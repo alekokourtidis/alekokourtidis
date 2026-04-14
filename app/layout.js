@@ -1,4 +1,5 @@
 import "./globals.css";
+import Analytics from "./components/Analytics";
 
 export const metadata = {
   title: "Aleko Tools — AI-Powered Tools for Students | by Aleko Kourtidis",
@@ -44,6 +45,7 @@ export default function RootLayout({ children }) {
           </div>
         </nav>
         {children}
+        <Analytics />
         <footer className="footer">
           <div className="footer-inner">
             <span>&copy; 2026 Aleko Kourtidis</span>
