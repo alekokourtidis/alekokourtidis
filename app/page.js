@@ -38,12 +38,14 @@ const CORE_PRODUCTS = [
     project_name: "feastmate",
     tagline: "AI recipe generator — set your macros, pick ingredients, get full recipes (iOS)",
     deploy_url: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
+    isApp: true,
   },
   {
     id: "wholefed",
     project_name: "wholefed",
     tagline: "Snap a photo of your food, get instant AI health analysis (iOS)",
     deploy_url: "https://apps.apple.com/app/wholefed",
+    isApp: true,
   },
 ];
 
@@ -72,45 +74,28 @@ export default async function Home() {
         </p>
       </div>
 
-      {/* Tools Section */}
+      {/* Web Tools */}
       <div className="section">
         <div className="section-header">
-          <span className="section-title">Tools</span>
+          <span className="section-title">Web Tools</span>
         </div>
+        <div className="products">
+          {products.filter(p => !p.isApp).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
 
-        {products.length === 0 ? (
-          <p style={{ color: "var(--text-muted)", padding: "40px 0", textAlign: "center", fontSize: 14 }}>
-            Loading tools...
-          </p>
-        ) : (
-          <div className="products">
-            {products.map((product) => {
-              const evaluation = product.evaluations?.[0] || product.evaluations;
-              const color = PRODUCT_COLORS[product.project_name] || "#525252";
-              const pricing = PRODUCT_PRICING[product.project_name] || "Free";
-              const initial = formatName(product.project_name).charAt(0);
-
-              return (
-                <Link href={`/${product.project_name}`} key={product.id} className="product-card">
-                  <div className="card-top">
-                    <div className="card-icon" style={{ background: color }}>
-                      {initial}
-                    </div>
-                    <span className="card-badge">Live</span>
-                  </div>
-                  <h3>{formatName(product.project_name)}</h3>
-                  <div className="tagline">
-                    {product.tagline || evaluation?.eli17 || ""}
-                  </div>
-                  <div className="card-footer">
-                    <span className="card-price">{pricing}</span>
-                    <span className="card-arrow">View →</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+      {/* Mobile Apps */}
+      <div className="section">
+        <div className="section-header">
+          <span className="section-title">Mobile Apps</span>
+        </div>
+        <div className="products">
+          {products.filter(p => p.isApp).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
       </div>
 
       {/* Recent Blog Posts */}
@@ -140,6 +125,32 @@ export default async function Home() {
       {/* Email Capture */}
       <EmailCapture />
     </div>
+  );
+}
+
+function ProductCard({ product }) {
+  const evaluation = product.evaluations?.[0] || product.evaluations;
+  const color = PRODUCT_COLORS[product.project_name] || "#525252";
+  const pricing = PRODUCT_PRICING[product.project_name] || "Free";
+  const initial = formatName(product.project_name).charAt(0);
+
+  return (
+    <Link href={product.deploy_url || `/${product.project_name}`} target={product.deploy_url ? "_blank" : undefined} rel={product.deploy_url ? "noopener" : undefined} className="product-card">
+      <div className="card-top">
+        <div className="card-icon" style={{ background: color }}>
+          {initial}
+        </div>
+        <span className="card-badge">{product.isApp ? "App Store" : "Live"}</span>
+      </div>
+      <h3>{formatName(product.project_name)}</h3>
+      <div className="tagline">
+        {product.tagline || evaluation?.eli17 || ""}
+      </div>
+      <div className="card-footer">
+        <span className="card-price">{pricing}</span>
+        <span className="card-arrow">{product.isApp ? "Download →" : "Try it →"}</span>
+      </div>
+    </Link>
   );
 }
 
