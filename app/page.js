@@ -13,17 +13,50 @@ const PRODUCT_COLORS = {
 
 const PRODUCT_PRICING = {
   "answer-my-pdf": "$1.99/mo",
-  "essay-cloner": "Free",
+  "essay-cloner": "$1.99/mo",
   feastmate: "$4.99/mo",
   wholefed: "Free",
   "ai-shadow-shield": "$19/mo",
 };
 
+// Core products that always show up (not dependent on Supabase)
+const CORE_PRODUCTS = [
+  {
+    id: "answermypdf",
+    project_name: "answer-my-pdf",
+    tagline: "Upload a PDF worksheet, get it filled in with answers that match your grade level",
+    deploy_url: "https://answermypdf.vercel.app",
+  },
+  {
+    id: "essaycloner",
+    project_name: "essay-cloner",
+    tagline: "AI essays written in your personal voice — not ChatGPT's",
+    deploy_url: "https://essaycloner.vercel.app",
+  },
+  {
+    id: "feastmate",
+    project_name: "feastmate",
+    tagline: "AI recipe generator — set your macros, pick ingredients, get full recipes (iOS)",
+    deploy_url: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
+  },
+  {
+    id: "wholefed",
+    project_name: "wholefed",
+    tagline: "Snap a photo of your food, get instant AI health analysis (iOS)",
+    deploy_url: "https://apps.apple.com/app/wholefed",
+  },
+];
+
 export default async function Home() {
-  let products = [];
+  let supabaseProducts = [];
   try {
-    products = await getDeployedProducts();
+    supabaseProducts = await getDeployedProducts();
   } catch {}
+
+  // Merge: core products + any Supabase products not already in core
+  const coreNames = new Set(CORE_PRODUCTS.map(p => p.project_name));
+  const extraProducts = supabaseProducts.filter(p => !coreNames.has(p.project_name));
+  const products = [...CORE_PRODUCTS, ...extraProducts];
 
   const recentPosts = getAllPosts().slice(0, 3);
 
