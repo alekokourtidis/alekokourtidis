@@ -1,66 +1,119 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { getDeployedProducts } from "../lib/supabase";
+import { getAllPosts } from "../lib/blog-posts";
+import EmailCapture from "./components/EmailCapture";
 
-export default function Home() {
+const PRODUCT_COLORS = {
+  "answer-my-pdf": "#2563eb",
+  "essay-cloner": "#7c3aed",
+  feastmate: "#f59e0b",
+  wholefed: "#dc2626",
+};
+
+const PRODUCT_PRICING = {
+  "answer-my-pdf": "$1.99/mo",
+  "essay-cloner": "Free",
+  feastmate: "$4.99/mo",
+  wholefed: "Free",
+};
+
+export default async function Home() {
+  let products = [];
+  try {
+    products = await getDeployedProducts();
+  } catch {}
+
+  const recentPosts = getAllPosts().slice(0, 3);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="container">
+      {/* Hero */}
+      <div className="hero">
+        <div className="hero-badge">Open-source AI tools</div>
+        <h1>Tools that solve real problems</h1>
+        <p>
+          A growing collection of AI-powered tools built for students.
+          Each one solves a specific problem — no bloat, no fluff.
+        </p>
+      </div>
+
+      {/* Tools Section */}
+      <div className="section">
+        <div className="section-header">
+          <span className="section-title">Tools</span>
+        </div>
+
+        {products.length === 0 ? (
+          <p style={{ color: "var(--text-muted)", padding: "40px 0", textAlign: "center", fontSize: 14 }}>
+            Loading tools...
           </p>
+        ) : (
+          <div className="products">
+            {products.map((product) => {
+              const evaluation = product.evaluations?.[0] || product.evaluations;
+              const color = PRODUCT_COLORS[product.project_name] || "#525252";
+              const pricing = PRODUCT_PRICING[product.project_name] || "Free";
+              const initial = formatName(product.project_name).charAt(0);
+
+              return (
+                <Link href={`/${product.project_name}`} key={product.id} className="product-card">
+                  <div className="card-top">
+                    <div className="card-icon" style={{ background: color }}>
+                      {initial}
+                    </div>
+                    <span className="card-badge">Live</span>
+                  </div>
+                  <h3>{formatName(product.project_name)}</h3>
+                  <div className="tagline">
+                    {product.tagline || evaluation?.eli17 || ""}
+                  </div>
+                  <div className="card-footer">
+                    <span className="card-price">{pricing}</span>
+                    <span className="card-arrow">View →</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Recent Blog Posts */}
+      {recentPosts.length > 0 && (
+        <div className="section">
+          <div className="section-header">
+            <span className="section-title">Latest from the blog</span>
+            <Link href="/blog" className="section-link">View all →</Link>
+          </div>
+          <div className="blog-list" style={{ paddingBottom: 0 }}>
+            {recentPosts.map((post) => (
+              <Link href={`/blog/${post.slug}`} key={post.slug} className="blog-card">
+                <div className="blog-card-content">
+                  <div className="blog-meta">
+                    <span className="blog-date">{formatDate(post.date)}</span>
+                  </div>
+                  <h2>{post.title}</h2>
+                  <p>{post.excerpt}</p>
+                </div>
+                <span className="blog-arrow">→</span>
+              </Link>
+            ))}
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      )}
+
+      {/* Email Capture */}
+      <EmailCapture />
     </div>
   );
+}
+
+function formatName(slug) {
+  return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatDate(dateStr) {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
+    month: "short", day: "numeric", year: "numeric",
+  });
 }
