@@ -8,6 +8,7 @@ const PRODUCT_COLORS = {
   "essay-cloner": "#7c3aed",
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
+  "ai-shadow-shield": "#10b981",
 };
 
 const PRODUCT_PRICING = {
@@ -15,6 +16,7 @@ const PRODUCT_PRICING = {
   "essay-cloner": "Free",
   feastmate: "$4.99/mo",
   wholefed: "Free",
+  "ai-shadow-shield": "$19/mo",
 };
 
 export default async function Home() {
