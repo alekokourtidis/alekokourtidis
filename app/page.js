@@ -9,6 +9,7 @@ const PRODUCT_COLORS = {
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
   "ai-shadow-shield": "#10b981",
+  "ai-traffic-guard": "#f59e0b",
 };
 
 const PRODUCT_PRICING = {
@@ -17,6 +18,7 @@ const PRODUCT_PRICING = {
   feastmate: "$4.99/mo",
   wholefed: "Free",
   "ai-shadow-shield": "$19/mo",
+  "ai-traffic-guard": "$29/mo",
 };
 
 // Core products that always show up (not dependent on Supabase)
