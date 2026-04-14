@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <meta name="google-site-verification" content="vQ9wtF1eidiF6zJcby" />
+        <meta name="google-site-verification" content="vQ9wtF1eidiF6zJcbyxm6flNDMcN0EQVIe7-LXSqQJM" />
       </head>
       <body>
         <nav className="nav">
