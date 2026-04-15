@@ -4,7 +4,6 @@ import { getAllPosts } from "../lib/blog-posts";
 import EmailCapture from "./components/EmailCapture";
 
 const PRODUCT_COLORS = {
-  "answer-my-pdf": "#2563eb",
   "essay-cloner": "#7c3aed",
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
@@ -14,7 +13,6 @@ const PRODUCT_COLORS = {
 };
 
 const PRODUCT_PRICING = {
-  "answer-my-pdf": "$1.99/mo",
   "essay-cloner": "$1.99/mo",
   feastmate: "$4.99/mo",
   wholefed: "Free",
@@ -25,12 +23,6 @@ const PRODUCT_PRICING = {
 
 // Core products that always show up (not dependent on Supabase)
 const CORE_PRODUCTS = [
-  {
-    id: "answermypdf",
-    project_name: "answer-my-pdf",
-    tagline: "Upload a PDF worksheet, get it filled in with answers that match your grade level",
-    deploy_url: "https://answermypdf.vercel.app",
-  },
   {
     id: "essaycloner",
     project_name: "essay-cloner",

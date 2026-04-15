@@ -12,14 +12,12 @@ export const metadata = {
 };
 
 const PRODUCT_COLORS = {
-  answermypdf: "#2563eb",
   essaycloner: "#7c3aed",
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
 };
 
 const PRODUCT_NAMES = {
-  answermypdf: "AnswerMyPDF",
   essaycloner: "EssayCloner",
   feastmate: "Feastmate",
   wholefed: "Wholefed",

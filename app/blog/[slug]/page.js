@@ -20,21 +20,18 @@ export async function generateMetadata({ params }) {
 }
 
 const PRODUCT_URLS = {
-  answermypdf: "https://answermypdf.vercel.app",
   essaycloner: "https://essaycloner.vercel.app",
   feastmate: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
   wholefed: "https://apps.apple.com/app/wholefed",
 };
 
 const PRODUCT_NAMES = {
-  answermypdf: "AnswerMyPDF",
   essaycloner: "EssayCloner",
   feastmate: "Feastmate",
   wholefed: "Wholefed",
 };
 
 const PRODUCT_COLORS = {
-  answermypdf: "#2563eb",
   essaycloner: "#7c3aed",
   feastmate: "#f59e0b",
   wholefed: "#dc2626",

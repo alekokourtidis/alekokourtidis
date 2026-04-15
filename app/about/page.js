@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "About Aleko Kourtidis — Builder of Aleko Tools",
-  description: "Aleko Kourtidis is a 17-year-old software developer who builds AI-powered tools for students. Creator of AnswerMyPDF, EssayCloner, Feastmate, and Wholefed.",
+  description: "Aleko Kourtidis is a 17-year-old software developer who builds AI-powered tools for students. Creator of EssayCloner, Feastmate, and Wholefed.",
   keywords: "aleko kourtidis, alekokourtidis, aleko tools, who is aleko kourtidis, aleko developer",
   alternates: {
     canonical: "https://alekotools.com/about",
@@ -40,10 +40,6 @@ export default function About() {
         <div className="about-section">
           <h2>The Tools</h2>
           <ul>
-            <li>
-              <strong>AnswerMyPDF</strong> — Upload a PDF worksheet, get it filled in with
-              answers that match your grade level and writing style. $1.99/mo.
-            </li>
             <li>
               <strong>EssayCloner</strong> — Paste your writing samples, get new essays
               written in your actual voice — not ChatGPT's. Free.
