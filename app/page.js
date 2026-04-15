@@ -10,6 +10,7 @@ const PRODUCT_COLORS = {
   wholefed: "#dc2626",
   "ai-shadow-shield": "#10b981",
   "ai-traffic-guard": "#f59e0b",
+  "whowasright": "#8b5cf6",
 };
 
 const PRODUCT_PRICING = {
@@ -18,6 +19,7 @@ const PRODUCT_PRICING = {
   feastmate: "$4.99/mo",
   wholefed: "Free",
   "ai-shadow-shield": "$19/mo",
+  "whowasright": "Free",
   "ai-traffic-guard": "$29/mo",
 };
 
