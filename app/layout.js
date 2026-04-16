@@ -41,6 +41,7 @@ export default function RootLayout({ children }) {
               <a href="/">Tools</a>
               <a href="/blog">Blog</a>
               <a href="/about">About</a>
+              <a href="/affiliates">Affiliates</a>
             </div>
           </div>
         </nav>
