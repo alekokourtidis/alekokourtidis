@@ -1,14 +1,14 @@
 {
-  "rewrites": [
-    { "source": "/essaycloner", "destination": "https://essaycloner.vercel.app" },
-    { "source": "/essaycloner/:path*", "destination": "https://essaycloner.vercel.app/:path*" },
-    { "source": "/studyacorn", "destination": "https://studyacorn.vercel.app" },
-    { "source": "/studyacorn/:path*", "destination": "https://studyacorn.vercel.app/:path*" },
-    { "source": "/shadowshield", "destination": "https://ai-shadow-shield.vercel.app" },
-    { "source": "/shadowshield/:path*", "destination": "https://ai-shadow-shield.vercel.app/:path*" },
-    { "source": "/trafficguard", "destination": "https://ai-traffic-guard.vercel.app" },
-    { "source": "/trafficguard/:path*", "destination": "https://ai-traffic-guard.vercel.app/:path*" },
-    { "source": "/whowasright", "destination": "https://argument-analyzer-ten.vercel.app" },
-    { "source": "/whowasright/:path*", "destination": "https://argument-analyzer-ten.vercel.app/:path*" }
+  "redirects": [
+    { "source": "/essaycloner", "destination": "https://essaycloner.vercel.app", "permanent": false },
+    { "source": "/essaycloner/:path*", "destination": "https://essaycloner.vercel.app/:path*", "permanent": false },
+    { "source": "/studyacorn", "destination": "https://studyacorn.vercel.app", "permanent": false },
+    { "source": "/studyacorn/:path*", "destination": "https://studyacorn.vercel.app/:path*", "permanent": false },
+    { "source": "/shadowshield", "destination": "https://ai-shadow-shield.vercel.app", "permanent": false },
+    { "source": "/shadowshield/:path*", "destination": "https://ai-shadow-shield.vercel.app/:path*", "permanent": false },
+    { "source": "/trafficguard", "destination": "https://ai-traffic-guard.vercel.app", "permanent": false },
+    { "source": "/trafficguard/:path*", "destination": "https://ai-traffic-guard.vercel.app/:path*", "permanent": false },
+    { "source": "/whowasright", "destination": "https://argument-analyzer-ten.vercel.app", "permanent": false },
+    { "source": "/whowasright/:path*", "destination": "https://argument-analyzer-ten.vercel.app/:path*", "permanent": false }
   ]
 }
