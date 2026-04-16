@@ -5,6 +5,7 @@ import EmailCapture from "./components/EmailCapture";
 
 const PRODUCT_COLORS = {
   "essay-cloner": "#7c3aed",
+  studyacorn: "#16a34a",
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
   "ai-shadow-shield": "#10b981",
@@ -14,6 +15,7 @@ const PRODUCT_COLORS = {
 
 const PRODUCT_PRICING = {
   "essay-cloner": "$1.99/mo",
+  studyacorn: "Free",
   feastmate: "$4.99/mo",
   wholefed: "Free",
   "ai-shadow-shield": "$19/mo",
@@ -30,17 +32,35 @@ const CORE_PRODUCTS = [
     deploy_url: "/essaycloner",
   },
   {
-    id: "feastmate",
-    project_name: "feastmate",
-    tagline: "AI recipe generator — set your macros, pick ingredients, get full recipes (iOS)",
-    deploy_url: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
-    isApp: true,
+    id: "studyacorn",
+    project_name: "studyacorn",
+    tagline: "Adaptive AP and SAT study guide that finds your gaps",
+    deploy_url: "/studyacorn",
+  },
+  {
+    id: "ai-shadow-shield",
+    project_name: "ai-shadow-shield",
+    tagline: "Know when your company is being cloned with AI",
+    deploy_url: "/shadowshield",
+  },
+  {
+    id: "ai-traffic-guard",
+    project_name: "ai-traffic-guard",
+    tagline: "Track keywords stolen by Google AI Overviews",
+    deploy_url: "/trafficguard",
   },
   {
     id: "wholefed",
     project_name: "wholefed",
     tagline: "Snap a photo of your food, get instant AI health analysis (iOS)",
     deploy_url: "https://apps.apple.com/app/wholefed",
+    isApp: true,
+  },
+  {
+    id: "feastmate",
+    project_name: "feastmate",
+    tagline: "AI recipe generator — set your macros, pick ingredients, get full recipes (iOS)",
+    deploy_url: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
     isApp: true,
   },
 ];
