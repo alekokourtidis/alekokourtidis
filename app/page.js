@@ -27,7 +27,7 @@ const CORE_PRODUCTS = [
     id: "essaycloner",
     project_name: "essay-cloner",
     tagline: "AI essays written in your personal voice — not ChatGPT's",
-    deploy_url: "https://essaycloner.vercel.app",
+    deploy_url: "/essaycloner",
   },
   {
     id: "feastmate",
@@ -124,14 +124,29 @@ export default async function Home() {
   );
 }
 
+const TOOL_ROUTES = {
+  "essay-cloner": "/essaycloner",
+  "ai-shadow-shield": "/shadowshield",
+  "ai-traffic-guard": "/trafficguard",
+  "argument-analyzer-ten": "/whowasright",
+  "studyacorn": "/studyacorn",
+};
+
+function getProductUrl(product) {
+  if (product.isApp) return product.deploy_url;
+  return TOOL_ROUTES[product.project_name] || product.deploy_url || `/${product.project_name}`;
+}
+
 function ProductCard({ product }) {
   const evaluation = product.evaluations?.[0] || product.evaluations;
   const color = PRODUCT_COLORS[product.project_name] || "#525252";
   const pricing = PRODUCT_PRICING[product.project_name] || "Free";
   const initial = formatName(product.project_name).charAt(0);
+  const url = getProductUrl(product);
+  const isExternal = url.startsWith("http");
 
   return (
-    <Link href={product.deploy_url || `/${product.project_name}`} target={product.deploy_url ? "_blank" : undefined} rel={product.deploy_url ? "noopener" : undefined} className="product-card">
+    <Link href={url} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined} className="product-card">
       <div className="card-top">
         <div className="card-icon" style={{ background: color }}>
           {initial}
