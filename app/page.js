@@ -82,11 +82,11 @@ export default async function Home() {
     <div className="container">
       {/* Hero */}
       <div className="hero">
-        <div className="hero-badge">{products.length} tools live</div>
-        <h1>Useful AI tools, built by one person</h1>
+        <div className="hero-badge">{products.length} tools shipped</div>
+        <h1>I build AI tools that solve real problems</h1>
         <p>
-          I find real problems people have online and build simple tools to fix them.
-          Everything here is free to try.
+          Every tool here started as a complaint on Reddit.
+          I find the problem, build the fix, ship it. All free to try.
         </p>
       </div>
 
