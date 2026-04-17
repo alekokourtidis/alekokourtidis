@@ -12,9 +12,9 @@ export const metadata = {
 };
 
 const PRODUCT_COLORS = {
-  essaycloner: "#7c3aed",
-  feastmate: "#f59e0b",
-  wholefed: "#dc2626",
+  essaycloner: "#a78bfa",
+  feastmate: "#fbbf24",
+  wholefed: "#f87171",
 };
 
 const PRODUCT_NAMES = {
@@ -30,7 +30,7 @@ export default function BlogIndex() {
     <div className="container">
       <div className="blog-header">
         <h1>Blog</h1>
-        <p>Guides, tips, and insights on using AI tools effectively.</p>
+        <p>Guides, tips, and insights on building and using AI tools.</p>
       </div>
 
       <div className="blog-list">
@@ -42,7 +42,7 @@ export default function BlogIndex() {
                 {post.product && (
                   <span
                     className="blog-product-tag"
-                    style={{ background: `${PRODUCT_COLORS[post.product]}20`, color: PRODUCT_COLORS[post.product] }}
+                    style={{ background: `${PRODUCT_COLORS[post.product]}18`, color: PRODUCT_COLORS[post.product] }}
                   >
                     {PRODUCT_NAMES[post.product]}
                   </span>

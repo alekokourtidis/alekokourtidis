@@ -82,11 +82,11 @@ export default async function Home() {
     <div className="container">
       {/* Hero */}
       <div className="hero">
-        <div className="hero-badge">Open-source AI tools</div>
-        <h1>Tools that solve real problems</h1>
+        <div className="hero-badge">{products.length} tools live</div>
+        <h1>Useful AI tools, built by one person</h1>
         <p>
-          A growing collection of AI-powered tools built for students.
-          Each one solves a specific problem — no bloat, no fluff.
+          I find real problems people have online and build simple tools to fix them.
+          Everything here is free to try.
         </p>
       </div>
 
@@ -94,6 +94,7 @@ export default async function Home() {
       <div className="section">
         <div className="section-header">
           <span className="section-title">Web Tools</span>
+          <span className="section-title">{products.filter(p => !p.isApp).length} tools</span>
         </div>
         <div className="products">
           {products.filter(p => !p.isApp).map((product) => (
@@ -106,6 +107,7 @@ export default async function Home() {
       <div className="section">
         <div className="section-header">
           <span className="section-title">Mobile Apps</span>
+          <span className="section-title">{products.filter(p => p.isApp).length} apps</span>
         </div>
         <div className="products">
           {products.filter(p => p.isApp).map((product) => (

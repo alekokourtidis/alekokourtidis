@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
         <Analytics />
         <footer className="footer">
           <div className="footer-inner">
-            <span>&copy; 2026 Aleko Kourtidis</span>
+            <span>Built by Aleko Kourtidis</span>
             <div className="footer-links">
               <a href="/">Tools</a>
               <a href="/blog">Blog</a>

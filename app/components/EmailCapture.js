@@ -35,7 +35,8 @@ export default function EmailCapture() {
 
   return (
     <div className="email-capture">
-      <p className="email-label">Get notified when we launch new tools</p>
+      <p className="email-label">Stay in the loop</p>
+      <p className="email-sublabel">Get notified when new tools launch. No spam, just builds.</p>
       <form onSubmit={handleSubmit} className="email-form">
         <input
           type="email"
@@ -46,11 +47,11 @@ export default function EmailCapture() {
           required
         />
         <button type="submit" className="email-btn" disabled={status === "loading"}>
-          {status === "loading" ? "..." : "Notify me"}
+          {status === "loading" ? "..." : "Subscribe"}
         </button>
       </form>
       {status === "error" && <p className="email-error">Something went wrong. Try again.</p>}
-      <p className="email-note">No spam. Just new tool launches.</p>
+      <p className="email-note">Join other students and builders. Unsubscribe anytime.</p>
     </div>
   );
 }
