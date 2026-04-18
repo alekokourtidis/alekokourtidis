@@ -20,14 +20,14 @@ export async function generateMetadata({ params }) {
 }
 
 const PRODUCT_URLS = {
-  essaycloner: "https://essaycloner.vercel.app",
-  "essay-cloner": "https://essaycloner.vercel.app",
+  essaycloner: "https://alekotools.com/essaycloner",
+  "essay-cloner": "https://alekotools.com/essaycloner",
   feastmate: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
   wholefed: "https://apps.apple.com/app/wholefed",
-  "ai-shadow-shield": "https://ai-shadow-shield.vercel.app",
-  "ai-traffic-guard": "https://ai-traffic-guard.vercel.app",
-  whowasright: "https://argument-analyzer-ten.vercel.app",
-  studyacorn: "https://studyacorn.vercel.app",
+  "ai-shadow-shield": "https://alekotools.com/shadowshield",
+  "ai-traffic-guard": "https://alekotools.com/trafficguard",
+  whowasright: "https://alekotools.com/whowasright",
+  studyacorn: "https://alekotools.com/studyacorn",
 };
 
 const PRODUCT_NAMES = {
