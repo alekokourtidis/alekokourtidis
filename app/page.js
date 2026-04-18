@@ -13,6 +13,16 @@ const PRODUCT_COLORS = {
   "whowasright": "#8b5cf6",
 };
 
+const PRODUCT_GRADIENTS = {
+  "essay-cloner": "linear-gradient(135deg, #1a1030 0%, #0f0f12 100%)",
+  studyacorn: "linear-gradient(135deg, #0d1f14 0%, #0f0f12 100%)",
+  feastmate: "linear-gradient(135deg, #1f1808 0%, #0f0f12 100%)",
+  wholefed: "linear-gradient(135deg, #1f0d0d 0%, #0f0f12 100%)",
+  "ai-shadow-shield": "linear-gradient(135deg, #0d1f1a 0%, #0f0f12 100%)",
+  "ai-traffic-guard": "linear-gradient(135deg, #1f1808 0%, #0f0f12 100%)",
+  "whowasright": "linear-gradient(135deg, #1a0d25 0%, #0f0f12 100%)",
+};
+
 const PRODUCT_PRICING = {
   "essay-cloner": "$1.99/mo",
   studyacorn: "Free",
@@ -34,7 +44,7 @@ const CORE_PRODUCTS = [
   {
     id: "studyacorn",
     project_name: "studyacorn",
-    tagline: "Adaptive AP and SAT study guide that finds your gaps",
+    tagline: "AI study guide that finds your weak spots and drills them",
     deploy_url: "/studyacorn",
   },
   {
@@ -76,18 +86,35 @@ export default async function Home() {
   const extraProducts = supabaseProducts.filter(p => !coreNames.has(p.project_name));
   const products = [...CORE_PRODUCTS, ...extraProducts];
 
-  const recentPosts = getAllPosts().slice(0, 3);
+  const allPosts = getAllPosts();
+  const recentPosts = allPosts.slice(0, 3);
 
   return (
     <div className="container">
       {/* Hero */}
       <div className="hero">
         <div className="hero-badge">{products.length} tools shipped</div>
-        <h1>I build AI tools that solve real problems</h1>
+        <h1>AI tools that solve real problems</h1>
         <p>
           Every tool here started as a complaint on Reddit.
           I find the problem, build the fix, ship it. All free to try.
         </p>
+      </div>
+
+      {/* Stats Row */}
+      <div className="stats-row">
+        <div className="stat-item">
+          <span className="stat-number">{products.length}</span>
+          <span className="stat-label">Tools shipped</span>
+        </div>
+        <div className="stat-item">
+          <span className="stat-number">{allPosts.length}</span>
+          <span className="stat-label">Blog posts</span>
+        </div>
+        <div className="stat-item">
+          <span className="stat-number">2</span>
+          <span className="stat-label">App Store apps</span>
+        </div>
       </div>
 
       {/* Web Tools */}
@@ -162,32 +189,43 @@ function getProductUrl(product) {
 function ProductCard({ product }) {
   const evaluation = product.evaluations?.[0] || product.evaluations;
   const color = PRODUCT_COLORS[product.project_name] || "#525252";
+  const gradient = PRODUCT_GRADIENTS[product.project_name] || "linear-gradient(135deg, #151518 0%, #0f0f12 100%)";
   const pricing = PRODUCT_PRICING[product.project_name] || "Free";
   const initial = formatName(product.project_name).charAt(0);
   const url = getProductUrl(product);
   const isExternal = url.startsWith("http");
 
   return (
-    <Link href={url} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined} className="product-card">
-      <div className="card-top">
-        <div className="card-icon" style={{ background: color }}>
-          {initial}
+    <Link href={url} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined} className="product-card" style={{ borderLeft: `3px solid ${color}` }}>
+      <div className="card-body">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <span className="card-badge">{product.isApp ? "App Store" : "Live"}</span>
+          <span className="card-price">{pricing}</span>
         </div>
-        <span className="card-badge">{product.isApp ? "App Store" : "Live"}</span>
-      </div>
-      <h3>{formatName(product.project_name)}</h3>
-      <div className="tagline">
-        {product.tagline || evaluation?.eli17 || ""}
-      </div>
-      <div className="card-footer">
-        <span className="card-price">{pricing}</span>
-        <span className="card-arrow">{product.isApp ? "Download →" : "Try it →"}</span>
+        <h3>{formatName(product.project_name)}</h3>
+        <div className="tagline">
+          {product.tagline || evaluation?.eli17 || ""}
+        </div>
+        <div className="card-footer">
+          <span className="card-arrow">{product.isApp ? "Download →" : "Try it →"}</span>
+        </div>
       </div>
     </Link>
   );
 }
 
+const DISPLAY_NAMES = {
+  "studyacorn": "StudyPebble",
+  "essay-cloner": "EssayCloner",
+  "ai-shadow-shield": "AI Shadow Shield",
+  "ai-traffic-guard": "AI Traffic Guard",
+  "whowasright": "WhoWasRight",
+  "feastmate": "Feastmate",
+  "wholefed": "Wholefed",
+};
+
 function formatName(slug) {
+  if (DISPLAY_NAMES[slug]) return DISPLAY_NAMES[slug];
   return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
