@@ -1,5 +1,6 @@
 import "./globals.css";
 import Analytics from "./components/Analytics";
+import CardGlow from "./components/CardGlow";
 
 export const metadata = {
   title: "Aleko Tools — AI-Powered Tools for Students | by Aleko Kourtidis",
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
         </nav>
         {children}
         <Analytics />
+        <CardGlow />
         <footer className="footer">
           <div className="footer-inner">
             <span>Built by Aleko Kourtidis</span>

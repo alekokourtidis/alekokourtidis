@@ -63,8 +63,9 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== HERO (Homepage) ===== */
 .hero {
-  padding: 80px 0 64px;
-  max-width: 620px;
+  padding: 100px 0 72px;
+  max-width: 640px;
+  position: relative;
 }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -85,9 +86,9 @@ a { color: inherit; text-decoration: none; }
   50% { opacity: 0.4; }
 }
 .hero h1 {
-  font-size: 48px; font-weight: 900; letter-spacing: -2.5px;
+  font-size: 56px; font-weight: 800; letter-spacing: -2.8px;
   line-height: 1.05; margin-bottom: 20px;
-  background: linear-gradient(to bottom, #fff 30%, #a1a1aa 100%);
+  background: linear-gradient(to bottom, #fff 20%, #71717a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -132,24 +133,52 @@ a { color: inherit; text-decoration: none; }
 }
 .section-link:hover { color: var(--text); }
 
-/* ===== PRODUCT CARDS ===== */
+/* ===== PRODUCT CARDS (Bento Grid) ===== */
 .products {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
 }
+/* First card spans full width — featured */
+.product-card:first-child {
+  grid-column: 1 / -1;
+}
+.product-card:first-child .card-body {
+  padding: 28px 32px;
+}
+.product-card:first-child h3 {
+  font-size: 22px;
+}
+.product-card:first-child .tagline {
+  font-size: 15px;
+  max-width: 500px;
+}
+
 .product-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 0;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
   display: flex; flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.03), transparent 40%);
+}
+.product-card:hover::before { opacity: 1; }
 .product-card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 0 0 1px var(--border-hover), 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  transform: translateY(-2px);
 }
 
 .product-card .card-body {
@@ -169,12 +198,20 @@ a { color: inherit; text-decoration: none; }
 }
 
 .product-card h3 {
-  font-size: 16px; font-weight: 700; margin-bottom: 8px;
-  letter-spacing: -0.3px;
+  font-size: 17px; font-weight: 700; margin-bottom: 8px;
+  letter-spacing: -0.4px;
+  color: var(--text);
 }
 .product-card .tagline {
-  font-size: 14px; color: var(--text-2); line-height: 1.6;
+  font-size: 14px; color: var(--text-2); line-height: 1.65;
   flex: 1;
+}
+
+@media (max-width: 640px) {
+  .products { grid-template-columns: 1fr; }
+  .product-card:first-child { grid-column: 1; }
+  .hero h1 { font-size: 36px; letter-spacing: -1.5px; }
+  .blog-grid { grid-template-columns: 1fr; }
 }
 .product-card .card-footer {
   display: flex; align-items: center; justify-content: space-between;
