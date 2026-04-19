@@ -565,7 +565,7 @@ function ToolsPage() {
             <>
               {filteredFeatured.length > 0 && <FeaturedRow tools={filteredFeatured} />}
               <div className="tools-section-label">
-                <span className="tools-section-dot tools-section-dot-all" /> {filteredFeatured.length > 0 ? 'All Other Tools' : 'All Tools'}
+                <span className="tools-section-dot tools-section-dot-all" /> All Tools
                 <span className="tools-section-spacer" />
                 <span className="tools-section-note">{filteredRest.length} {filteredRest.length === 1 ? 'tool' : 'tools'}</span>
               </div>
