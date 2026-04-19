@@ -161,6 +161,22 @@ const TOOLS = [
     users: '1.8k', shipped: '2026-04-16',
     accent: '#f472b6', Demo: window.FeastmateDemo,
   },
+  {
+    id: 'whowasright', title: 'WhoWasRight', price: 'Free',
+    cat: 'Relationships',
+    tag: 'Paste a text argument. AI breaks down who was right, what manipulation tactics were used, and scores each person on 10 dimensions.',
+    meta: 'Web · Launched April 2026',
+    users: '320', shipped: '2026-04-15',
+    accent: '#8b5cf6', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'Person A: 62% · Person B: 38%'); },
+  },
+  {
+    id: 'flowdebug', title: 'FlowDebug', price: '$29 / Mo',
+    cat: 'Productivity',
+    tag: 'When your Make.com automations break at 3 AM, this shows you exactly what data went where and what failed.',
+    meta: 'Web · Launched April 2026',
+    users: '89', shipped: '2026-04-16',
+    accent: '#14b8a6', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'Scan: 3 workflows · 1 failure detected'); },
+  },
 ];
 
 const WIP = [
@@ -171,7 +187,7 @@ const WIP = [
 
 /* ============ Shipping Dashboard ============ */
 function ShippingDashboard() {
-  const liveCount = 6 + daysSince(START_DATE) - 7;
+  const liveCount = 8 + daysSince(START_DATE) - 7;
   const [pulse, setPulse] = useState(false);
   const [count, setCount] = useState(liveCount);
 
@@ -474,7 +490,7 @@ function ToolLibrary() {
         <div className="lib-featured-label">
           <span className="section-label" style={{ margin: 0 }}>Featured Tools</span>
           <span className="lib-divider-line" />
-          <span className="lib-featured-count">2 Of {TOOLS.length}</span>
+          <span className="lib-featured-count">2 Of 8</span>
         </div>
         <div className="lib-featured">
           {featured.map((t, i) => (

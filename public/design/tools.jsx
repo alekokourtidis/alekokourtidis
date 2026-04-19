@@ -51,9 +51,25 @@ const ALL_TOOLS = [
     id: 'feastmate', title: 'Feastmate', price: '$4.99 / Mo', priceNum: 4.99,
     cat: 'Health', platform: 'iOS',
     tag: 'Plug in your macro targets. Get back a real recipe that hits them, not a vague suggestion you have to math out.',
-    desc: 'Constraint solver hits your macros on the nose with real ingredients. Respects allergies, budget, and a "don\'t want" list without blowing up the math. Three rewrites to get the solver right.',
+    desc: 'Constraint solver hits your macros on the nose with real ingredients. Respects allergies, budget, and a "don\'t want" list without blowing up the math.',
     users: '1.8k', usersNum: 1800, shipped: '2026-04-16',
     accent: '#f472b6',
+  },
+  {
+    id: 'whowasright', title: 'WhoWasRight', price: 'Free', priceNum: 0,
+    cat: 'Relationships', platform: 'Web',
+    tag: 'Paste a text argument. AI breaks down who was right, scores each person on 10 dimensions, detects manipulation tactics.',
+    desc: 'Supports text paste, screenshot OCR, voice recording, and typed description. Analyzes arguments with 10-category scoring: factual accuracy, emotional control, proportionality, manipulation, empathy, and more.',
+    users: '320', usersNum: 320, shipped: '2026-04-15',
+    accent: '#8b5cf6',
+  },
+  {
+    id: 'flowdebug', title: 'FlowDebug', price: '$29 / Mo', priceNum: 29,
+    cat: 'Productivity', platform: 'Web',
+    tag: 'When your Make.com automations break at 3 AM, this shows you exactly what data went where and what failed.',
+    desc: 'Replay workflows step by step, see data flowing between modules, spot the exact moment things went wrong. Built for freelancers and agencies running client automations.',
+    users: '89', usersNum: 89, shipped: '2026-04-16',
+    accent: '#14b8a6',
   },
 ];
 
@@ -64,9 +80,11 @@ const DEMO_MAP = {
   trafficguard: () => window.TrafficGuardDemo,
   wholefed:     () => window.WholefedDemo,
   feastmate:    () => window.FeastmateDemo,
+  whowasright:  null,
+  flowdebug:    null,
 };
 
-const CATEGORIES = ['All', 'Education', 'Health', 'Security', 'Productivity', 'iOS Apps'];
+const CATEGORIES = ['All', 'Education', 'Health', 'Security', 'Productivity', 'Relationships', 'iOS Apps'];
 const SORTS = ['Newest', 'Most Popular', 'Price (Low)'];
 
 /* ============ Filtering ============ */
