@@ -485,7 +485,7 @@ function ToolsPage() {
   }, [q]);
 
   const featured = useMemo(() => ALL_TOOLS.filter(t => t.featured), []);
-  const rest = useMemo(() => ALL_TOOLS.filter(t => !t.featured), []);
+  const rest = useMemo(() => ALL_TOOLS, []); // Show ALL tools in the list, not just non-featured
 
   // For list view: featured always on top unless an incompatible category is selected
   const filteredFeatured = useMemo(() => {
