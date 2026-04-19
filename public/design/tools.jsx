@@ -362,7 +362,8 @@ function ToolRow({ t, index, isOpen, onToggle }) {
               </div>
             </div>
             <a
-              href={`/${t.id}`}
+              href={toolUrl(t.id)}
+              target={toolTarget(t.id)}
               className="tools-row-cta"
               style={{ '--accent': t.accent }}
             >
@@ -470,7 +471,7 @@ function EmptyState() {
       <div className="tools-empty-result">0 results.</div>
       <div className="tools-empty-title">No tools match that.</div>
       <div className="tools-empty-sub">Try a different filter — or pitch what you need.</div>
-      <a href="community.html#suggest" className="tools-empty-cta">Suggest a tool →</a>
+      <a href="/community" target="_top" className="tools-empty-cta">Suggest a tool →</a>
     </div>
   );
 }
@@ -486,7 +487,7 @@ function BottomCTA() {
         </div>
         <h3 className="tools-cta-title">Don't see what you need?</h3>
         <p className="tools-cta-sub">I ship one community-picked tool a week. Pitch yours — if it gets enough votes, I build it.</p>
-        <a href="community.html#suggest" className="tools-cta-btn">Suggest A Tool →</a>
+        <a href="/community" target="_top" className="tools-cta-btn">Suggest A Tool →</a>
       </div>
     </section>
   );
