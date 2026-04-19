@@ -122,7 +122,7 @@ const TOOLS = [
     accent: '#a78bfa', Demo: window.EssayClonerDemo,
   },
   {
-    id: 'studyacorn', title: 'Study Pebble', price: '$14.99 / Mo',
+    id: 'studypebble', title: 'Study Pebble', price: '$14.99 / Mo',
     cat: 'Education',
     tag: 'AP and SAT prep that adjusts to what you keep getting wrong. Free response answers get scored against the actual rubric.',
     meta: 'Web · Launched April 2026', cls: 'card-feat-2',
@@ -267,6 +267,70 @@ function ShippingDashboard() {
             </div>
           ))}
         </div>
+      </div>
+
+      <RecentUpdates />
+    </div>
+  );
+}
+
+/* ============ Recent Updates Timeline ============ */
+const UPDATE_TAG_COLOR = {
+  LAUNCH:  '#22c55e',
+  FEATURE: '#a78bfa',
+  FIX:     '#fbbf24',
+  UPDATE:  '#60a5fa',
+};
+const UPDATE_TOOL_COLOR = {
+  'EssayCloner':   '#a78bfa',
+  'Study Pebble':  '#60a5fa',
+  'Shadow Shield': '#22c55e',
+  'Traffic Guard': '#fbbf24',
+  'Wholefed':      '#f472b6',
+  'Feastmate':     '#fb923c',
+  'Core':          '#9ca3af',
+};
+const RECENT_UPDATES = [
+  { date: 'Apr 19', tool: 'Feastmate',     tag: 'FEATURE', text: 'Macro solver respects "don\'t want" ingredients without breaking the budget.' },
+  { date: 'Apr 19', tool: 'Study Pebble',  tag: 'FIX',     text: 'Streak counter stopped resetting on Safari private windows.' },
+  { date: 'Apr 18', tool: 'Shadow Shield', tag: 'FEATURE', text: 'Proof-of-shield screenshot mode ships without revealing the source.' },
+  { date: 'Apr 18', tool: 'EssayCloner',   tag: 'FIX',     text: 'Voice match score updates after every paragraph, not only at the end.' },
+  { date: 'Apr 17', tool: 'Traffic Guard', tag: 'UPDATE',  text: 'Threshold slider is logarithmic. 1 to 1000 fits on one row.' },
+  { date: 'Apr 17', tool: 'Core',          tag: 'UPDATE',  text: 'Rewrote the community voting board. Votes reorder live instead of on reload.' },
+  { date: 'Apr 16', tool: 'EssayCloner',   tag: 'LAUNCH',  text: 'Tones v2 is live. Three sliders replace the old ten checkboxes.' },
+];
+
+function RecentUpdates() {
+  return (
+    <div className="dash-updates">
+      <div className="dash-feed-header">
+        <span className="section-label" style={{ margin: 0 }}>
+          <span className="dash-updates-dot" /> Recent Updates
+        </span>
+        <span style={{ fontSize: 11, color: 'var(--text-3)' }}>
+          Last {RECENT_UPDATES.length} Shipped · Scroll For More
+        </span>
+      </div>
+      <div className="dash-updates-list">
+        {RECENT_UPDATES.map((u, i) => (
+          <div key={i} className="dash-update-row" style={{ animationDelay: `${i * 50}ms` }}>
+            <span className="dash-update-date">{u.date}</span>
+            <span
+              className="dash-update-tool-dot"
+              style={{ background: UPDATE_TOOL_COLOR[u.tool] || '#9ca3af' }}
+            />
+            <span className="dash-update-tool">{u.tool}</span>
+            <span className="dash-update-text">{u.text}</span>
+            <span
+              className="dash-update-tag"
+              style={{
+                color: UPDATE_TAG_COLOR[u.tag],
+                borderColor: UPDATE_TAG_COLOR[u.tag] + '55',
+                background: UPDATE_TAG_COLOR[u.tag] + '12',
+              }}
+            >{u.tag}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -425,7 +489,7 @@ function ToolLibrary() {
                 <div className="card-demo"><t.Demo /></div>
                 <div className="card-footer">
                   <div className="card-meta">{t.meta} · {t.users} Users</div>
-                  <a className="card-link" href={'/' + t.id} target="_top">Visit →</a>
+                  <a className="card-link" href={`tool.html?id=${t.id}`}>Visit →</a>
                 </div>
               </CardGlow>
             </Reveal>
@@ -509,7 +573,7 @@ function ToolLibrary() {
                           <span className="lib-row-meta-val" style={{ color: t.accent }}>Community Pick</span>
                         </div>
                       )}
-                      <a href={'/' + t.id} target="_top" className="lib-row-cta">Visit {t.title} →</a>
+                      <a href={`tool.html?id=${t.id}`} className="lib-row-cta">Visit {t.title} →</a>
                     </div>
                   </div>
                 </div>
@@ -588,7 +652,7 @@ function WeeklyCommunity() {
                 <div className="weekly-card-title">{week.title}</div>
                 <div className="weekly-card-tagline">{week.tagline}</div>
               </div>
-              <a href="/wholefed" target="_top" className="weekly-card-cta">Visit {week.title} →</a>
+              <a href="tool.html?id=wholefed" className="weekly-card-cta">Visit {week.title} →</a>
             </div>
 
             <div className="weekly-card-body">
@@ -896,22 +960,28 @@ function BlogSection() {
 
 /* ============ App ============ */
 function App() {
+  const [navScrolled, setNavScrolled] = React.useState(false);
+  React.useEffect(() => {
+    const on = () => setNavScrolled(window.scrollY > 50);
+    on();
+    window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, []);
   return (
     <>
-      <nav className="nav">
+      <nav className={`nav ${navScrolled ? 'is-scrolled' : ''}`}>
         <div className="container nav-inner">
           <div className="nav-logo">
             <span className="nav-logo-dot" />
             <span>Aleko</span>
           </div>
           <div className="nav-links">
-            <a href="#tools">All Tools</a>
-            <a href="/blog" target="_top">Blog</a>
-            <a href="/about" target="_top">About</a>
-            <a href="/affiliates" target="_top">Affiliates</a>
-            <a href="#suggest">Suggest</a>
+            <a href="index.html">Home</a>
+            <a href="#tools">Tools</a>
+            <a href="blog.html">Blog</a>
+            <a href="affiliates.html">Affiliates</a>
           </div>
-          <a href="#tools" className="nav-cta">See The Tools →</a>
+          <a href="community.html#suggest" className="nav-cta">Suggest A Tool →</a>
         </div>
       </nav>
 
@@ -993,29 +1063,38 @@ function App() {
             <div className="footer-col">
               <h4>Tools</h4>
               <ul>
-                <li><a href="/essaycloner" target="_top">EssayCloner</a></li>
-                <li><a href="/studyacorn" target="_top">Study Pebble</a></li>
-                <li><a href="/shadowshield" target="_top">AI Shadow Shield</a></li>
-                <li><a href="/trafficguard" target="_top">AI Traffic Guard</a></li>
-                <li><a href="https://apps.apple.com/app/wholefed" target="_blank">Wholefed</a></li>
-                <li><a href="https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833" target="_blank">Feastmate</a></li>
+                <li><a href="tool.html?id=essaycloner">EssayCloner</a></li>
+                <li><a href="tool.html?id=studypebble">Study Pebble</a></li>
+                <li><a href="tool.html?id=shadowshield">AI Shadow Shield</a></li>
+                <li><a href="tool.html?id=trafficguard">AI Traffic Guard</a></li>
+                <li><a href="tool.html?id=wholefed">Wholefed</a></li>
+                <li><a href="tool.html?id=feastmate">Feastmate</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>Site</h4>
               <ul>
-                <li><a href="/about" target="_top">About</a></li>
-                <li><a href="/blog" target="_top">Blog</a></li>
-                <li><a href="/affiliates" target="_top">Affiliates</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="changelog.html">Changelog</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>Partners</h4>
+              <ul>
+                <li><a href="affiliates.html">Affiliate Program</a></li>
+                <li><a href="community.html#suggest">Suggest A Tool</a></li>
+                <li><a href="index.html#building">In Progress</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>Elsewhere</h4>
               <ul>
-                <li><a href="https://tiktok.com/@alekokourtidis" target="_blank">TikTok</a></li>
-                <li><a href="https://instagram.com/alekokourtidis" target="_blank">Instagram</a></li>
-                <li><a href="https://github.com/alekokourtidis" target="_blank">GitHub</a></li>
-                <li><a href="mailto:alekokourtidis@gmail.com">Email</a></li>
+                <li><a href="#">TikTok</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">GitHub</a></li>
+                <li><a href="#">Email</a></li>
               </ul>
             </div>
           </div>
