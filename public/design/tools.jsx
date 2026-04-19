@@ -92,6 +92,21 @@ const DEMO_MAP = {
   flowdebug:    null,
 };
 
+
+const TOOL_URLS = {
+  essaycloner: '/essaycloner',
+  studypebble: '/studyacorn',
+  shadowshield: '/shadowshield',
+  trafficguard: '/trafficguard',
+  wholefed: 'https://apps.apple.com/app/wholefed',
+  feastmate: 'https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833',
+  whowasright: '/whowasright',
+  flowdebug: '/flowdebug',
+  whomealplanner: '/whomealplanner',
+};
+function toolUrl(id) { return TOOL_URLS[id] || '/' + id; }
+function toolTarget(id) { return TOOL_URLS[id]?.startsWith('http') ? '_blank' : '_top'; }
+
 const CATEGORIES = ['All', 'Education', 'Health', 'Security', 'Productivity', 'Relationships', 'iOS Apps'];
 const SORTS = ['Newest', 'Most Popular', 'Price (Low)'];
 
@@ -272,7 +287,7 @@ function FeaturedRow({ tools }) {
                 <div className="tools-feat-meta">
                   {t.platform} · {t.users} users · Launched {fmtDate(t.shipped)}
                 </div>
-                <a href={`tool.html?id=${t.id}`} className="tools-feat-link">Visit →</a>
+                <a href={toolUrl(t.id)} target={toolTarget(t.id)} className="tools-feat-link">Visit →</a>
               </div>
             </CardGlow>
           );
@@ -347,7 +362,7 @@ function ToolRow({ t, index, isOpen, onToggle }) {
               </div>
             </div>
             <a
-              href={`tool.html?id=${t.id}`}
+              href={`/${t.id}`}
               className="tools-row-cta"
               style={{ '--accent': t.accent }}
             >

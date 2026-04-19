@@ -432,17 +432,60 @@ function SuggestForm() {
   const [idea, setIdea] = useState('');
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
-  const ideas = [
-    { t: 'A clipboard manager that uses AI to sort what I copy.', votes: 47, color: '#a78bfa' },
-    { t: 'Spotify but it builds you a playlist from a single mood prompt.', votes: 31, color: '#22c55e' },
-    { t: 'Reminders that actually understand context like "buy milk if I\'m near a store".', votes: 28, color: '#fbbf24' },
-    { t: 'A meeting transcriber that flags only the parts you actually need to do.', votes: 22, color: '#60a5fa' },
-  ];
+  const [ideas, setIdeas] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+  const [votedIds, setVotedIds] = useState(new Set());
+  const [sortBy, setSortBy] = useState('votes');
+
+  const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+  const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+  const sbHeaders = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+  const loadIdeas = () => {
+    const order = sortBy === 'votes' ? 'votes.desc' : 'created_at.desc';
+    const limit = showAll ? 20 : 4;
+    fetch(SB_URL + '/rest/v1/suggestions?status=eq.open&order=' + order + '&limit=' + limit + '&select=id,idea,votes,name,created_at', { headers: sbHeaders })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const colors = ['#a78bfa', '#22c55e', '#fbbf24', '#60a5fa', '#f472b6', '#14b8a6', '#ef4444', '#fb923c'];
+          setIdeas(data.map((d, i) => ({ id: d.id, t: d.idea, votes: d.votes || 0, color: colors[i % colors.length], name: d.name })));
+        }
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => { loadIdeas(); }, [showAll, sortBy]);
+
+  const upvote = (id) => {
+    if (votedIds.has(id)) return;
+    setVotedIds(prev => new Set(prev).add(id));
+    setIdeas(prev => prev.map(s => s.id === id ? { ...s, votes: s.votes + 1 } : s));
+    fetch(SB_URL + '/rest/v1/rpc/increment_vote', {
+      method: 'POST', headers: sbHeaders,
+      body: JSON.stringify({ suggestion_id: id }),
+    }).catch(() => {
+      // Fallback: direct update if RPC doesn't exist
+      const item = ideas.find(s => s.id === id);
+      if (item) {
+        fetch(SB_URL + '/rest/v1/suggestions?id=eq.' + id, {
+          method: 'PATCH', headers: { ...sbHeaders, Prefer: 'return=minimal' },
+          body: JSON.stringify({ votes: item.votes + 1 }),
+        }).catch(() => {});
+      }
+    });
+  };
+
   const submit = (e) => {
     e.preventDefault();
     if (!idea.trim()) return;
-    setSent(true);
-    setTimeout(() => { setSent(false); setName(''); setIdea(''); setEmail(''); }, 3500);
+    fetch(SB_URL + '/rest/v1/suggestions', {
+      method: 'POST', headers: { ...sbHeaders, Prefer: 'return=minimal' },
+      body: JSON.stringify({ name: name.trim() || 'Anonymous', idea: idea.trim(), email: email.trim() || null }),
+    }).then(() => {
+      setSent(true);
+      setTimeout(() => { setSent(false); setName(''); setIdea(''); setEmail(''); loadIdeas(); }, 2500);
+    }).catch(() => { setSent(true); setTimeout(() => setSent(false), 2500); });
   };
   return (
     <section className="section suggest-section" id="suggest">
@@ -461,7 +504,7 @@ function SuggestForm() {
                 <div key={i} className="suggest-row">
                   <div className="suggest-row-bar" style={{ width: `${(s.votes / 50) * 100}%`, background: s.color }} />
                   <span className="suggest-row-text">{s.t}</span>
-                  <span className="suggest-row-votes">{s.votes} ↑</span>
+                  <button onClick={() => upvote(s.id)} style={{background:"none",border:"none",color:votedIds.has(s.id)?"#22c55e":"var(--text-2)",cursor:"pointer",fontWeight:600,fontSize:14,fontFamily:"inherit"}}>{s.votes} {votedIds.has(s.id)?"✓":"↑"}</button>
                 </div>
               ))}
             </div>
