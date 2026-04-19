@@ -187,21 +187,26 @@ const WIP = [
 
 /* ============ Shipping Dashboard ============ */
 function ShippingDashboard() {
-  const liveCount = 8 + daysSince(START_DATE) - 7;
   const [pulse, setPulse] = useState(false);
-  const [count, setCount] = useState(liveCount);
+  const [count, setCount] = useState(8);
 
   useEffect(() => {
-    let n = Math.max(0, liveCount - 4);
-    setCount(n);
-    const id = setInterval(() => {
-      n++;
-      if (n > liveCount) { clearInterval(id); return; }
-      setCount(n);
-      setPulse(true);
-      setTimeout(() => setPulse(false), 400);
-    }, 180);
-    return () => clearInterval(id);
+    // Fetch real tool count from Supabase
+    const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+    const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+    fetch(SB_URL + '/rest/v1/built_projects?status=eq.deployed&select=id', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
+    })
+      .then(r => r.json())
+      .then(data => {
+        // Add 6 for manually-built tools (essaycloner, studypebble, shadowshield, trafficguard, wholefed, feastmate)
+        const pipelineCount = Array.isArray(data) ? data.length : 0;
+        const total = Math.max(8, 6 + pipelineCount);
+        setCount(total);
+        setPulse(true);
+        setTimeout(() => setPulse(false), 400);
+      })
+      .catch(() => {});
   }, []);
 
   // 14-day commit heatmap (your contribution graph)
@@ -215,15 +220,62 @@ function ShippingDashboard() {
     return `oklch(${0.55 + t * 0.2} ${0.12 + t * 0.08} ${250 - t * 200})`;
   };
 
-  // simulated activity feed
-  const activity = [
-    { t: '2m', label: 'Tabby Build', kind: 'compile', detail: '#1842 Passed In 12.4s' },
-    { t: '1h', label: 'Feastmate', kind: 'deploy', detail: 'iOS Build 2.1.4 Pushed' },
-    { t: '4h', label: 'Study Pebble', kind: 'commit', detail: '+382 / −41 Across 14 Files' },
-    { t: '6h', label: 'EssayCloner', kind: 'metric', detail: 'New User #4,127' },
-    { t: 'Yesterday', label: 'Wholefed', kind: 'deploy', detail: 'iOS Build 1.8.0 Pushed' },
-  ];
-  const kindColor = { compile: '#fbbf24', deploy: '#22c55e', commit: '#60a5fa', metric: '#a78bfa' };
+  // Live activity feed from Supabase
+  const [activity, setActivity] = useState([]);
+  const kindColor = { build: '#fbbf24', deploy: '#22c55e', evaluate: '#60a5fa', blog: '#a78bfa', scout: '#22d3ee' };
+
+  useEffect(() => {
+    const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+    const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+    const headers = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+
+    // Fetch last 5 agent runs
+    fetch(SB_URL + '/rest/v1/agent_runs?order=started_at.desc&limit=8&select=agent,status,stats,started_at', { headers })
+      .then(r => r.json())
+      .then(runs => {
+        if (!Array.isArray(runs)) return;
+        const items = runs.map(r => {
+          const ago = Math.floor((Date.now() - new Date(r.started_at).getTime()) / 60000);
+          const t = ago < 60 ? ago + 'm' : ago < 1440 ? Math.floor(ago/60) + 'h' : 'Yesterday';
+          const stats = r.stats || {};
+          let detail = r.status === 'completed' ? 'Completed' : r.status;
+          if (r.agent === 'scout') detail = (stats.stored || stats.found || 0) + ' problems found';
+          else if (r.agent === 'builder') detail = (stats.built || 0) + ' MVPs built';
+          else if (r.agent === 'publisher') detail = (stats.deployed || 0) + ' deployed';
+          else if (r.agent === 'evaluator') detail = (stats.evaluated || 0) + ' evaluated';
+          else if (r.agent === 'blog-writer') detail = (stats.written || 0) + ' posts written';
+          const kind = r.agent === 'builder' ? 'build' : r.agent === 'publisher' ? 'deploy' : r.agent === 'evaluator' ? 'evaluate' : r.agent === 'blog-writer' ? 'blog' : 'scout';
+          return { t, label: r.agent.charAt(0).toUpperCase() + r.agent.slice(1).replace('-', ' '), kind, detail: detail.charAt(0).toUpperCase() + detail.slice(1) };
+        });
+        setActivity(items);
+      })
+      .catch(() => {});
+
+    // Refresh every 30s
+    const id = setInterval(() => {
+      fetch(SB_URL + '/rest/v1/agent_runs?order=started_at.desc&limit=8&select=agent,status,stats,started_at', { headers })
+        .then(r => r.json())
+        .then(runs => {
+          if (!Array.isArray(runs)) return;
+          const items = runs.map(r => {
+            const ago = Math.floor((Date.now() - new Date(r.started_at).getTime()) / 60000);
+            const t = ago < 60 ? ago + 'm' : ago < 1440 ? Math.floor(ago/60) + 'h' : 'Yesterday';
+            const stats = r.stats || {};
+            let detail = r.status === 'completed' ? 'Completed' : r.status;
+            if (r.agent === 'scout') detail = (stats.stored || stats.found || 0) + ' problems found';
+            else if (r.agent === 'builder') detail = (stats.built || 0) + ' MVPs built';
+            else if (r.agent === 'publisher') detail = (stats.deployed || 0) + ' deployed';
+            else if (r.agent === 'evaluator') detail = (stats.evaluated || 0) + ' evaluated';
+            else if (r.agent === 'blog-writer') detail = (stats.written || 0) + ' posts written';
+            const kind = r.agent === 'builder' ? 'build' : r.agent === 'publisher' ? 'deploy' : r.agent === 'evaluator' ? 'evaluate' : r.agent === 'blog-writer' ? 'blog' : 'scout';
+            return { t, label: r.agent.charAt(0).toUpperCase() + r.agent.slice(1).replace('-', ' '), kind, detail: detail.charAt(0).toUpperCase() + detail.slice(1) };
+          });
+          setActivity(items);
+        })
+        .catch(() => {});
+    }, 30000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="dash">
@@ -306,15 +358,29 @@ const UPDATE_TOOL_COLOR = {
   'Feastmate':     '#fb923c',
   'Core':          '#9ca3af',
 };
-const RECENT_UPDATES = [
-  { date: 'Apr 19', tool: 'Feastmate',     tag: 'FEATURE', text: 'Macro solver respects "don\'t want" ingredients without breaking the budget.' },
-  { date: 'Apr 19', tool: 'Study Pebble',  tag: 'FIX',     text: 'Streak counter stopped resetting on Safari private windows.' },
-  { date: 'Apr 18', tool: 'Shadow Shield', tag: 'FEATURE', text: 'Proof-of-shield screenshot mode ships without revealing the source.' },
-  { date: 'Apr 18', tool: 'EssayCloner',   tag: 'FIX',     text: 'Voice match score updates after every paragraph, not only at the end.' },
-  { date: 'Apr 17', tool: 'Traffic Guard', tag: 'UPDATE',  text: 'Threshold slider is logarithmic. 1 to 1000 fits on one row.' },
-  { date: 'Apr 17', tool: 'Core',          tag: 'UPDATE',  text: 'Rewrote the community voting board. Votes reorder live instead of on reload.' },
-  { date: 'Apr 16', tool: 'EssayCloner',   tag: 'LAUNCH',  text: 'Tones v2 is live. Three sliders replace the old ten checkboxes.' },
-];
+// Fetch recent builds/deploys from Supabase as updates
+let RECENT_UPDATES = [];
+(function loadUpdates() {
+  const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+  const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+  fetch(SB_URL + '/rest/v1/built_projects?status=eq.deployed&order=created_at.desc&limit=10&select=project_name,tagline,created_at', {
+    headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
+  })
+    .then(r => r.json())
+    .then(builds => {
+      if (!Array.isArray(builds)) return;
+      RECENT_UPDATES = builds.map(b => {
+        const d = new Date(b.created_at);
+        return {
+          date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          tool: (b.project_name || '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+          tag: 'LAUNCH',
+          text: b.tagline || 'New tool shipped',
+        };
+      });
+    })
+    .catch(() => {});
+})();
 
 function RecentUpdates() {
   return (
