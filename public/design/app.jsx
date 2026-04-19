@@ -177,6 +177,14 @@ const TOOLS = [
     users: '89', shipped: '2026-04-16',
     accent: '#14b8a6', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'Scan: 3 workflows · 1 failure detected'); },
   },
+  {
+    id: 'whomealplanner', title: 'WHO Meal Planner', price: '$4.99 / Mo',
+    cat: 'Health',
+    tag: 'Converts WHO nutrition guidelines into personalized weekly meal plans with grocery lists.',
+    meta: 'Web · Launched April 2026',
+    users: '0', shipped: '2026-04-19',
+    accent: '#22c55e', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'Mon: Grilled salmon + quinoa · 2,100 cal · $8.40'); },
+  },
 ];
 
 const WIP = [
@@ -671,28 +679,26 @@ function ToolLibrary() {
 /* ============ Weekly Community Build ============ */
 function WeeklyCommunity() {
   const week = {
-    weekNum: 16,
-    range: 'Apr 13 – Apr 19',
-    title: 'Wholefed',
-    tagline: 'Snap a photo of your meal, get a real health read beyond calories.',
-    pitch: '"I have celiac and every calorie tracker I try makes me feel like a robot. I just want to know if what I\'m about to eat is actually good for me, not a macro breakdown I\'ll ignore. Please build something that just tells me the vibe of the meal."',
-    pitchedBy: '@mara_eats',
-    pitchedOn: 'Apr 2, 2026',
-    votes: 184,
-    chosen: 'Apr 13',
-    shipped: 'Apr 15',
+    weekNum: 2,
+    range: 'Apr 14 – Apr 19',
+    title: 'WHO Meal Planner',
+    tagline: 'Converts WHO nutrition guidelines into personalized weekly meal plans.',
+    pitch: '"I want to eat healthier based on WHO guidelines but I have no idea how to actually turn those recommendations into meals I can cook. Every influencer says something different and I just want something I can trust."',
+    pitchedBy: '@nutrition_sarah',
+    pitchedOn: 'Apr 14, 2026',
+    votes: 96,
+    chosen: 'Apr 17',
+    shipped: 'Apr 19',
     accent: '#22c55e',
     thread: [
-      { from: '@mara_eats', when: 'Apr 2', text: 'Original pitch. 23 upvotes overnight.' },
-      { from: 'aleko', when: 'Apr 12', text: 'Chose this for the week. The celiac angle made it. Rolling into Monday.' },
-      { from: '@mara_eats', when: 'Apr 15', text: 'Got the TestFlight invite. Holy crap it actually works.' },
+      { from: '@nutrition_sarah', when: 'Apr 14', text: 'Original pitch. 12 upvotes in the first day.' },
+      { from: 'aleko', when: 'Apr 17', text: 'Picked this one. WHO guidelines are trusted and nobody has made a simple tool for it.' },
+      { from: '@nutrition_sarah', when: 'Apr 19', text: 'Just tried it. This is exactly what I needed.' },
     ],
   };
 
   const past = [
-    { week: 15, title: 'Traffic Guard Threshold', by: '@ceo_jen', accent: '#60a5fa' },
-    { week: 14, title: 'Voice Match For EssayCloner', by: '@hschooler22', accent: '#a78bfa' },
-    { week: 13, title: 'Macro Lock On Feastmate', by: '@gym_raf', accent: '#f472b6' },
+    { week: 1, title: 'Wholefed', by: '@mara_eats', accent: '#22c55e' },
   ];
 
   return (
@@ -1138,45 +1144,41 @@ function App() {
                 <span className="nav-logo-dot" />
                 <span>Aleko</span>
               </div>
-              <p className="footer-tagline" style={{ marginTop: 18 }}>
-                Small, Sharp AI Tools Built By One Person.
+              <p className="footer-tagline">
+                Small, sharp AI tools.<br/>Shipped solo, from my bedroom.
               </p>
             </div>
             <div className="footer-col">
               <h4>Tools</h4>
               <ul>
-                <li><a href="tool.html?id=essaycloner">EssayCloner</a></li>
-                <li><a href="tool.html?id=studypebble">Study Pebble</a></li>
-                <li><a href="tool.html?id=shadowshield">AI Shadow Shield</a></li>
-                <li><a href="tool.html?id=trafficguard">AI Traffic Guard</a></li>
-                <li><a href="tool.html?id=wholefed">Wholefed</a></li>
-                <li><a href="tool.html?id=feastmate">Feastmate</a></li>
+                <li><a href="/essaycloner" target="_top">EssayCloner</a></li>
+                <li><a href="/studyacorn" target="_top">Study Pebble</a></li>
+                <li><a href="/shadowshield" target="_top">AI Shadow Shield</a></li>
+                <li><a href="/trafficguard" target="_top">AI Traffic Guard</a></li>
+                <li><a href="/whowasright" target="_top">WhoWasRight</a></li>
+                <li><a href="/whomealplanner" target="_top">WHO Meal Planner</a></li>
+                <li><a href="/flowdebug" target="_top">FlowDebug</a></li>
+                <li style={{marginTop:8}}><a href="/tools" target="_top" style={{color:'var(--text-2)',fontWeight:600}}>All Tools →</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>Site</h4>
               <ul>
-                <li><a href="about.html">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="community.html">Community</a></li>
-                <li><a href="changelog.html">Changelog</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h4>Partners</h4>
-              <ul>
-                <li><a href="affiliates.html">Affiliate Program</a></li>
-                <li><a href="community.html#suggest">Suggest A Tool</a></li>
-                <li><a href="index.html#building">In Progress</a></li>
+                <li><a href="/about" target="_top">About</a></li>
+                <li><a href="/blog" target="_top">Blog</a></li>
+                <li><a href="/affiliates" target="_top">Affiliates</a></li>
+                <li><a href="/community" target="_top">Community</a></li>
+                <li><a href="/changelog" target="_top">Changelog</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>Elsewhere</h4>
               <ul>
-                <li><a href="#">TikTok</a></li>
-                <li><a href="#">Instagram</a></li>
-                <li><a href="#">GitHub</a></li>
-                <li><a href="#">Email</a></li>
+                <li><a href="https://tiktok.com/@alekokourtidis" target="_blank">TikTok</a></li>
+                <li><a href="https://instagram.com/alekokourtidis" target="_blank">Instagram</a></li>
+                <li><a href="https://youtube.com/@alekokourtidis" target="_blank">YouTube</a></li>
+                <li><a href="https://github.com/alekokourtidis" target="_blank">GitHub</a></li>
+                <li><a href="mailto:alekokourtidis@gmail.com">Email</a></li>
               </ul>
             </div>
           </div>

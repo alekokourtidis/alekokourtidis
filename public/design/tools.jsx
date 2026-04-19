@@ -71,6 +71,14 @@ const ALL_TOOLS = [
     users: '89', usersNum: 89, shipped: '2026-04-16',
     accent: '#14b8a6',
   },
+  {
+    id: 'whomealplanner', title: 'WHO Meal Planner', price: '$4.99 / Mo', priceNum: 4.99,
+    cat: 'Health', platform: 'Web',
+    tag: 'Converts WHO nutrition guidelines into personalized weekly meal plans with grocery lists and cost estimates.',
+    desc: 'Paste your dietary restrictions and goals. AI generates a 7-day meal plan following WHO guidelines with a grocery list and estimated weekly cost.',
+    users: '0', usersNum: 0, shipped: '2026-04-19',
+    accent: '#22c55e',
+  },
 ];
 
 const DEMO_MAP = {
