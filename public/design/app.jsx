@@ -122,7 +122,7 @@ const TOOLS = [
     accent: '#a78bfa', Demo: window.EssayClonerDemo,
   },
   {
-    id: 'studypebble', title: 'Study Pebble', price: '$14.99 / Mo',
+    id: 'studyacorn', title: 'Study Pebble', price: '$14.99 / Mo',
     cat: 'Education',
     tag: 'AP and SAT prep that adjusts to what you keep getting wrong. Free response answers get scored against the actual rubric.',
     meta: 'Web · Launched April 2026', cls: 'card-feat-2',
@@ -425,7 +425,7 @@ function ToolLibrary() {
                 <div className="card-demo"><t.Demo /></div>
                 <div className="card-footer">
                   <div className="card-meta">{t.meta} · {t.users} Users</div>
-                  <a className="card-link" href="#">Visit →</a>
+                  <a className="card-link" href={'/' + t.id} target="_top">Visit →</a>
                 </div>
               </CardGlow>
             </Reveal>
@@ -509,7 +509,7 @@ function ToolLibrary() {
                           <span className="lib-row-meta-val" style={{ color: t.accent }}>Community Pick</span>
                         </div>
                       )}
-                      <a href="#" className="lib-row-cta">Visit {t.title} →</a>
+                      <a href={'/' + t.id} target="_top" className="lib-row-cta">Visit {t.title} →</a>
                     </div>
                   </div>
                 </div>
@@ -588,7 +588,7 @@ function WeeklyCommunity() {
                 <div className="weekly-card-title">{week.title}</div>
                 <div className="weekly-card-tagline">{week.tagline}</div>
               </div>
-              <a href="#" className="weekly-card-cta">Visit {week.title} →</a>
+              <a href="/wholefed" target="_top" className="weekly-card-cta">Visit {week.title} →</a>
             </div>
 
             <div className="weekly-card-body">
@@ -905,10 +905,10 @@ function App() {
             <span>Aleko</span>
           </div>
           <div className="nav-links">
-            <a href="#tools">Tools</a>
-            <a href="#community">Community</a>
-            <a href="blog.html">Writing</a>
-            <a href="#building">Editor</a>
+            <a href="#tools">All Tools</a>
+            <a href="/blog" target="_top">Blog</a>
+            <a href="/about" target="_top">About</a>
+            <a href="/affiliates" target="_top">Affiliates</a>
             <a href="#suggest">Suggest</a>
           </div>
           <a href="#tools" className="nav-cta">See The Tools →</a>
@@ -993,30 +993,29 @@ function App() {
             <div className="footer-col">
               <h4>Tools</h4>
               <ul>
-                <li><a href="#">EssayCloner</a></li>
-                <li><a href="#">Study Pebble</a></li>
-                <li><a href="#">AI Shadow Shield</a></li>
-                <li><a href="#">AI Traffic Guard</a></li>
-                <li><a href="#">Wholefed</a></li>
-                <li><a href="#">Feastmate</a></li>
+                <li><a href="/essaycloner" target="_top">EssayCloner</a></li>
+                <li><a href="/studyacorn" target="_top">Study Pebble</a></li>
+                <li><a href="/shadowshield" target="_top">AI Shadow Shield</a></li>
+                <li><a href="/trafficguard" target="_top">AI Traffic Guard</a></li>
+                <li><a href="https://apps.apple.com/app/wholefed" target="_blank">Wholefed</a></li>
+                <li><a href="https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833" target="_blank">Feastmate</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>Site</h4>
               <ul>
-                <li><a href="#">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="#">Affiliates</a></li>
-                <li><a href="#">Changelog</a></li>
+                <li><a href="/about" target="_top">About</a></li>
+                <li><a href="/blog" target="_top">Blog</a></li>
+                <li><a href="/affiliates" target="_top">Affiliates</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>Elsewhere</h4>
               <ul>
-                <li><a href="#">TikTok</a></li>
-                <li><a href="#">Instagram</a></li>
-                <li><a href="#">GitHub</a></li>
-                <li><a href="#">Email</a></li>
+                <li><a href="https://tiktok.com/@alekokourtidis" target="_blank">TikTok</a></li>
+                <li><a href="https://instagram.com/alekokourtidis" target="_blank">Instagram</a></li>
+                <li><a href="https://github.com/alekokourtidis" target="_blank">GitHub</a></li>
+                <li><a href="mailto:alekokourtidis@gmail.com">Email</a></li>
               </ul>
             </div>
           </div>
