@@ -1,0 +1,1034 @@
+const { useState, useEffect, useRef } = React;
+
+/* ============ Cycling tool name (hero) ============ */
+function MorphingWord() {
+  const words = [
+    'Essays in Your Voice',
+    'Adaptive Study Guides',
+    'AI Privacy Shields',
+    'SEO Decay Reports',
+    'Food Intelligence',
+    'Macro-Precise Recipes',
+  ];
+  const [i, setI] = useState(0);
+  const [shown, setShown] = useState('');
+  const [phase, setPhase] = useState('typing');
+
+  useEffect(() => {
+    const target = words[i];
+    let id;
+    if (phase === 'typing') {
+      if (shown.length < target.length) {
+        id = setTimeout(() => setShown(target.slice(0, shown.length + 1)), 38);
+      } else {
+        id = setTimeout(() => setPhase('hold'), 1600);
+      }
+    } else if (phase === 'hold') {
+      id = setTimeout(() => setPhase('deleting'), 500);
+    } else if (phase === 'deleting') {
+      if (shown.length > 0) {
+        id = setTimeout(() => setShown(shown.slice(0, -1)), 22);
+      } else {
+        setI((i + 1) % words.length);
+        setPhase('typing');
+      }
+    }
+    return () => clearTimeout(id);
+  }, [shown, phase, i]);
+
+  return <span className="morph">{shown || '\u00A0'}</span>;
+}
+
+/* ============ Days-since counter ============ */
+const START_DATE = '2026-04-11'; // a week ago, +1 tool per day
+function daysSince(from) {
+  const start = new Date(from);
+  return Math.max(0, Math.floor((Date.now() - start.getTime()) / (1000 * 60 * 60 * 24)));
+}
+function DaysSince({ from }) {
+  const [days, setDays] = useState(daysSince(from));
+  useEffect(() => {
+    const id = setInterval(() => setDays(daysSince(from)), 60_000);
+    return () => clearInterval(id);
+  }, [from]);
+  return <span>{days.toLocaleString()}</span>;
+}
+
+/* ============ Cards: glow-following ============ */
+function CardGlow({ children, className, accent }) {
+  const ref = useRef(null);
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  };
+  return (
+    <div ref={ref} className={className} onMouseMove={onMove} style={accent ? { '--accent': accent } : {}}>
+      {children}
+    </div>
+  );
+}
+
+/* ============ Reveal-on-scroll wrapper ============ */
+function Reveal({ children, delay = 0, as: Tag = 'div', className = '', style = {} }) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) {
+      // no ref yet, just reveal
+      const t = setTimeout(() => setShown(true), delay);
+      return () => clearTimeout(t);
+    }
+    const reveal = () => setTimeout(() => setShown(true), delay);
+    const r = el.getBoundingClientRect();
+    // if already visible or already scrolled past, reveal immediately
+    if (r.top < window.innerHeight + 200) {
+      reveal();
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          reveal();
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.01, rootMargin: '0px 0px 10% 0px' });
+    io.observe(el);
+    // hard fallback — always reveal within 1.5s no matter what
+    const fallback = setTimeout(() => setShown(true), 1500 + delay);
+    return () => { io.disconnect(); clearTimeout(fallback); };
+  }, [delay]);
+  const inlineStyle = {
+    ...style,
+    opacity: shown ? 1 : 0,
+    transform: shown ? 'translateY(0)' : 'translateY(20px)',
+    transition: 'opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)',
+  };
+  return <Tag ref={ref} className={className} style={inlineStyle}>{children}</Tag>;
+}
+
+/* ============ Tool data ============ */
+const TOOLS = [
+  {
+    id: 'essaycloner', title: 'EssayCloner', price: '$1.99 / Mo',
+    cat: 'Education',
+    tag: 'Feed it three of your old essays. It learns how you actually write and drafts new ones that don\'t sound like ChatGPT.',
+    meta: 'Web · Launched April 2026', cls: 'card-feat-1',
+    featured: true, users: '4.1k', shipped: '2026-04-11',
+    accent: '#a78bfa', Demo: window.EssayClonerDemo,
+  },
+  {
+    id: 'studypebble', title: 'Study Pebble', price: '$14.99 / Mo',
+    cat: 'Education',
+    tag: 'AP and SAT prep that adjusts to what you keep getting wrong. Free response answers get scored against the actual rubric.',
+    meta: 'Web · Launched April 2026', cls: 'card-feat-2',
+    featured: true, users: '2.4k', shipped: '2026-04-12',
+    accent: '#fbbf24', Demo: window.StudyAcornDemo,
+  },
+  {
+    id: 'shadowshield', title: 'AI Shadow Shield', price: '$19 / Mo',
+    cat: 'Security',
+    tag: 'Quietly checks the apps you use at work. Tells you if your company is feeding what you write into a model.',
+    meta: 'Web · Launched April 2026',
+    users: '860', shipped: '2026-04-13',
+    accent: '#ef4444', Demo: window.ShadowShieldDemo,
+  },
+  {
+    id: 'trafficguard', title: 'AI Traffic Guard', price: '$29 / Mo',
+    cat: 'Productivity',
+    tag: 'Watches your top keywords and flags the ones Google AI Overviews are eating. Rewrite before the traffic goes.',
+    meta: 'Web · Launched April 2026',
+    users: '412', shipped: '2026-04-14',
+    accent: '#60a5fa', Demo: window.TrafficGuardDemo,
+  },
+  {
+    id: 'wholefed', title: 'Wholefed', price: 'Free · iOS',
+    cat: 'Health',
+    tag: 'Take a photo of what you\'re about to eat. Get back a real read on it, not just a calorie number.',
+    meta: 'iOS · Launched April 2026',
+    users: '11.2k', shipped: '2026-04-15', community: true,
+    accent: '#22c55e', Demo: window.WholefedDemo,
+  },
+  {
+    id: 'feastmate', title: 'Feastmate', price: '$4.99 / Mo',
+    cat: 'Health',
+    tag: 'Plug in your macro targets. Get back a real recipe that hits them, not a vague suggestion you have to math out.',
+    meta: 'iOS · Launched April 2026',
+    users: '1.8k', shipped: '2026-04-16',
+    accent: '#f472b6', Demo: window.FeastmateDemo,
+  },
+];
+
+const WIP = [
+  { tag: 'Shipping This Week', title: 'Tabby', desc: 'My tabs got out of hand. So I\'m building a thing that summarizes them and closes the dead ones for me.', pct: 78, eta: 'Friday', accent: '#fbbf24', icon: '⌘' },
+  { tag: 'Building', title: 'Quietmail', desc: 'I hate getting pinged for things that aren\'t urgent. This batches the noise and only surfaces what actually matters.', pct: 41, eta: 'May', accent: '#60a5fa', icon: '✉' },
+  { tag: 'Sketching', title: 'Loom For Money', desc: 'I want to see where my money actually goes without setting up 14 categories. Still figuring out the shape of it.', pct: 12, eta: 'Q3', accent: '#22c55e', icon: '$' },
+];
+
+/* ============ Shipping Dashboard ============ */
+function ShippingDashboard() {
+  const liveCount = 6 + daysSince(START_DATE) - 7;
+  const [pulse, setPulse] = useState(false);
+  const [count, setCount] = useState(liveCount);
+
+  useEffect(() => {
+    let n = Math.max(0, liveCount - 4);
+    setCount(n);
+    const id = setInterval(() => {
+      n++;
+      if (n > liveCount) { clearInterval(id); return; }
+      setCount(n);
+      setPulse(true);
+      setTimeout(() => setPulse(false), 400);
+    }, 180);
+    return () => clearInterval(id);
+  }, []);
+
+  // 14-day commit heatmap (your contribution graph)
+  const days = 14;
+  const heat = [3, 5, 2, 7, 4, 8, 6, 11, 9, 5, 12, 7, 14, 9];
+  const maxHeat = Math.max(...heat);
+  const heatColor = (v) => {
+    if (v === 0) return 'rgba(255,255,255,0.04)';
+    const t = v / maxHeat;
+    // cool blue → warm orange as commits ramp
+    return `oklch(${0.55 + t * 0.2} ${0.12 + t * 0.08} ${250 - t * 200})`;
+  };
+
+  // simulated activity feed
+  const activity = [
+    { t: '2m', label: 'Tabby Build', kind: 'compile', detail: '#1842 Passed In 12.4s' },
+    { t: '1h', label: 'Feastmate', kind: 'deploy', detail: 'iOS Build 2.1.4 Pushed' },
+    { t: '4h', label: 'Study Pebble', kind: 'commit', detail: '+382 / −41 Across 14 Files' },
+    { t: '6h', label: 'EssayCloner', kind: 'metric', detail: 'New User #4,127' },
+    { t: 'Yesterday', label: 'Wholefed', kind: 'deploy', detail: 'iOS Build 1.8.0 Pushed' },
+  ];
+  const kindColor = { compile: '#fbbf24', deploy: '#22c55e', commit: '#60a5fa', metric: '#a78bfa' };
+
+  return (
+    <div className="dash">
+      <div className="dash-row">
+        <div className="dash-stat dash-stat-hero">
+          <div className="dash-stat-label">
+            <span className="pulse-green" /> Tools Shipped
+          </div>
+          <div className={`dash-stat-value ${pulse ? 'pulsing' : ''}`}>
+            {count}
+          </div>
+          <div className="dash-stat-sub">+1 Per Day, Every Day</div>
+        </div>
+
+        <div className="dash-divider" />
+
+        <div className="dash-stat">
+          <div className="dash-stat-label">Days Building</div>
+          <div className="dash-stat-value-sm"><DaysSince from={START_DATE} /></div>
+          <div className="dash-stat-sub">Since First Launch</div>
+        </div>
+
+        <div className="dash-heatmap">
+          <div className="dash-stat-label" style={{ marginBottom: 10 }}>Commits · Last 14d</div>
+          <div className="heat-grid">
+            {heat.map((v, i) => (
+              <div key={i}
+                className="heat-cell"
+                style={{ background: heatColor(v), animationDelay: `${i * 35}ms` }}
+                title={`${v} commits`}>
+                <span className="heat-tip">{v}</span>
+              </div>
+            ))}
+          </div>
+          <div className="dash-stat-sub" style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
+            <span>{heat.reduce((a,b) => a+b, 0)} Total</span>
+            <span style={{ color: '#fb923c' }}>↑ Trending</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dash-feed">
+        <div className="dash-feed-header">
+          <span className="section-label" style={{ margin: 0 }}>
+            <span className="pulse-green" /> Live Activity
+          </span>
+          <span style={{ fontSize: 11, color: 'var(--text-3)' }}>Auto-Refreshing</span>
+        </div>
+        <div className="dash-feed-list">
+          {activity.map((a, i) => (
+            <div key={i} className="dash-feed-row" style={{ animationDelay: `${i * 60}ms` }}>
+              <span className="dash-feed-dot" style={{ background: kindColor[a.kind] }} />
+              <span className="dash-feed-time">{a.t}</span>
+              <span className="dash-feed-label">{a.label}</span>
+              <span className="dash-feed-detail">{a.detail}</span>
+              <span className="dash-feed-kind" style={{ color: kindColor[a.kind] }}>{a.kind.toUpperCase()}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============ Suggestion Form ============ */
+function SuggestForm() {
+  const [name, setName] = useState('');
+  const [idea, setIdea] = useState('');
+  const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
+  const ideas = [
+    { t: 'A clipboard manager that uses AI to sort what I copy.', votes: 47, color: '#a78bfa' },
+    { t: 'Spotify but it builds you a playlist from a single mood prompt.', votes: 31, color: '#22c55e' },
+    { t: 'Reminders that actually understand context like "buy milk if I\'m near a store".', votes: 28, color: '#fbbf24' },
+    { t: 'A meeting transcriber that flags only the parts you actually need to do.', votes: 22, color: '#60a5fa' },
+  ];
+  const submit = (e) => {
+    e.preventDefault();
+    if (!idea.trim()) return;
+    setSent(true);
+    setTimeout(() => { setSent(false); setName(''); setIdea(''); setEmail(''); }, 3500);
+  };
+  return (
+    <section className="section suggest-section" id="suggest">
+      <div className="container">
+        <div className="suggest-grid">
+          <Reveal>
+            <div className="section-label">Your Turn</div>
+            <h2 className="section-title">Tell Me What To Build Next.</h2>
+            <p className="section-desc">
+              I read every one. The most-voted idea each month gets prototyped on stream.
+              No catch, no marketing list.
+            </p>
+            <div className="suggest-poll">
+              <div className="suggest-poll-label">Top Voted Right Now</div>
+              {ideas.map((s, i) => (
+                <div key={i} className="suggest-row">
+                  <div className="suggest-row-bar" style={{ width: `${(s.votes / 50) * 100}%`, background: s.color }} />
+                  <span className="suggest-row-text">{s.t}</span>
+                  <span className="suggest-row-votes">{s.votes} ↑</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <form className={`suggest-form ${sent ? 'sent' : ''}`} onSubmit={submit}>
+              <div className="suggest-form-head">
+                <span className="suggest-form-tag">Suggest A Tool</span>
+                <span className="suggest-form-meta">Anonymous · Free</span>
+              </div>
+              <label className="suggest-field">
+                <span>Your Name <em>(Optional)</em></span>
+                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Anonymous Hero" />
+              </label>
+              <label className="suggest-field">
+                <span>What Should I Build?</span>
+                <textarea
+                  rows="4"
+                  value={idea}
+                  onChange={e => setIdea(e.target.value)}
+                  placeholder="Describe the problem first. What annoys you. Then what you wish existed."
+                  required
+                />
+                <span className="suggest-counter">{idea.length} / 280</span>
+              </label>
+              <label className="suggest-field">
+                <span>Email <em>(So I Can Tell You If I Build It)</em></span>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@somewhere.com" />
+              </label>
+              <button type="submit" className="suggest-submit" disabled={sent}>
+                {sent ? '✓ Got It. I\'ll Read This Tonight.' : 'Send The Idea →'}
+              </button>
+            </form>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============ Tool Library (scalable) ============ */
+function ToolLibrary() {
+  const [cat, setCat] = useState('All');
+  const [sort, setSort] = useState('Newest');
+  const [expanded, setExpanded] = useState(null);
+  const [query, setQuery] = useState('');
+
+  const cats = ['All', 'Education', 'Health', 'Security', 'Productivity', 'Community Picks'];
+
+  const featured = TOOLS.filter(t => t.featured);
+  const rest = TOOLS.filter(t => !t.featured);
+
+  let filteredRest = rest.filter(t => {
+    if (cat === 'All') return true;
+    if (cat === 'Community Picks') return t.community;
+    return t.cat === cat;
+  });
+  if (query) {
+    const q = query.toLowerCase();
+    filteredRest = filteredRest.filter(t =>
+      t.title.toLowerCase().includes(q) ||
+      t.tag.toLowerCase().includes(q) ||
+      t.cat.toLowerCase().includes(q)
+    );
+  }
+  if (sort === 'Newest') {
+    filteredRest = [...filteredRest].sort((a, b) => b.shipped.localeCompare(a.shipped));
+  } else if (sort === 'Popular') {
+    const toNum = (u) => parseFloat(u) * (u.includes('k') ? 1000 : 1);
+    filteredRest = [...filteredRest].sort((a, b) => toNum(b.users) - toNum(a.users));
+  }
+
+  const catCount = (c) => {
+    if (c === 'All') return rest.length;
+    if (c === 'Community Picks') return rest.filter(t => t.community).length;
+    return rest.filter(t => t.cat === c).length;
+  };
+
+  return (
+    <section className="section section-library" id="tools">
+      <div className="container">
+        <Reveal>
+          <div className="lib-head">
+            <div>
+              <div className="section-label">Tool Library</div>
+              <h2 className="section-title">The Stuff People Are Actually Paying For.</h2>
+              <p className="section-desc">
+                I ship a new tool every day, so this list keeps growing. Two featured up top, the rest in the library below. Filter, search, expand the ones you want to see working.
+              </p>
+            </div>
+            <div className="lib-counter">
+              <div className="lib-counter-num">{TOOLS.length}</div>
+              <div className="lib-counter-label">Live Tools<br/>And Counting</div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* FEATURED */}
+        <div className="lib-featured-label">
+          <span className="section-label" style={{ margin: 0 }}>Featured Tools</span>
+          <span className="lib-divider-line" />
+          <span className="lib-featured-count">2 Of {TOOLS.length}</span>
+        </div>
+        <div className="lib-featured">
+          {featured.map((t, i) => (
+            <Reveal key={t.id} delay={i * 60} className={`card card-feat-${i + 1}`}>
+              <CardGlow className="card-inner" accent={t.accent}>
+                <span className="card-accent" />
+                <div className="card-head">
+                  <div className="card-title">{t.title}</div>
+                  <div className="card-price">{t.price}</div>
+                </div>
+                <div className="card-tagline">{t.tag}</div>
+                <div className="card-demo"><t.Demo /></div>
+                <div className="card-footer">
+                  <div className="card-meta">{t.meta} · {t.users} Users</div>
+                  <a className="card-link" href="#">Visit →</a>
+                </div>
+              </CardGlow>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* CONTROLS */}
+        <Reveal delay={60}>
+          <div className="lib-controls">
+            <div className="lib-cats">
+              {cats.map(c => (
+                <button key={c} className={`lib-cat ${cat === c ? 'active' : ''}`} onClick={() => { setCat(c); setExpanded(null); }}>
+                  {c}
+                  <span className="lib-cat-count">{catCount(c)}</span>
+                </button>
+              ))}
+            </div>
+            <div className="lib-controls-right">
+              <div className="lib-search">
+                <span className="lib-search-icon">⌕</span>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="Search tools..."
+                />
+              </div>
+              <div className="lib-sort">
+                {['Newest', 'Popular'].map(s => (
+                  <button key={s} className={`lib-sort-btn ${sort === s ? 'active' : ''}`} onClick={() => setSort(s)}>
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* LIBRARY ROWS */}
+        <div className="lib-rows">
+          {filteredRest.length === 0 && (
+            <div className="lib-empty">No tools match that. Try a different filter.</div>
+          )}
+          {filteredRest.map((t, i) => {
+            const isOpen = expanded === t.id;
+            return (
+              <Reveal key={t.id} delay={i * 40} className={`lib-row ${isOpen ? 'open' : ''}`} style={{ '--accent': t.accent }}>
+                <button className="lib-row-head" onClick={() => setExpanded(isOpen ? null : t.id)}>
+                  <span className="lib-row-dot" style={{ background: t.accent }} />
+                  <div className="lib-row-title-col">
+                    <div className="lib-row-title">{t.title}</div>
+                    <div className="lib-row-tag">{t.tag}</div>
+                  </div>
+                  <div className="lib-row-cat" style={{ color: t.accent, borderColor: t.accent + '40' }}>
+                    {t.cat}
+                  </div>
+                  <div className="lib-row-users">
+                    <span className="lib-row-users-num">{t.users}</span>
+                    <span className="lib-row-users-label">Users</span>
+                  </div>
+                  <div className="lib-row-price">{t.price}</div>
+                  <div className="lib-row-chev">{isOpen ? '▾' : '▸'}</div>
+                </button>
+                <div className="lib-row-body" style={{ maxHeight: isOpen ? 480 : 0 }}>
+                  <div className="lib-row-body-inner">
+                    <div className="lib-row-demo">
+                      <t.Demo />
+                    </div>
+                    <div className="lib-row-meta-col">
+                      <div className="lib-row-meta-item">
+                        <span className="lib-row-meta-label">Launched</span>
+                        <span className="lib-row-meta-val">{t.meta.split('Launched ')[1] || t.meta}</span>
+                      </div>
+                      <div className="lib-row-meta-item">
+                        <span className="lib-row-meta-label">Platform</span>
+                        <span className="lib-row-meta-val">{t.meta.split(' · ')[0]}</span>
+                      </div>
+                      {t.community && (
+                        <div className="lib-row-meta-item">
+                          <span className="lib-row-meta-label">Origin</span>
+                          <span className="lib-row-meta-val" style={{ color: t.accent }}>Community Pick</span>
+                        </div>
+                      )}
+                      <a href="#" className="lib-row-cta">Visit {t.title} →</a>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============ Weekly Community Build ============ */
+function WeeklyCommunity() {
+  const week = {
+    weekNum: 16,
+    range: 'Apr 13 – Apr 19',
+    title: 'Wholefed',
+    tagline: 'Snap a photo of your meal, get a real health read beyond calories.',
+    pitch: '"I have celiac and every calorie tracker I try makes me feel like a robot. I just want to know if what I\'m about to eat is actually good for me, not a macro breakdown I\'ll ignore. Please build something that just tells me the vibe of the meal."',
+    pitchedBy: '@mara_eats',
+    pitchedOn: 'Apr 2, 2026',
+    votes: 184,
+    chosen: 'Apr 13',
+    shipped: 'Apr 15',
+    accent: '#22c55e',
+    thread: [
+      { from: '@mara_eats', when: 'Apr 2', text: 'Original pitch. 23 upvotes overnight.' },
+      { from: 'aleko', when: 'Apr 12', text: 'Chose this for the week. The celiac angle made it. Rolling into Monday.' },
+      { from: '@mara_eats', when: 'Apr 15', text: 'Got the TestFlight invite. Holy crap it actually works.' },
+    ],
+  };
+
+  const past = [
+    { week: 15, title: 'Traffic Guard Threshold', by: '@ceo_jen', accent: '#60a5fa' },
+    { week: 14, title: 'Voice Match For EssayCloner', by: '@hschooler22', accent: '#a78bfa' },
+    { week: 13, title: 'Macro Lock On Feastmate', by: '@gym_raf', accent: '#f472b6' },
+  ];
+
+  return (
+    <section className="section section-weekly" id="community">
+      <div className="container">
+        <Reveal>
+          <div className="weekly-head">
+            <div>
+              <div className="section-label">
+                <span className="pulse-green" /> Weekly Community Build
+              </div>
+              <h2 className="section-title">Every Week, I Build What You Voted For.</h2>
+              <p className="section-desc">
+                One tool a week comes straight from the suggestion box. The most-upvoted pitch wins. Here's the one I'm building right now.
+              </p>
+            </div>
+            <div className="weekly-week-badge">
+              <div className="weekly-week-label">Week</div>
+              <div className="weekly-week-num">{week.weekNum}</div>
+              <div className="weekly-week-range">{week.range}</div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <div className="weekly-card" style={{ '--accent': week.accent }}>
+            <div className="weekly-card-top">
+              <div className="weekly-card-status">
+                <span className="weekly-card-dot" /> Shipped {week.shipped}
+              </div>
+              <div className="weekly-card-votes">
+                <span className="weekly-card-votes-num">{week.votes}</span>
+                <span className="weekly-card-votes-label">Upvotes</span>
+              </div>
+            </div>
+
+            <div className="weekly-card-title-row">
+              <div>
+                <div className="weekly-card-title">{week.title}</div>
+                <div className="weekly-card-tagline">{week.tagline}</div>
+              </div>
+              <a href="#" className="weekly-card-cta">Visit {week.title} →</a>
+            </div>
+
+            <div className="weekly-card-body">
+              <div className="weekly-pitch">
+                <div className="weekly-pitch-label">The Pitch</div>
+                <blockquote className="weekly-pitch-quote">{week.pitch}</blockquote>
+                <div className="weekly-pitch-attr">
+                  <span className="weekly-pitch-avatar">{week.pitchedBy.charAt(1).toUpperCase()}</span>
+                  <div>
+                    <div className="weekly-pitch-name">{week.pitchedBy}</div>
+                    <div className="weekly-pitch-when">Pitched {week.pitchedOn}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="weekly-timeline">
+                <div className="weekly-pitch-label">Timeline</div>
+                {week.thread.map((t, i) => (
+                  <div key={i} className="weekly-thread">
+                    <div className="weekly-thread-line" />
+                    <div className="weekly-thread-dot" />
+                    <div className="weekly-thread-content">
+                      <div className="weekly-thread-head">
+                        <span className="weekly-thread-from">{t.from}</span>
+                        <span className="weekly-thread-when">{t.when}</span>
+                      </div>
+                      <div className="weekly-thread-text">{t.text}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={140}>
+          <div className="weekly-past">
+            <div className="weekly-past-label">Previous Weeks</div>
+            <div className="weekly-past-list">
+              {past.map((p, i) => (
+                <div key={i} className="weekly-past-item" style={{ '--accent': p.accent }}>
+                  <span className="weekly-past-week">W{p.week}</span>
+                  <span className="weekly-past-title">{p.title}</span>
+                  <span className="weekly-past-by">{p.by}</span>
+                  <span className="weekly-past-arrow">→</span>
+                </div>
+              ))}
+              <a href="#suggest" className="weekly-past-cta">Pitch Next Week →</a>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============ Collaborations ============ */
+function CollabSection() {
+  const collabs = [
+    { name: 'Reply Guy', by: 'w/ @maya (designer)', note: 'She designs, I ship. A tool that drafts replies that don\'t sound desperate.' },
+    { name: 'Deckboard', by: 'w/ @theotis (stream)', note: 'Stream overlay that turns chat into quick reactions. We built it in a weekend.' },
+    { name: 'Open Slot', by: 'you?', note: 'If you design, teach, create, or have an audience and a problem, send me a DM.', open: true },
+  ];
+  return (
+    <section className="section section-collab" id="collab">
+      <div className="container">
+        <Reveal>
+          <div className="section-label">Collaborations</div>
+          <h2 className="section-title">Sometimes, I Build With People.</h2>
+          <p className="section-desc">
+            I work solo by default, but I'll team up on specific projects. Designers, teachers, and anyone with a real audience and a real problem.
+          </p>
+        </Reveal>
+        <div className="collab-grid">
+          {collabs.map((c, i) => (
+            <Reveal key={c.name} delay={i * 70} className={`collab-card ${c.open ? 'collab-card-open' : ''}`}>
+              <div className="collab-card-head">
+                <div className="collab-card-name">{c.name}</div>
+                <div className="collab-card-by">{c.by}</div>
+              </div>
+              <div className="collab-card-note">{c.note}</div>
+              {c.open && <a href="#suggest" className="collab-card-cta">Pitch A Collab →</a>}
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+function WIPCard({ w, idx }) {
+  const [open, setOpen] = useState(idx === 0);
+  return (
+    <Reveal delay={idx * 70} className={`wip-card ${open ? 'open' : ''}`} style={{ '--accent': w.accent }}>
+      <div className="wip-glow" />
+      <button className="wip-card-btn" onClick={() => setOpen(o => !o)}>
+        <div className="wip-head">
+          <div className="wip-icon" style={{ background: w.accent + '22', color: w.accent, borderColor: w.accent + '55' }}>
+            {w.icon}
+          </div>
+          <div className="wip-tag" style={{ color: w.accent, borderColor: w.accent + '40', background: w.accent + '0d' }}>
+            {w.tag}
+          </div>
+        </div>
+        <div className="wip-title-row">
+          <div className="wip-title">{w.title}</div>
+          <div className="wip-eta">ETA {w.eta} <span className="wip-chev">{open ? '▾' : '▸'}</span></div>
+        </div>
+        <div className="wip-desc">{w.desc}</div>
+        <div className="wip-progress">
+          <div className="wip-bar">
+            <div className="wip-bar-fill"
+              style={{ width: w.pct + '%', background: w.accent, boxShadow: `0 0 12px ${w.accent}80` }} />
+          </div>
+          <span style={{ color: w.accent, fontWeight: 600 }}>{w.pct}%</span>
+        </div>
+      </button>
+
+      <div className="wip-detail" style={{ maxHeight: open ? 240 : 0 }}>
+        <div className="wip-detail-inner">
+          <div className="wip-detail-row">
+            <span className="wip-detail-label">Last Commit</span>
+            <span className="wip-detail-val">{idx === 0 ? '14 Min Ago' : idx === 1 ? '2 Days Ago' : '6 Days Ago'}</span>
+          </div>
+          <div className="wip-detail-row">
+            <span className="wip-detail-label">Stack</span>
+            <span className="wip-detail-val">{idx === 0 ? 'TS, Vite, Chrome MV3' : idx === 1 ? 'Swift, Postgres' : 'Next, Plaid API'}</span>
+          </div>
+          <div className="wip-detail-row">
+            <span className="wip-detail-label">Open Issues</span>
+            <span className="wip-detail-val">{idx === 0 ? '4' : idx === 1 ? '17' : '2 (Just Vibes)'}</span>
+          </div>
+          <div className="wip-detail-row">
+            <span className="wip-detail-label">Note To Self</span>
+            <span className="wip-detail-val" style={{ fontStyle: 'italic', color: 'var(--text-2)' }}>
+              {idx === 0 ? '"Ship Friday Even If Onboarding Is Ugly."' :
+               idx === 1 ? '"Stop Adding Features. Cut Two."' :
+               '"Talk To Five Real People Before Writing Code."'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+/* ============ Blog Posts (shared) ============ */
+const POSTS = [
+  {
+    cat: 'BUILD LOG', title: 'How EssayCloner Learns A Voice In Three Samples',
+    excerpt: 'I tried fine-tuning. I tried RAG. I tried a wild prompt sandwich. Here is what actually shipped, and what I threw out.',
+    snippet: 'Fine-tuning GPT-4 on three essays is like teaching a pianist to play in your style by showing them three of your napkin doodles. It does not work. What works: a structured extraction pass that pulls out your sentence-length rhythm, your em-dash habits, the words you use when you are hedging versus when you are confident. Feed those as constraints, not examples. Draft quality jumps overnight.',
+    date: 'Apr 17, 2026', read: '6 Min', words: '1,847', accent: '#fbbf24',
+    tool: 'EssayCloner',
+  },
+  {
+    cat: 'POSTMORTEM', title: 'I Killed My Second Product After Four Months',
+    excerpt: 'It made $200 a month. People told me to keep it. I shut it down anyway. Honestly the best decision I made this year.',
+    snippet: 'The product worked. It had 40 paying users. It was profitable on day one because I built it over a weekend. And I was miserable every time I opened the support inbox. Two hundred dollars a month is not worth the weight of something you do not care about. Killing it freed up a Tuesday, and that Tuesday became EssayCloner. That is the real math.',
+    date: 'Apr 14, 2026', read: '9 Min', words: '2,634', accent: '#ef4444',
+    tool: 'Deadpool',
+  },
+  {
+    cat: 'THINKING', title: 'Why One-Person Companies Will Own The Next Decade',
+    excerpt: 'Distribution got cheap. Building got cheaper. The bottleneck moved to taste, and taste does not scale with headcount.',
+    snippet: 'Every advantage a big company had in 2015 is gone. Infrastructure is a credit card. Design is a prompt. Distribution is a TikTok. What is left is the thing that never scaled: knowing what to make. Five smart people in a room will always outvote one person with conviction. That is why the next decade belongs to people, not teams.',
+    date: 'Apr 11, 2026', read: '11 Min', words: '3,102', accent: '#a78bfa',
+    tool: null,
+  },
+  {
+    cat: 'BUILD LOG', title: 'The Three Hour Window Where I Ship Everything',
+    excerpt: 'I tried morning pages. I tried deep work blocks. The only thing that has ever worked is 11pm to 2am.',
+    date: 'Apr 8, 2026', read: '4 Min', words: '1,204', accent: '#fbbf24',
+    tool: null,
+  },
+  {
+    cat: 'POSTMORTEM', title: 'Why Feastmate\'s First Launch Was A Disaster',
+    excerpt: 'Hit the App Store. 800 downloads in a day. A 1.4 star rating by Friday. What I got wrong and what I rebuilt.',
+    date: 'Apr 5, 2026', read: '7 Min', words: '2,088', accent: '#ef4444',
+    tool: 'Feastmate',
+  },
+];
+window.POSTS = POSTS;
+
+/* ============ Blog Section — clean data table ============ */
+function BlogSection() {
+  const [sortKey, setSortKey] = useState('date');
+  const [sortDir, setSortDir] = useState('desc');
+
+  const totalWords = POSTS.reduce((a, p) => a + (parseInt(p.words?.replace(',', '')) || 0), 0);
+  const totalPosts = POSTS.length;
+  const postsThisMonth = POSTS.filter(p => p.date.includes('Apr')).length;
+
+  const parseDate = (d) => new Date(d).getTime();
+  const parseWords = (w) => parseInt((w || '0').replace(',', '')) || 0;
+
+  const sorted = [...POSTS].sort((a, b) => {
+    let va, vb;
+    if (sortKey === 'date') { va = parseDate(a.date); vb = parseDate(b.date); }
+    else if (sortKey === 'words') { va = parseWords(a.words); vb = parseWords(b.words); }
+    else if (sortKey === 'cat') { va = a.cat; vb = b.cat; }
+    else { va = a.title; vb = b.title; }
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const toggleSort = (key) => {
+    if (sortKey === key) setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir(key === 'date' || key === 'words' ? 'desc' : 'asc'); }
+  };
+
+  const sortIcon = (key) => sortKey !== key ? '' : sortDir === 'asc' ? '↑' : '↓';
+
+  return (
+    <section className="section section-blog" id="writing">
+      <div className="container">
+        <Reveal>
+          <div className="blog-head-new">
+            <div>
+              <div className="section-label">
+                <span className="pulse-green" /> Devlog
+              </div>
+              <h2 className="section-title">Notes From The Late Shift.</h2>
+              <p className="section-desc">
+                Build logs, postmortems, and half-formed thinking I write between commits. No listicles, no thread bait, no SEO tricks.
+              </p>
+            </div>
+
+            <div className="blog-stats">
+              <div className="blog-stat">
+                <div className="blog-stat-num">{totalPosts}</div>
+                <div className="blog-stat-label">Posts</div>
+              </div>
+              <div className="blog-stat">
+                <div className="blog-stat-num">{postsThisMonth}</div>
+                <div className="blog-stat-label">This Month</div>
+              </div>
+              <div className="blog-stat">
+                <div className="blog-stat-num">{(totalWords/1000).toFixed(1)}k</div>
+                <div className="blog-stat-label">Words Written</div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <div className="blog-table-wrap">
+            <div className="blog-table-meta">
+              <span className="blog-table-meta-title">
+                <span className="blog-table-prompt">/</span> writing / all-posts
+              </span>
+              <span className="blog-table-meta-count">{sorted.length} Entries</span>
+            </div>
+
+            <div className="blog-table" role="table">
+              <div className="blog-table-row blog-table-head" role="row">
+                <button className="blog-th blog-th-date" onClick={() => toggleSort('date')}>
+                  Date <span className="blog-th-icon">{sortIcon('date')}</span>
+                </button>
+                <button className="blog-th blog-th-cat" onClick={() => toggleSort('cat')}>
+                  Type <span className="blog-th-icon">{sortIcon('cat')}</span>
+                </button>
+                <button className="blog-th blog-th-title" onClick={() => toggleSort('title')}>
+                  Title <span className="blog-th-icon">{sortIcon('title')}</span>
+                </button>
+                <div className="blog-th blog-th-tool">Tool</div>
+                <button className="blog-th blog-th-words" onClick={() => toggleSort('words')}>
+                  <span className="blog-th-icon">{sortIcon('words')}</span> Words
+                </button>
+                <div className="blog-th blog-th-read">Read</div>
+                <div className="blog-th blog-th-arrow" />
+              </div>
+
+              {sorted.map((p, i) => (
+                <a key={p.title} href="blog.html" className="blog-table-row blog-table-body-row" role="row">
+                  <div className="blog-td blog-td-date">{p.date.replace(', 2026', '')}</div>
+                  <div className="blog-td blog-td-cat">
+                    <span className="blog-cat-chip" style={{ color: p.accent, background: p.accent + '14', borderColor: p.accent + '33' }}>
+                      <span className="blog-cat-dot" style={{ background: p.accent }} />
+                      {p.cat}
+                    </span>
+                  </div>
+                  <div className="blog-td blog-td-title">
+                    <div className="blog-td-title-main">{p.title}</div>
+                    <div className="blog-td-title-excerpt">{p.excerpt}</div>
+                  </div>
+                  <div className="blog-td blog-td-tool">{p.tool || '—'}</div>
+                  <div className="blog-td blog-td-words">{p.words || '—'}</div>
+                  <div className="blog-td blog-td-read">{p.read}</div>
+                  <div className="blog-td blog-td-arrow">→</div>
+                </a>
+              ))}
+            </div>
+
+            <div className="blog-table-foot">
+              <span className="blog-table-foot-note">Newest First · Click Any Column To Sort</span>
+              <a href="blog.html" className="blog-table-foot-link">Open Full Archive →</a>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============ App ============ */
+function App() {
+  return (
+    <>
+      <nav className="nav">
+        <div className="container nav-inner">
+          <div className="nav-logo">
+            <span className="nav-logo-dot" />
+            <span>Aleko</span>
+          </div>
+          <div className="nav-links">
+            <a href="#tools">Tools</a>
+            <a href="#community">Community</a>
+            <a href="blog.html">Writing</a>
+            <a href="#building">Editor</a>
+            <a href="#suggest">Suggest</a>
+          </div>
+          <a href="#tools" className="nav-cta">See The Tools →</a>
+        </div>
+      </nav>
+
+      <header className="hero">
+        <div className="noise" />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <Reveal>
+            <div className="hero-eyebrow">
+              <span className="pulse" /> Shipping Solo From My Bedroom
+            </div>
+          </Reveal>
+          <Reveal delay={60}>
+            <h1>
+              One Person, Building<br />
+              <MorphingWord />
+            </h1>
+          </Reveal>
+          <Reveal delay={120}>
+            <p className="hero-sub">
+              I'm Aleko, a high schooler making small AI tools by myself. I'm trying to ship
+              one new thing every single day. So far the streak is holding.
+            </p>
+          </Reveal>
+
+          <Reveal delay={180}>
+            <ShippingDashboard />
+          </Reveal>
+        </div>
+      </header>
+
+      {/* tool library */}
+      <ToolLibrary />
+
+      {/* suggestion form, directly below library */}
+      <SuggestForm />
+
+      {/* weekly community build */}
+      <WeeklyCommunity />
+
+      {/* collaborations */}
+      <CollabSection />
+
+      {/* writing */}
+      <BlogSection />
+
+      {/* in progress / editor — last */}
+      <section className="section" id="building" style={{ paddingTop: 40 }}>
+        <div className="container">
+          <Reveal>
+            <div className="section-label">In Progress</div>
+            <h2 className="section-title">What's Open In My Editor This Week.</h2>
+            <p className="section-desc">
+              Click a card to see the actual state of things. Last commits, stack choices,
+              and the messy notes I leave for myself.
+            </p>
+          </Reveal>
+
+          <div className="wip-grid">
+            {WIP.map((w, i) => (
+              <WIPCard key={w.title} w={w} idx={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* footer */}
+      <footer className="footer" id="about">
+        <div className="container">
+          <div className="footer-top">
+            <div className="footer-brand">
+              <div className="nav-logo">
+                <span className="nav-logo-dot" />
+                <span>Aleko</span>
+              </div>
+              <p className="footer-tagline" style={{ marginTop: 18 }}>
+                Small, Sharp AI Tools Built By One Person.
+              </p>
+            </div>
+            <div className="footer-col">
+              <h4>Tools</h4>
+              <ul>
+                <li><a href="#">EssayCloner</a></li>
+                <li><a href="#">Study Pebble</a></li>
+                <li><a href="#">AI Shadow Shield</a></li>
+                <li><a href="#">AI Traffic Guard</a></li>
+                <li><a href="#">Wholefed</a></li>
+                <li><a href="#">Feastmate</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>Site</h4>
+              <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="#">Affiliates</a></li>
+                <li><a href="#">Changelog</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>Elsewhere</h4>
+              <ul>
+                <li><a href="#">TikTok</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">GitHub</a></li>
+                <li><a href="#">Email</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bot">
+            <span>© 2026 Aleko. Built From My Bedroom.</span>
+            <span>v1.0 · Last Shipped 2 Hours Ago</span>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

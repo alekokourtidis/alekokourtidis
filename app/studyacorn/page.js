@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function StudyAcornPage() {
-  return <ToolFrame src="https://studyacorn.vercel.app" title="StudyPebble" />;
+  return <ToolFrame src="https://studypebble.vercel.app" title="StudyPebble" />;
 }
