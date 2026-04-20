@@ -127,7 +127,7 @@ const TOOLS = [
     tag: 'AP and SAT prep that adjusts to what you keep getting wrong. Free response answers get scored against the actual rubric.',
     meta: 'Web · Launched April 2026', cls: 'card-feat-2',
     featured: true, users: '2.4k', shipped: '2026-04-12',
-    accent: '#fbbf24', Demo: window.StudyAcornDemo,
+    accent: '#fbbf24', Demo: window.StudyPebbleDemo,
   },
   {
     id: 'shadowshield', title: 'AI Shadow Shield', price: '$19 / Mo',
@@ -1195,7 +1195,7 @@ function App() {
               <h4>Tools</h4>
               <ul>
                 <li><a href="/essaycloner" target="_top">EssayCloner</a></li>
-                <li><a href="/studyacorn" target="_top">Study Pebble</a></li>
+                <li><a href="/studypebble" target="_top">Study Pebble</a></li>
                 <li><a href="/shadowshield" target="_top">AI Shadow Shield</a></li>
                 <li><a href="/trafficguard" target="_top">AI Traffic Guard</a></li>
                 <li><a href="/whowasright" target="_top">WhoWasRight</a></li>

@@ -13,7 +13,7 @@ function formatDate(dateStr) {
 const TOPIC_MAP = {
   essaycloner: "Writing",
   "essay-cloner": "Writing",
-  studyacorn: "Study Tips",
+  studypebble: "Study Tips",
   "ai-shadow-shield": "AI & Work",
   "ai-traffic-guard": "SEO",
   whowasright: "Relationships",

@@ -104,7 +104,7 @@ function EssayClonerDemo() {
 }
 
 /* ===================== Study Acorn — MCQ ===================== */
-function StudyAcornDemo() {
+function StudyPebbleDemo() {
   const options = [
     { k: 'A', t: 'Mitochondria' },
     { k: 'B', t: 'Ribosomes' },
@@ -557,6 +557,6 @@ function FeastmateDemo() {
 }
 
 Object.assign(window, {
-  EssayClonerDemo, StudyAcornDemo, ShadowShieldDemo,
+  EssayClonerDemo, StudyPebbleDemo, ShadowShieldDemo,
   TrafficGuardDemo, WholefedDemo, FeastmateDemo,
 });

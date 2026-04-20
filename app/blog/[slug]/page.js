@@ -27,7 +27,7 @@ const PRODUCT_URLS = {
   "ai-shadow-shield": "https://alekotools.com/shadowshield",
   "ai-traffic-guard": "https://alekotools.com/trafficguard",
   whowasright: "https://alekotools.com/whowasright",
-  studyacorn: "https://alekotools.com/studyacorn",
+  studypebble: "https://alekotools.com/studypebble",
 };
 
 const PRODUCT_NAMES = {
@@ -38,7 +38,7 @@ const PRODUCT_NAMES = {
   "ai-shadow-shield": "AI Shadow Shield",
   "ai-traffic-guard": "AI Traffic Guard",
   whowasright: "WhoWasRight",
-  studyacorn: "StudyAcorn",
+  studypebble: "StudyPebble",
 };
 
 const PRODUCT_COLORS = {
@@ -49,13 +49,13 @@ const PRODUCT_COLORS = {
   "ai-shadow-shield": "#10b981",
   "ai-traffic-guard": "#f59e0b",
   whowasright: "#8b5cf6",
-  studyacorn: "#16a34a",
+  studypebble: "#16a34a",
 };
 
 const TOPIC_GRADIENTS = {
   essaycloner: "linear-gradient(135deg, #1a1030 0%, #09090b 100%)",
   "essay-cloner": "linear-gradient(135deg, #1a1030 0%, #09090b 100%)",
-  studyacorn: "linear-gradient(135deg, #0d1f14 0%, #09090b 100%)",
+  studypebble: "linear-gradient(135deg, #0d1f14 0%, #09090b 100%)",
   "ai-shadow-shield": "linear-gradient(135deg, #0d1f1a 0%, #09090b 100%)",
   "ai-traffic-guard": "linear-gradient(135deg, #1f1808 0%, #09090b 100%)",
   whowasright: "linear-gradient(135deg, #1a0d25 0%, #09090b 100%)",
@@ -66,7 +66,7 @@ const TOPIC_GRADIENTS = {
 const RELATED_GRADIENTS = {
   essaycloner: "linear-gradient(135deg, #1a1030 0%, #0f0f12 100%)",
   "essay-cloner": "linear-gradient(135deg, #1a1030 0%, #0f0f12 100%)",
-  studyacorn: "linear-gradient(135deg, #0d1f14 0%, #0f0f12 100%)",
+  studypebble: "linear-gradient(135deg, #0d1f14 0%, #0f0f12 100%)",
   feastmate: "linear-gradient(135deg, #1f1808 0%, #0f0f12 100%)",
   wholefed: "linear-gradient(135deg, #1f0d0d 0%, #0f0f12 100%)",
   "ai-shadow-shield": "linear-gradient(135deg, #0d1f1a 0%, #0f0f12 100%)",

@@ -83,7 +83,7 @@ const ALL_TOOLS = [
 
 const DEMO_MAP = {
   essaycloner:  () => window.EssayClonerDemo,
-  studypebble:  () => window.StudyAcornDemo,
+  studypebble:  () => window.StudyPebbleDemo,
   shadowshield: () => window.ShadowShieldDemo,
   trafficguard: () => window.TrafficGuardDemo,
   wholefed:     () => window.WholefedDemo,
@@ -95,7 +95,7 @@ const DEMO_MAP = {
 
 const TOOL_URLS = {
   essaycloner: '/essaycloner',
-  studypebble: '/studyacorn',
+  studypebble: '/studypebble',
   shadowshield: '/shadowshield',
   trafficguard: '/trafficguard',
   wholefed: 'https://apps.apple.com/app/wholefed',

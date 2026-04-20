@@ -5,6 +5,6 @@ export const metadata = {
   description: "Adaptive AP and SAT study guide with gap-finding",
 };
 
-export default function StudyAcornPage() {
+export default function StudyPebblePage() {
   return <ToolFrame src="https://studypebble.vercel.app" title="StudyPebble" />;
 }

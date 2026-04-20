@@ -5,7 +5,7 @@ import EmailCapture from "./components/EmailCapture";
 
 const PRODUCT_COLORS = {
   "essay-cloner": "#7c3aed",
-  studyacorn: "#16a34a",
+  studypebble: "#16a34a",
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
   "ai-shadow-shield": "#10b981",
@@ -15,7 +15,7 @@ const PRODUCT_COLORS = {
 
 const PRODUCT_GRADIENTS = {
   "essay-cloner": "linear-gradient(135deg, #1a1030 0%, #0f0f12 100%)",
-  studyacorn: "linear-gradient(135deg, #0d1f14 0%, #0f0f12 100%)",
+  studypebble: "linear-gradient(135deg, #0d1f14 0%, #0f0f12 100%)",
   feastmate: "linear-gradient(135deg, #1f1808 0%, #0f0f12 100%)",
   wholefed: "linear-gradient(135deg, #1f0d0d 0%, #0f0f12 100%)",
   "ai-shadow-shield": "linear-gradient(135deg, #0d1f1a 0%, #0f0f12 100%)",
@@ -25,7 +25,7 @@ const PRODUCT_GRADIENTS = {
 
 const PRODUCT_PRICING = {
   "essay-cloner": "$1.99/mo",
-  studyacorn: "Free",
+  studypebble: "Free",
   feastmate: "$4.99/mo",
   wholefed: "Free",
   "ai-shadow-shield": "$19/mo",
@@ -42,10 +42,10 @@ const CORE_PRODUCTS = [
     deploy_url: "/essaycloner",
   },
   {
-    id: "studyacorn",
-    project_name: "studyacorn",
+    id: "studypebble",
+    project_name: "studypebble",
     tagline: "AI study guide that finds your weak spots and drills them",
-    deploy_url: "/studyacorn",
+    deploy_url: "/studypebble",
   },
   {
     id: "ai-shadow-shield",
@@ -178,7 +178,7 @@ const TOOL_ROUTES = {
   "ai-shadow-shield": "/shadowshield",
   "ai-traffic-guard": "/trafficguard",
   "argument-analyzer-ten": "/whowasright",
-  "studyacorn": "/studyacorn",
+  "studypebble": "/studypebble",
 };
 
 function getProductUrl(product) {
@@ -215,7 +215,7 @@ function ProductCard({ product }) {
 }
 
 const DISPLAY_NAMES = {
-  "studyacorn": "StudyPebble",
+  "studypebble": "StudyPebble",
   "essay-cloner": "EssayCloner",
   "ai-shadow-shield": "AI Shadow Shield",
   "ai-traffic-guard": "AI Traffic Guard",

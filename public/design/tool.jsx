@@ -22,7 +22,7 @@ const TOOLS = {
   studypebble: {
     name: 'Study Pebble', tagline: 'Adaptive AP and SAT prep that adjusts to the stuff you actually keep missing.',
     price: '$14.99 / Month', freePrice: 'First Week Free', accent: '#fbbf24',
-    Demo: window.StudyAcornDemo,
+    Demo: window.StudyPebbleDemo,
     how: [
       { n: '01', t: 'Take A Diagnostic', d: 'Fifteen minutes. It figures out where your gaps actually are, not just what\'s on the course outline.' },
       { n: '02', t: 'Get A Live Plan', d: 'A plan that changes every day based on what you got wrong yesterday. No more generic "review unit 4" nonsense.' },
