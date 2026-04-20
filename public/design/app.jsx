@@ -867,91 +867,44 @@ function WeeklyCommunity() {
     <section className="section section-weekly" id="community">
       <div className="container">
         <Reveal>
-          <div className="weekly-head">
-            <div>
+          <div className="weekly-head-compact">
+            <div className="weekly-head-copy">
               <div className="section-label">
                 <span className="pulse-green" /> Weekly Community Build
               </div>
               <h2 className="section-title">Every Week, I Build What You Voted For.</h2>
               <p className="section-desc">
-                One tool a week comes straight from the suggestion box. The most-upvoted pitch wins. Here's the one I'm building right now.
+                One tool a week comes straight from the suggestion box. Most-upvoted pitch wins.
               </p>
-            </div>
-            <div className="weekly-week-badge">
-              <div className="weekly-week-label">Week</div>
-              <div className="weekly-week-num">{week.weekNum}</div>
-              <div className="weekly-week-range">{week.range}</div>
             </div>
           </div>
         </Reveal>
 
         <Reveal delay={80}>
-          <div className="weekly-card" style={{ '--accent': week.accent }}>
-            <div className="weekly-card-top">
-              <div className="weekly-card-status">
-                <span className="weekly-card-dot" /> Shipped {week.shipped}
-              </div>
-              <div className="weekly-card-votes">
-                <span className="weekly-card-votes-num">{week.votes}</span>
-                <span className="weekly-card-votes-label">Upvotes</span>
-              </div>
-            </div>
-
-            <div className="weekly-card-title-row">
-              <div>
-                <div className="weekly-card-title">{week.title}</div>
-                <div className="weekly-card-tagline">{week.tagline}</div>
-              </div>
-              <a href="/whomealplanner" target="_top" className="weekly-card-cta">Visit {week.title} →</a>
-            </div>
-
-            <div className="weekly-card-body">
-              <div className="weekly-pitch">
-                <div className="weekly-pitch-label">The Pitch</div>
-                <blockquote className="weekly-pitch-quote">{week.pitch}</blockquote>
-                <div className="weekly-pitch-attr">
-                  <span className="weekly-pitch-avatar">{week.pitchedBy.charAt(1).toUpperCase()}</span>
-                  <div>
-                    <div className="weekly-pitch-name">{week.pitchedBy}</div>
-                    <div className="weekly-pitch-when">Pitched {week.pitchedOn}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="weekly-timeline">
-                <div className="weekly-pitch-label">Timeline</div>
-                {week.thread.map((t, i) => (
-                  <div key={i} className="weekly-thread">
-                    <div className="weekly-thread-line" />
-                    <div className="weekly-thread-dot" />
-                    <div className="weekly-thread-content">
-                      <div className="weekly-thread-head">
-                        <span className="weekly-thread-from">{t.from}</span>
-                        <span className="weekly-thread-when">{t.when}</span>
-                      </div>
-                      <div className="weekly-thread-text">{t.text}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <a href="/whomealplanner" target="_top" className="weekly-strip" style={{ '--accent': week.accent }}>
+            <span className="weekly-strip-badge">
+              W{week.weekNum} · Shipped {week.shipped}
+            </span>
+            <span className="weekly-strip-main">
+              <span className="weekly-strip-title">{week.title}</span>
+              <span className="weekly-strip-tagline">{week.tagline}</span>
+            </span>
+            <span className="weekly-strip-meta">
+              <span className="weekly-strip-votes">{week.votes}</span>
+              <span className="weekly-strip-votes-label">upvotes</span>
+            </span>
+            <span className="weekly-strip-arrow">→</span>
+          </a>
         </Reveal>
 
-        <Reveal delay={140}>
-          <div className="weekly-past">
-            <div className="weekly-past-label">Previous Weeks</div>
-            <div className="weekly-past-list">
-              {past.map((p, i) => (
-                <div key={i} className="weekly-past-item" style={{ '--accent': p.accent }}>
-                  <span className="weekly-past-week">W{p.week}</span>
-                  <span className="weekly-past-title">{p.title}</span>
-                  <span className="weekly-past-by">{p.by}</span>
-                  <span className="weekly-past-arrow">→</span>
-                </div>
-              ))}
-              <a href="#suggest" className="weekly-past-cta">Pitch Next Week →</a>
-            </div>
+        <Reveal delay={120}>
+          <div className="weekly-past-compact">
+            {past.map((p, i) => (
+              <a key={i} href="#" className="weekly-past-chip" style={{ '--accent': p.accent }}>
+                W{p.week} · {p.title} <span className="weekly-past-chip-by">{p.by}</span>
+              </a>
+            ))}
+            <a href="#suggest" className="weekly-past-chip weekly-past-chip-cta">Pitch Next Week →</a>
           </div>
         </Reveal>
       </div>
@@ -1185,7 +1138,7 @@ function BlogSection() {
                 <div className="blog-th blog-th-arrow" />
               </div>
 
-              {sorted.map((p, i) => (
+              {sorted.slice(0, 5).map((p, i) => (
                 <a key={p.slug || p.title} href={p.slug ? `/blog/${p.slug}` : '/blog'} target="_top" className="blog-table-row blog-table-body-row" role="row">
                   <div className="blog-td blog-td-date">{p.date.replace(', 2026', '')}</div>
                   <div className="blog-td blog-td-cat">
@@ -1207,11 +1160,21 @@ function BlogSection() {
             </div>
 
             <div className="blog-table-foot">
-              <span className="blog-table-foot-note">Newest First · Click Any Column To Sort</span>
-              <a href="/blog" target="_top" className="blog-table-foot-link">Open Full Archive →</a>
+              <span className="blog-table-foot-note">Showing {Math.min(5, sorted.length)} of {sorted.length} posts</span>
+              <a href="/blog" target="_top" className="blog-table-foot-link">View All {sorted.length} Posts →</a>
             </div>
           </div>
         </Reveal>
+
+        {sorted.length > 5 && (
+          <Reveal delay={120}>
+            <div className="lib-viewall-wrap">
+              <a href="/blog" target="_top" className="lib-viewall-btn">
+                View All {sorted.length} Posts →
+              </a>
+            </div>
+          </Reveal>
+        )}
       </div>
     </section>
   );
@@ -1220,16 +1183,29 @@ function BlogSection() {
 /* ============ App ============ */
 function App() {
   const [navScrolled, setNavScrolled] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   React.useEffect(() => {
     const on = () => setNavScrolled(window.scrollY > 50);
     on();
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
+  React.useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
   return (
     <>
       <nav className={`nav ${navScrolled ? 'is-scrolled' : ''}`}>
         <div className="container nav-inner">
+          <button
+            className="nav-burger"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span /><span /><span />
+          </button>
           <div className="nav-logo">
             <span className="nav-logo-dot" />
             <span>Aleko</span>
@@ -1243,6 +1219,7 @@ function App() {
           <a href="community.html#suggest" className="nav-cta">Suggest A Tool →</a>
         </div>
       </nav>
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} current="home" />
 
       <header className="hero">
         <div className="noise" />
@@ -1320,34 +1297,23 @@ function App() {
               </p>
             </div>
             <div className="footer-col">
-              <h4>Tools</h4>
-              <ul>
-                <li><a href="/essaycloner" target="_top">EssayCloner</a></li>
-                <li><a href="/studypebble" target="_top">Study Pebble</a></li>
-                <li><a href="/shadowshield" target="_top">AI Shadow Shield</a></li>
-                <li><a href="/trafficguard" target="_top">AI Traffic Guard</a></li>
-                <li><a href="/whowasright" target="_top">WhoWasRight</a></li>
-                <li><a href="/whomealplanner" target="_top">WHO Meal Planner</a></li>
-                <li><a href="/flowdebug" target="_top">FlowDebug</a></li>
-                <li style={{marginTop:8}}><a href="/tools" target="_top" style={{color:'var(--text-2)',fontWeight:600}}>All Tools →</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
               <h4>Site</h4>
               <ul>
                 <li><a href="/about" target="_top">About</a></li>
+                <li><a href="/community#suggest" target="_top">Suggest A Tool</a></li>
                 <li><a href="/blog" target="_top">Blog</a></li>
-                <li><a href="/affiliates" target="_top">Affiliates</a></li>
+                <li><a href="/tools" target="_top">Tools</a></li>
                 <li><a href="/community" target="_top">Community</a></li>
-                <li><a href="/changelog" target="_top">Changelog</a></li>
+                <li><a href="/affiliates" target="_top">Affiliates</a></li>
               </ul>
             </div>
             <div className="footer-col">
-              <h4>Elsewhere</h4>
+              <h4>Socials</h4>
               <ul>
                 <li><a href="https://tiktok.com/@alekokourtidis" target="_blank">TikTok</a></li>
                 <li><a href="https://instagram.com/alekokourtidis" target="_blank">Instagram</a></li>
                 <li><a href="https://youtube.com/@alekokourtidis" target="_blank">YouTube</a></li>
+                <li><a href="https://x.com/alekokourtidis" target="_blank">X / Twitter</a></li>
                 <li><a href="https://github.com/alekokourtidis" target="_blank">GitHub</a></li>
                 <li><a href="mailto:alekokourtidis@gmail.com">Email</a></li>
               </ul>

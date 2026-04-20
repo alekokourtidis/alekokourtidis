@@ -29,30 +29,93 @@ window.useToolLibrarySupabase = function useToolLibrarySupabase(fallback, mapRow
   return tools;
 };
 
+function MobileMenu({ open, onClose, current }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  const links = [
+    { href: 'index.html', label: 'Home', key: 'home' },
+    { href: 'tools.html', label: 'Tools', key: 'tools' },
+    { href: 'blog.html', label: 'Blog', key: 'blog' },
+    { href: 'affiliates.html', label: 'Affiliates', key: 'affiliates' },
+    { href: 'about.html', label: 'About', key: 'about' },
+  ];
+  return (
+    <div className={`mobile-menu ${open ? 'is-open' : ''}`} aria-hidden={!open}>
+      <div className="mobile-menu-backdrop" onClick={onClose} />
+      <aside className="mobile-menu-panel" role="dialog" aria-label="Menu">
+        <div className="mobile-menu-head">
+          <div className="nav-logo">
+            <span className="nav-logo-dot" />
+            <span>Aleko</span>
+          </div>
+          <button className="mobile-menu-close" aria-label="Close menu" onClick={onClose}>×</button>
+        </div>
+        <nav className="mobile-menu-links">
+          {links.map(l => (
+            <a
+              key={l.key}
+              href={l.href}
+              className={current === l.key ? 'active' : ''}
+              onClick={onClose}
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <a href="community.html#suggest" className="mobile-menu-cta" onClick={onClose}>
+          Suggest A Tool →
+        </a>
+      </aside>
+    </div>
+  );
+}
+window.MobileMenu = MobileMenu;
+
 function SharedNav({ current }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 50);
     on();
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
   return (
-    <nav className={`nav ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="container nav-inner">
-        <a href="index.html" className="nav-logo">
-          <span className="nav-logo-dot" />
-          <span>Aleko</span>
-        </a>
-        <div className="nav-links">
-          <a href="index.html" className={current === 'home' ? 'active' : ''}>Home</a>
-          <a href="tools.html" className={current === 'tools' ? 'active' : ''}>Tools</a>
-          <a href="blog.html" className={current === 'blog' ? 'active' : ''}>Blog</a>
-          <a href="affiliates.html" className={current === 'affiliates' ? 'active' : ''}>Affiliates</a>
+    <>
+      <nav className={`nav ${scrolled ? 'is-scrolled' : ''}`}>
+        <div className="container nav-inner">
+          <button
+            className="nav-burger"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span /><span /><span />
+          </button>
+          <a href="index.html" className="nav-logo">
+            <span className="nav-logo-dot" />
+            <span>Aleko</span>
+          </a>
+          <div className="nav-links">
+            <a href="index.html" className={current === 'home' ? 'active' : ''}>Home</a>
+            <a href="tools.html" className={current === 'tools' ? 'active' : ''}>Tools</a>
+            <a href="blog.html" className={current === 'blog' ? 'active' : ''}>Blog</a>
+            <a href="affiliates.html" className={current === 'affiliates' ? 'active' : ''}>Affiliates</a>
+          </div>
+          <a href="community.html#suggest" className="nav-cta">Suggest A Tool →</a>
         </div>
-        <a href="community.html#suggest" className="nav-cta">Suggest A Tool →</a>
-      </div>
-    </nav>
+      </nav>
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} current={current} />
+    </>
   );
 }
 
