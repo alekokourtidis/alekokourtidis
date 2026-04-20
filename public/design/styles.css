@@ -1504,6 +1504,32 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 }
 .lib-row-cta:hover { transform: translateY(-1px); filter: brightness(1.1); }
 
+.lib-viewall-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.lib-viewall-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-1, #fafafa);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.lib-viewall-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
 /* ============ Weekly Community Build ============ */
 .section-weekly {
   padding-top: 60px; padding-bottom: 40px;

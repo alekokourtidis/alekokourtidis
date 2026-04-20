@@ -766,12 +766,12 @@ function ToolLibrary() {
           </div>
         </Reveal>
 
-        {/* LIBRARY ROWS */}
+        {/* LIBRARY ROWS — homepage shows a 5-tool preview; full list lives at /tools */}
         <div className="lib-rows">
           {filteredRest.length === 0 && (
             <div className="lib-empty">No tools match that. Try a different filter.</div>
           )}
-          {filteredRest.map((t, i) => {
+          {filteredRest.slice(0, 5).map((t, i) => {
             const isOpen = expanded === t.id;
             return (
               <Reveal key={t.id} delay={i * 40} className={`lib-row ${isOpen ? 'open' : ''}`} style={{ '--accent': t.accent }}>
@@ -819,6 +819,14 @@ function ToolLibrary() {
             );
           })}
         </div>
+
+        {filteredRest.length > 5 && (
+          <div className="lib-viewall-wrap">
+            <a href="/tools" target="_top" className="lib-viewall-btn">
+              View All {filteredRest.length} Tools →
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );
