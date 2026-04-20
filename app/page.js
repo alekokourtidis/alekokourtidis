@@ -9,20 +9,22 @@ export default function Home() {
   return (
     <>
       <style>{`
+        html, body { margin: 0; padding: 0; height: 100%; overscroll-behavior: none; }
         .nav, .footer { display: none !important; }
         body { overflow: hidden; }
+        .home-frame {
+          position: fixed;
+          inset: 0;
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh;
+          border: none;
+          z-index: 9999;
+        }
       `}</style>
       <iframe
         src="/design/index.html"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          border: "none",
-          zIndex: 9999,
-        }}
+        className="home-frame"
         title="Aleko Tools"
       />
     </>

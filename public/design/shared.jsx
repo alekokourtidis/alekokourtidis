@@ -2,6 +2,33 @@
 
 const { useState, useEffect, useRef } = React;
 
+/* ============ Shared Supabase tool_library fetcher ============
+ * Both the homepage and /tools use this so new deployed tools show up
+ * on every page automatically. Pass the hardcoded seed as the fallback
+ * so the UI never blanks out if Supabase is unreachable.
+ */
+window.SB_URL = window.SB_URL || 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+window.SB_KEY = window.SB_KEY || 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+
+window.useToolLibrarySupabase = function useToolLibrarySupabase(fallback, mapRow) {
+  const [tools, setTools] = useState(fallback || []);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(window.SB_URL + '/rest/v1/tool_library?select=*&visible=eq.true&order=sort_order.asc', {
+      headers: { apikey: window.SB_KEY, Authorization: 'Bearer ' + window.SB_KEY },
+      cache: 'no-store',
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(rows => {
+        if (cancelled || !Array.isArray(rows) || rows.length === 0) return;
+        setTools(rows.map(mapRow));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  return tools;
+};
+
 function SharedNav({ current }) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {

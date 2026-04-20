@@ -726,7 +726,7 @@ function ToolLibrary() {
                 <div className="card-tagline">{t.tag}</div>
                 <div className="card-demo"><t.Demo /></div>
                 <div className="card-footer">
-                  <div className="card-meta">{t.meta} · {t.users} Users</div>
+                  <div className="card-meta">{t.meta} · {(t.users === '0' || t.users === 0) ? 'Loading users...' : (t.users + ' Users')}</div>
                   <a className="card-link" href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"}>Visit →</a>
                 </div>
               </CardGlow>
@@ -785,8 +785,14 @@ function ToolLibrary() {
                     {t.cat}
                   </div>
                   <div className="lib-row-users">
-                    <span className="lib-row-users-num">{t.users}</span>
-                    <span className="lib-row-users-label">Users</span>
+                    {(t.users === '0' || t.users === 0) ? (
+                      <span className="lib-row-users-loading">Loading…</span>
+                    ) : (
+                      <>
+                        <span className="lib-row-users-num">{t.users}</span>
+                        <span className="lib-row-users-label">Users</span>
+                      </>
+                    )}
                   </div>
                   <div className="lib-row-price">{t.price}</div>
                   <div className="lib-row-chev">{isOpen ? '▾' : '▸'}</div>

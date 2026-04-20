@@ -5,8 +5,11 @@
 
 const { useState, useEffect, useMemo, useRef } = React;
 
-/* ============ Tool Data ============ */
-const ALL_TOOLS = [
+/* ============ Tool Data ============
+ * SEED_TOOLS is the hardcoded fallback; live list comes from Supabase
+ * tool_library via useToolLibrarySupabase (shared.jsx).
+ */
+const SEED_TOOLS = [
   {
     id: 'essaycloner', title: 'EssayCloner', price: '$1.99 / Mo', priceNum: 1.99,
     cat: 'Education', platform: 'Web',
@@ -131,8 +134,11 @@ const TOOL_URLS = {
   aivisibilitychecker: '/aivisibilitychecker',
   rulebotai: '/rulebotai',
 };
-function toolUrl(id) { return TOOL_URLS[id] || '/' + id; }
-function toolTarget(id) { return TOOL_URLS[id]?.startsWith('http') ? '_blank' : '_top'; }
+function toolUrl(id, url) { return url || TOOL_URLS[id] || '/' + id; }
+function toolTarget(id, url) {
+  const u = url || TOOL_URLS[id] || '';
+  return u.startsWith('http') ? '_blank' : '_top';
+}
 
 const CATEGORIES = ['All', 'Education', 'Health', 'Security', 'Productivity', 'Relationships', 'iOS Apps'];
 const SORTS = ['Newest', 'Most Popular', 'Price (Low)'];
@@ -312,9 +318,9 @@ function FeaturedRow({ tools }) {
               {Demo && <div className="tools-feat-demo"><Demo /></div>}
               <div className="tools-feat-footer">
                 <div className="tools-feat-meta">
-                  {t.platform} · {t.users} users · Launched {fmtDate(t.shipped)}
+                  {t.platform} · {(t.users === '0' || t.users === 0) ? 'Loading users…' : (t.users + ' users')} · Launched {fmtDate(t.shipped)}
                 </div>
-                <a href={toolUrl(t.id)} target={toolTarget(t.id)} className="tools-feat-link">Visit →</a>
+                <a href={toolUrl(t.id, t._url)} target={toolTarget(t.id, t._url)} className="tools-feat-link">Visit →</a>
               </div>
             </CardGlow>
           );
@@ -352,8 +358,14 @@ function ToolRow({ t, index, isOpen, onToggle }) {
         </div>
         <div className="tools-row-cat-pill">{t.cat}</div>
         <div className="tools-row-users">
-          <span className="tools-row-users-num">{t.users}</span>
-          <span className="tools-row-users-label">users</span>
+          {(t.users === '0' || t.users === 0) ? (
+            <span className="tools-row-users-loading">Loading…</span>
+          ) : (
+            <>
+              <span className="tools-row-users-num">{t.users}</span>
+              <span className="tools-row-users-label">users</span>
+            </>
+          )}
         </div>
         <div className="tools-row-price">{t.price}</div>
         <span className={`tools-row-chev ${isOpen ? 'open' : ''}`}>
@@ -389,8 +401,8 @@ function ToolRow({ t, index, isOpen, onToggle }) {
               </div>
             </div>
             <a
-              href={toolUrl(t.id)}
-              target={toolTarget(t.id)}
+              href={toolUrl(t.id, t._url)}
+              target={toolTarget(t.id, t._url)}
               className="tools-row-cta"
               style={{ '--accent': t.accent }}
             >
@@ -535,24 +547,44 @@ function ToolsPage() {
     return () => clearTimeout(t);
   }, [q]);
 
-  const featured = useMemo(() => ALL_TOOLS.filter(t => t.featured), []);
-  const rest = useMemo(() => ALL_TOOLS, []); // Show ALL tools in the list, not just non-featured
+  // Live tool list from Supabase (falls back to SEED_TOOLS on failure)
+  const ALL_TOOLS = window.useToolLibrarySupabase(SEED_TOOLS, (r) => {
+    const price = r.price || 'Free';
+    const priceNum = parseFloat((price.match(/\d+(\.\d+)?/) || ['0'])[0]) || 0;
+    const platform = price.includes('iOS') ? 'iOS' : 'Web';
+    return {
+      id: r.slug,
+      title: r.title,
+      price,
+      priceNum,
+      cat: r.cat,
+      platform,
+      tag: r.tagline,
+      desc: r.tagline,
+      featured: !!r.featured,
+      community: !!r.community,
+      users: r.users,
+      usersNum: parseFloat((r.users || '0').replace('k', '')) * ((r.users || '').includes('k') ? 1000 : 1),
+      shipped: r.shipped_at || '2026-01-01',
+      accent: r.accent,
+      _url: r.url,
+    };
+  });
 
-  // For list view: featured always on top unless an incompatible category is selected
-  const filteredFeatured = useMemo(() => {
-    const searched = filterTools(featured, { cat, q: debouncedQ, sort });
-    return searched;
-  }, [cat, debouncedQ, sort, featured]);
+  const featured = useMemo(() => ALL_TOOLS.filter(t => t.featured), [ALL_TOOLS]);
+  const rest = useMemo(() => ALL_TOOLS, [ALL_TOOLS]);
 
+  const filteredFeatured = useMemo(
+    () => filterTools(featured, { cat, q: debouncedQ, sort }),
+    [cat, debouncedQ, sort, featured]
+  );
   const filteredRest = useMemo(
     () => filterTools(rest, { cat, q: debouncedQ, sort }),
     [cat, debouncedQ, sort, rest]
   );
-
-  // For category view: all tools, no featured-split
   const filteredAll = useMemo(
     () => filterTools(ALL_TOOLS, { cat, q: debouncedQ, sort }),
-    [cat, debouncedQ, sort]
+    [cat, debouncedQ, sort, ALL_TOOLS]
   );
 
   const counts = useMemo(() => {
@@ -561,7 +593,7 @@ function ToolsPage() {
       c[cat] = ALL_TOOLS.filter(t => cat === 'iOS Apps' ? t.platform === 'iOS' : t.cat === cat).length;
     });
     return c;
-  }, []);
+  }, [ALL_TOOLS]);
 
   const totalMatches = view === 'cat' ? filteredAll.length : filteredFeatured.length + filteredRest.length;
 
