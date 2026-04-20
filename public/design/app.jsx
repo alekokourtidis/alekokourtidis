@@ -185,10 +185,34 @@ const TOOLS = [
     users: '0', shipped: '2026-04-19',
     accent: '#22c55e', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'Mon: Grilled salmon + quinoa · 2,100 cal · $8.40'); },
   },
+  {
+    id: 'arrpower', title: 'ArrPower', price: '$9.99 / Mo',
+    cat: 'Productivity',
+    tag: 'Stop your drives from spinning at 3AM. Schedule Radarr and Sonarr tasks intelligently so your hardware rests when you sleep.',
+    meta: 'Web · Launched April 2026',
+    users: '0', shipped: '2026-04-20',
+    accent: '#60a5fa', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'Next run: 02:00 · 4 tasks queued'); },
+  },
+  {
+    id: 'aivisibilitychecker', title: 'AI Visibility Checker', price: '$19 / Mo',
+    cat: 'Productivity',
+    tag: 'Find out if your business shows up when people ask AI chatbots like ChatGPT. Track visibility over time.',
+    meta: 'Web · Launched April 2026',
+    users: '0', shipped: '2026-04-20',
+    accent: '#a78bfa', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, 'ChatGPT: ✓ mentioned · Claude: ✗ missing'); },
+  },
+  {
+    id: 'rulebotai', title: 'RuleBot AI', price: '$4.99 / Mo',
+    cat: 'Productivity',
+    tag: 'An AI chatbot that follows YOUR rules, not its own judgment. Set custom constraints so it stays on-brand.',
+    meta: 'Web · Launched April 2026',
+    users: '0', shipped: '2026-04-20',
+    accent: '#fbbf24', Demo: function() { return React.createElement('div', {style:{padding:16,fontSize:13,color:'var(--text-2)'}}, '3 rules active · 0 violations'); },
+  },
 ];
 
 
-const TOOL_URLS = {"essaycloner": "/essaycloner", "studypebble": "/studyacorn", "studyacorn": "/studyacorn", "shadowshield": "/shadowshield", "trafficguard": "/trafficguard", "wholefed": "https://apps.apple.com/app/wholefed", "feastmate": "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833", "whowasright": "/whowasright", "flowdebug": "/flowdebug", "whomealplanner": "/whomealplanner"};
+const TOOL_URLS = {"essaycloner": "/essaycloner", "studypebble": "/studyacorn", "studyacorn": "/studyacorn", "shadowshield": "/shadowshield", "trafficguard": "/trafficguard", "wholefed": "https://apps.apple.com/app/wholefed", "feastmate": "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833", "whowasright": "/whowasright", "flowdebug": "/flowdebug", "whomealplanner": "/whomealplanner", "arrpower": "/arrpower", "aivisibilitychecker": "/aivisibilitychecker", "rulebotai": "/rulebotai"};
 function toolUrl(id) { return TOOL_URLS[id] || '/' + id; }
 function toolExternal(id) { return (TOOL_URLS[id] || '').startsWith('http'); }
 
@@ -561,7 +585,7 @@ function ToolLibrary() {
   const cats = ['All', 'Education', 'Health', 'Security', 'Productivity', 'Community Picks'];
 
   const featured = TOOLS.filter(t => t.featured);
-  const rest = TOOLS.filter(t => !t.featured);
+  const rest = TOOLS; // show every tool in the library (featured still render on top)
 
   let filteredRest = rest.filter(t => {
     if (cat === 'All') return true;
@@ -612,7 +636,7 @@ function ToolLibrary() {
         <div className="lib-featured-label">
           <span className="section-label" style={{ margin: 0 }}>Featured Tools</span>
           <span className="lib-divider-line" />
-          <span className="lib-featured-count">2 Of 8</span>
+          <span className="lib-featured-count">{featured.length} Of {TOOLS.length}</span>
         </div>
         <div className="lib-featured">
           {featured.map((t, i) => (
