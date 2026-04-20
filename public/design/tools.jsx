@@ -318,7 +318,7 @@ function FeaturedRow({ tools }) {
               {Demo && <div className="tools-feat-demo"><Demo /></div>}
               <div className="tools-feat-footer">
                 <div className="tools-feat-meta">
-                  {t.platform} · {(t.users === '0' || t.users === 0) ? 'Loading users…' : (t.users + ' users')} · Launched {fmtDate(t.shipped)}
+                  {t.platform} · {(t.users === '0' || t.users === 0) ? '… users' : (t.users + ' users')} · Launched {fmtDate(t.shipped)}
                 </div>
                 <a href={toolUrl(t.id, t._url)} target={toolTarget(t.id, t._url)} className="tools-feat-link">Visit →</a>
               </div>
@@ -358,14 +358,8 @@ function ToolRow({ t, index, isOpen, onToggle }) {
         </div>
         <div className="tools-row-cat-pill">{t.cat}</div>
         <div className="tools-row-users">
-          {(t.users === '0' || t.users === 0) ? (
-            <span className="tools-row-users-loading">Loading…</span>
-          ) : (
-            <>
-              <span className="tools-row-users-num">{t.users}</span>
-              <span className="tools-row-users-label">users</span>
-            </>
-          )}
+          <span className="tools-row-users-num">{(t.users === '0' || t.users === 0) ? '…' : t.users}</span>
+          <span className="tools-row-users-label">users</span>
         </div>
         <div className="tools-row-price">{t.price}</div>
         <span className={`tools-row-chev ${isOpen ? 'open' : ''}`}>

@@ -23,6 +23,8 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -1612,20 +1614,6 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 }
 .lib-row-cta:hover { transform: translateY(-1px); filter: brightness(1.1); }
 
-.lib-row-users-loading,
-.tools-row-users-loading {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-3, #6b7280);
-  font-weight: 500;
-  animation: pulse-loading 1.4s ease-in-out infinite;
-}
-@keyframes pulse-loading {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 1; }
-}
-
 .lib-viewall-wrap {
   display: flex;
   justify-content: center;
@@ -2140,14 +2128,15 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 
 /* ============ Devlog / Blog Table ============ */
 .section-blog {
-  padding-top: 60px; padding-bottom: 80px;
+  padding-top: 40px; padding-bottom: 60px;
 }
 .blog-head-new {
   display: flex; justify-content: space-between; align-items: flex-end;
-  gap: 40px; margin-bottom: 40px;
+  gap: 32px; margin-bottom: 20px;
 }
 .blog-head-new > div:first-child { max-width: 640px; }
-.blog-head-new h2 { margin-bottom: 14px; }
+.blog-head-new h2 { margin-bottom: 8px; }
+.blog-head-new .section-desc { margin-bottom: 0; }
 
 .blog-stats {
   display: flex; gap: 0;
@@ -2366,8 +2355,19 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 .blog-table-foot-link:hover { color: var(--text); }
 
 @media (max-width: 920px) {
-  .blog-head-new { flex-direction: column; align-items: flex-start; }
+  .blog-head-new {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .blog-head-new h2 { font-size: 26px; margin-bottom: 4px; line-height: 1.15; }
+  .blog-head-new .section-desc { font-size: 14px; line-height: 1.45; }
   .blog-stats { align-self: stretch; }
+  .blog-stat { padding: 10px 14px; min-width: 0; flex: 1; }
+  .blog-stat-num { font-size: 20px; }
+  .blog-stat-label { font-size: 9px; margin-top: 4px; }
+  .section-blog { padding-top: 24px !important; padding-bottom: 32px !important; }
   .blog-table-row {
     grid-template-columns: 70px 1fr 18px;
     gap: 12px;

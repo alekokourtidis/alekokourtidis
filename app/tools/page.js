@@ -11,7 +11,7 @@ export default function Page() {
           inset: 0;
           width: 100vw;
           height: 100vh;
-          height: 100dvh;
+          height: 100svh;
           border: none;
           z-index: 9999;
         }

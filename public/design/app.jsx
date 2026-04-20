@@ -726,7 +726,7 @@ function ToolLibrary() {
                 <div className="card-tagline">{t.tag}</div>
                 <div className="card-demo"><t.Demo /></div>
                 <div className="card-footer">
-                  <div className="card-meta">{t.meta} · {(t.users === '0' || t.users === 0) ? 'Loading users...' : (t.users + ' Users')}</div>
+                  <div className="card-meta">{t.meta} · {(t.users === '0' || t.users === 0) ? '… Users' : (t.users + ' Users')}</div>
                   <a className="card-link" href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"}>Visit →</a>
                 </div>
               </CardGlow>
@@ -785,14 +785,8 @@ function ToolLibrary() {
                     {t.cat}
                   </div>
                   <div className="lib-row-users">
-                    {(t.users === '0' || t.users === 0) ? (
-                      <span className="lib-row-users-loading">Loading…</span>
-                    ) : (
-                      <>
-                        <span className="lib-row-users-num">{t.users}</span>
-                        <span className="lib-row-users-label">Users</span>
-                      </>
-                    )}
+                    <span className="lib-row-users-num">{(t.users === '0' || t.users === 0) ? '…' : t.users}</span>
+                    <span className="lib-row-users-label">Users</span>
                   </div>
                   <div className="lib-row-price">{t.price}</div>
                   <div className="lib-row-chev">{isOpen ? '▾' : '▸'}</div>
@@ -1096,7 +1090,7 @@ function BlogSection() {
             <div className="blog-stats">
               <div className="blog-stat">
                 <div className="blog-stat-num">{totalPosts}</div>
-                <div className="blog-stat-label">Posts</div>
+                <div className="blog-stat-label">Blogs</div>
               </div>
               <div className="blog-stat">
                 <div className="blog-stat-num">{postsThisMonth}</div>
@@ -1160,8 +1154,8 @@ function BlogSection() {
             </div>
 
             <div className="blog-table-foot">
-              <span className="blog-table-foot-note">Showing {Math.min(5, sorted.length)} of {sorted.length} posts</span>
-              <a href="/blog" target="_top" className="blog-table-foot-link">View All {sorted.length} Posts →</a>
+              <span className="blog-table-foot-note">Showing {Math.min(5, sorted.length)} of {sorted.length} blogs</span>
+              <a href="/blog" target="_top" className="blog-table-foot-link">View All {sorted.length} Blogs →</a>
             </div>
           </div>
         </Reveal>
@@ -1170,7 +1164,7 @@ function BlogSection() {
           <Reveal delay={120}>
             <div className="lib-viewall-wrap">
               <a href="/blog" target="_top" className="lib-viewall-btn">
-                View All {sorted.length} Posts →
+                View All {sorted.length} Blogs →
               </a>
             </div>
           </Reveal>
