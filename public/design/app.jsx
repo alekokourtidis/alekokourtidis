@@ -111,8 +111,12 @@ function Reveal({ children, delay = 0, as: Tag = 'div', className = '', style = 
   return <Tag ref={ref} className={className} style={inlineStyle}>{children}</Tag>;
 }
 
-/* ============ Tool data ============ */
-const TOOLS = [
+/* ============ Tool data ============
+ * SEED_TOOLS is the hardcoded fallback used if the Supabase fetch fails.
+ * The live list comes from `tool_library` in Supabase — new pipeline-shipped
+ * tools should be upserted there so they appear here automatically.
+ */
+const SEED_TOOLS = [
   {
     id: 'essaycloner', title: 'EssayCloner', price: '$1.99 / Mo',
     cat: 'Education',
@@ -213,8 +217,79 @@ const TOOLS = [
 
 
 const TOOL_URLS = {"essaycloner": "/essaycloner", "studypebble": "/studyacorn", "studyacorn": "/studyacorn", "shadowshield": "/shadowshield", "trafficguard": "/trafficguard", "wholefed": "https://apps.apple.com/app/wholefed", "feastmate": "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833", "whowasright": "/whowasright", "flowdebug": "/flowdebug", "whomealplanner": "/whomealplanner", "arrpower": "/arrpower", "aivisibilitychecker": "/aivisibilitychecker", "rulebotai": "/rulebotai"};
-function toolUrl(id) { return TOOL_URLS[id] || '/' + id; }
-function toolExternal(id) { return (TOOL_URLS[id] || '').startsWith('http'); }
+function toolUrl(id, url) {
+  if (url) return url;
+  return TOOL_URLS[id] || '/' + id;
+}
+function toolExternal(id, url) {
+  const u = url || TOOL_URLS[id] || '';
+  return u.startsWith('http');
+}
+
+/* ============ Supabase-backed tool fetch ============
+ * Reads `tool_library` (public SELECT policy). Maps rows onto the shape
+ * SEED_TOOLS uses. Falls back to SEED_TOOLS on any error or empty response.
+ * Demos are keyed by slug so pipeline tools without hand-built demos render
+ * a simple placeholder.
+ */
+const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+
+const DEMOS_BY_SLUG = {
+  essaycloner: () => window.EssayClonerDemo,
+  studypebble: () => window.StudyPebbleDemo,
+  shadowshield: () => window.ShadowShieldDemo,
+  trafficguard: () => window.TrafficGuardDemo,
+  wholefed: () => window.WholefedDemo,
+  feastmate: () => window.FeastmateDemo,
+};
+
+function placeholderDemo(tagline) {
+  return function Demo() {
+    return React.createElement('div', { style: { padding: 16, fontSize: 13, color: 'var(--text-2)' } }, tagline);
+  };
+}
+
+function rowToTool(r) {
+  const demoFactory = DEMOS_BY_SLUG[r.slug];
+  const Demo = (demoFactory && demoFactory()) || placeholderDemo(r.tagline);
+  const platform = (r.price || '').includes('iOS') ? 'iOS' : 'Web';
+  const shipped = r.shipped_at || '2026-01-01';
+  const month = new Date(shipped).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  return {
+    id: r.slug,
+    title: r.title,
+    price: r.price,
+    cat: r.cat,
+    tag: r.tagline,
+    meta: platform + ' · Launched ' + month,
+    featured: !!r.featured,
+    users: r.users,
+    shipped: shipped,
+    community: !!r.community,
+    accent: r.accent,
+    url: r.url,
+    Demo: Demo,
+  };
+}
+
+function useToolLibrary() {
+  const [tools, setTools] = useState(SEED_TOOLS);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(SB_URL + '/rest/v1/tool_library?select=*&visible=eq.true&order=sort_order.asc', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(rows => {
+        if (cancelled || !Array.isArray(rows) || rows.length === 0) return;
+        setTools(rows.map(rowToTool));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  return tools;
+}
 
 const WIP = [
   { tag: 'Shipping This Week', title: 'Tabby', desc: 'My tabs got out of hand. So I\'m building a thing that summarizes them and closes the dead ones for me.', pct: 78, eta: 'Friday', accent: '#fbbf24', icon: '⌘' },
@@ -584,6 +659,7 @@ function ToolLibrary() {
 
   const cats = ['All', 'Education', 'Health', 'Security', 'Productivity', 'Community Picks'];
 
+  const TOOLS = useToolLibrary();
   const featured = TOOLS.filter(t => t.featured);
   const rest = TOOLS; // show every tool in the library (featured still render on top)
 
@@ -651,7 +727,7 @@ function ToolLibrary() {
                 <div className="card-demo"><t.Demo /></div>
                 <div className="card-footer">
                   <div className="card-meta">{t.meta} · {t.users} Users</div>
-                  <a className="card-link" href={toolUrl(t.id)} target={toolExternal(t.id) ? "_blank" : "_top"}>Visit →</a>
+                  <a className="card-link" href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"}>Visit →</a>
                 </div>
               </CardGlow>
             </Reveal>
@@ -735,7 +811,7 @@ function ToolLibrary() {
                           <span className="lib-row-meta-val" style={{ color: t.accent }}>Community Pick</span>
                         </div>
                       )}
-                      <a href={toolUrl(t.id)} target={toolExternal(t.id) ? "_blank" : "_top"} className="lib-row-cta">Visit {t.title} →</a>
+                      <a href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"} className="lib-row-cta">Visit {t.title} →</a>
                     </div>
                   </div>
                 </div>
