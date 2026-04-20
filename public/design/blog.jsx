@@ -1,6 +1,6 @@
-const { useState } = React;
+const { useState, useEffect } = React;
 
-const POSTS = [
+const FALLBACK_POSTS = [
   { cat: 'Education', title: 'How EssayCloner Learns A Voice In Three Samples', excerpt: 'I tried fine-tuning. I tried RAG. I tried a wild prompt sandwich. Here is what actually shipped, and what I threw out.', date: 'Apr 17, 2026', read: '6 Min', accent: '#fbbf24' },
   { cat: 'Relationships', title: 'I Killed My Second Product After Four Months', excerpt: 'It made $200 a month. People told me to keep it. I shut it down anyway. Honestly the best decision I made this year.', date: 'Apr 14, 2026', read: '9 Min', accent: '#ef4444' },
   { cat: 'SEO', title: 'Why One-Person Companies Will Own The Next Decade', excerpt: 'Distribution got cheap. Building got cheaper. The bottleneck moved to taste, and taste does not scale with headcount.', date: 'Apr 11, 2026', read: '11 Min', accent: '#a78bfa' },
@@ -11,9 +11,18 @@ const POSTS = [
 ];
 
 function BlogPage() {
-  const cats = ['All', 'Education', 'Health', 'Security', 'SEO', 'Relationships'];
+  const [livePosts, setLivePosts] = useState(null);
+  useEffect(() => {
+    fetch('/blog-posts.json', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (Array.isArray(data) && data.length) setLivePosts(data); })
+      .catch(() => {});
+  }, []);
+  const source = livePosts || FALLBACK_POSTS;
+  const catSet = Array.from(new Set(source.map(p => p.cat)));
+  const cats = ['All', ...catSet];
   const [filter, setFilter] = useState('All');
-  const filtered = filter === 'All' ? POSTS : POSTS.filter(p => p.cat === filter);
+  const filtered = filter === 'All' ? source : source.filter(p => p.cat === filter);
 
   return (
     <>
@@ -45,7 +54,7 @@ function BlogPage() {
 
           <div className="blogpage-grid">
             {filtered.map((p, i) => (
-              <div key={p.title}>
+              <a key={p.slug || p.title} href={p.slug ? `/blog/${p.slug}` : '#'} target="_top" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <CardGlow className="blogpage-card" accent={p.accent}>
                   <span className="blogpage-card-glow" />
                   <div className="blogpage-card-cat" style={{ color: p.accent, borderColor: p.accent + '40', background: p.accent + '10' }}>{p.cat}</div>
@@ -58,7 +67,7 @@ function BlogPage() {
                     <span className="blogpage-card-arrow">→</span>
                   </div>
                 </CardGlow>
-              </div>
+              </a>
             ))}
           </div>
         </div>

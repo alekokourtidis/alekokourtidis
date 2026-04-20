@@ -976,15 +976,24 @@ window.POSTS = POSTS;
 function BlogSection() {
   const [sortKey, setSortKey] = useState('date');
   const [sortDir, setSortDir] = useState('desc');
+  const [livePosts, setLivePosts] = useState(null);
 
-  const totalWords = POSTS.reduce((a, p) => a + (parseInt(p.words?.replace(',', '')) || 0), 0);
-  const totalPosts = POSTS.length;
-  const postsThisMonth = POSTS.filter(p => p.date.includes('Apr')).length;
+  React.useEffect(() => {
+    fetch('/blog-posts.json', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (Array.isArray(data) && data.length) setLivePosts(data); })
+      .catch(() => {});
+  }, []);
+
+  const source = livePosts || POSTS;
+  const totalWords = source.reduce((a, p) => a + (parseInt((p.words || '').replace(',', '')) || 0), 0);
+  const totalPosts = source.length;
+  const postsThisMonth = source.filter(p => p.date.includes('Apr')).length;
 
   const parseDate = (d) => new Date(d).getTime();
   const parseWords = (w) => parseInt((w || '0').replace(',', '')) || 0;
 
-  const sorted = [...POSTS].sort((a, b) => {
+  const sorted = [...source].sort((a, b) => {
     let va, vb;
     if (sortKey === 'date') { va = parseDate(a.date); vb = parseDate(b.date); }
     else if (sortKey === 'words') { va = parseWords(a.words); vb = parseWords(b.words); }
@@ -1063,7 +1072,7 @@ function BlogSection() {
               </div>
 
               {sorted.map((p, i) => (
-                <a key={p.title} href="blog.html" className="blog-table-row blog-table-body-row" role="row">
+                <a key={p.slug || p.title} href={p.slug ? `/blog/${p.slug}` : '/blog'} target="_top" className="blog-table-row blog-table-body-row" role="row">
                   <div className="blog-td blog-td-date">{p.date.replace(', 2026', '')}</div>
                   <div className="blog-td blog-td-cat">
                     <span className="blog-cat-chip" style={{ color: p.accent, background: p.accent + '14', borderColor: p.accent + '33' }}>
@@ -1085,7 +1094,7 @@ function BlogSection() {
 
             <div className="blog-table-foot">
               <span className="blog-table-foot-note">Newest First · Click Any Column To Sort</span>
-              <a href="blog.html" className="blog-table-foot-link">Open Full Archive →</a>
+              <a href="/blog" target="_top" className="blog-table-foot-link">Open Full Archive →</a>
             </div>
           </div>
         </Reveal>
