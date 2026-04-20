@@ -187,6 +187,11 @@ const TOOLS = [
   },
 ];
 
+
+const TOOL_URLS = {"essaycloner": "/essaycloner", "studypebble": "/studyacorn", "studyacorn": "/studyacorn", "shadowshield": "/shadowshield", "trafficguard": "/trafficguard", "wholefed": "https://apps.apple.com/app/wholefed", "feastmate": "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833", "whowasright": "/whowasright", "flowdebug": "/flowdebug", "whomealplanner": "/whomealplanner"};
+function toolUrl(id) { return TOOL_URLS[id] || '/' + id; }
+function toolExternal(id) { return (TOOL_URLS[id] || '').startsWith('http'); }
+
 const WIP = [
   { tag: 'Shipping This Week', title: 'Tabby', desc: 'My tabs got out of hand. So I\'m building a thing that summarizes them and closes the dead ones for me.', pct: 78, eta: 'Friday', accent: '#fbbf24', icon: '⌘' },
   { tag: 'Building', title: 'Quietmail', desc: 'I hate getting pinged for things that aren\'t urgent. This batches the noise and only surfaces what actually matters.', pct: 41, eta: 'May', accent: '#60a5fa', icon: '✉' },
@@ -622,7 +627,7 @@ function ToolLibrary() {
                 <div className="card-demo"><t.Demo /></div>
                 <div className="card-footer">
                   <div className="card-meta">{t.meta} · {t.users} Users</div>
-                  <a className="card-link" href={`tool.html?id=${t.id}`}>Visit →</a>
+                  <a className="card-link" href={toolUrl(t.id)} target={toolExternal(t.id) ? "_blank" : "_top"}>Visit →</a>
                 </div>
               </CardGlow>
             </Reveal>
@@ -706,7 +711,7 @@ function ToolLibrary() {
                           <span className="lib-row-meta-val" style={{ color: t.accent }}>Community Pick</span>
                         </div>
                       )}
-                      <a href={`tool.html?id=${t.id}`} className="lib-row-cta">Visit {t.title} →</a>
+                      <a href={toolUrl(t.id)} target={toolExternal(t.id) ? "_blank" : "_top"} className="lib-row-cta">Visit {t.title} →</a>
                     </div>
                   </div>
                 </div>
@@ -783,7 +788,7 @@ function WeeklyCommunity() {
                 <div className="weekly-card-title">{week.title}</div>
                 <div className="weekly-card-tagline">{week.tagline}</div>
               </div>
-              <a href="tool.html?id=wholefed" className="weekly-card-cta">Visit {week.title} →</a>
+              <a href="/whomealplanner" target="_top" className="weekly-card-cta">Visit {week.title} →</a>
             </div>
 
             <div className="weekly-card-body">
