@@ -78,6 +78,30 @@ const ALL_TOOLS = [
     desc: 'Paste your dietary restrictions and goals. AI generates a 7-day meal plan following WHO guidelines with a grocery list and estimated weekly cost.',
     users: '0', usersNum: 0, shipped: '2026-04-19',
     accent: '#22c55e',
+  },,
+  {
+    id: 'arrpower', title: 'ArrPower', price: '\$9.99 / Mo', priceNum: 9.99,
+    cat: 'Productivity', platform: 'Web',
+    tag: 'Stop your drives from spinning at 3AM. Schedule Radarr and Sonarr tasks intelligently.',
+    desc: 'Smart scheduling for media server tasks so your hardware rests when you sleep.',
+    users: '0', usersNum: 0, shipped: '2026-04-20',
+    accent: '#60a5fa',
+  },
+  {
+    id: 'aivisibilitychecker', title: 'AI Visibility Checker', price: '\$19 / Mo', priceNum: 19,
+    cat: 'Productivity', platform: 'Web',
+    tag: 'Find out if your business shows up when people ask AI chatbots like ChatGPT.',
+    desc: 'Checks if your brand appears in AI chatbot responses and tracks visibility over time.',
+    users: '0', usersNum: 0, shipped: '2026-04-20',
+    accent: '#a78bfa',
+  },
+  {
+    id: 'rulebotai', title: 'RuleBot AI', price: '\$4.99 / Mo', priceNum: 4.99,
+    cat: 'Productivity', platform: 'Web',
+    tag: 'An AI chatbot that follows YOUR rules, not its own judgment.',
+    desc: 'Set custom rules and constraints for your AI assistant so it stays on-brand.',
+    users: '0', usersNum: 0, shipped: '2026-04-20',
+    accent: '#fbbf24',
   },
 ];
 
@@ -103,6 +127,9 @@ const TOOL_URLS = {
   whowasright: '/whowasright',
   flowdebug: '/flowdebug',
   whomealplanner: '/whomealplanner',
+  arrpower: '/arrpower',
+  aivisibilitychecker: '/aivisibilitychecker',
+  rulebotai: '/rulebotai',
 };
 function toolUrl(id) { return TOOL_URLS[id] || '/' + id; }
 function toolTarget(id) { return TOOL_URLS[id]?.startsWith('http') ? '_blank' : '_top'; }
