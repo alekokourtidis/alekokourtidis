@@ -2,8 +2,8 @@ export const metadata = { title: "Aleko Tools" };
 export default function Page() {
   return (
     <>
-      <style>{`.nav, .footer { display: none !important; } body { overflow: hidden; }`}</style>
-      <iframe src="/design/changelog.html" style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", border: "none", zIndex: 9999 }} title="Aleko Tools" />
+      <style>{`html, body { margin: 0; padding: 0; height: 100%; } .nav, .footer { display: none !important; }`}</style>
+      <iframe src="/design/changelog.html" style={{ display: "block", width: "100%", height: "100vh", border: "none" }} title="Aleko Tools" />
     </>
   );
 }

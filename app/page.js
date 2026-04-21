@@ -9,17 +9,14 @@ export default function Home() {
   return (
     <>
       <style>{`
-        html, body { margin: 0; padding: 0; height: 100%; overscroll-behavior: none; }
+        html, body { margin: 0; padding: 0; height: 100%; }
         .nav, .footer { display: none !important; }
-        body { overflow: hidden; }
         .home-frame {
-          position: fixed;
-          inset: 0;
-          width: 100vw;
+          display: block;
+          width: 100%;
           height: 100vh;
           height: 100svh;
           border: none;
-          z-index: 9999;
         }
       `}</style>
       <iframe
