@@ -160,16 +160,18 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
   inset: 0;
   z-index: 200;
   pointer-events: none;
+  visibility: hidden;
 }
-.mobile-menu.is-open { pointer-events: auto; }
+.mobile-menu.is-open { pointer-events: auto; visibility: visible; }
 .mobile-menu-backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
   opacity: 0;
+  pointer-events: none;
   transition: opacity .22s ease;
 }
-.mobile-menu.is-open .mobile-menu-backdrop { opacity: 1; }
+.mobile-menu.is-open .mobile-menu-backdrop { opacity: 1; pointer-events: auto; }
 .mobile-menu-panel {
   position: absolute;
   left: 0; top: 0; bottom: 0;
