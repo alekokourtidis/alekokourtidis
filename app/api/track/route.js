@@ -17,6 +17,11 @@ const BOT_UA_PATTERNS = [
   /whatsapp/i, /linkedin/i, /preview/i, /embed/i,
 ];
 
+function safeDecode(v) {
+  if (!v) return v;
+  try { return decodeURIComponent(v); } catch { return v; }
+}
+
 function isBot(userAgent, city) {
   if (!userAgent) return true;
   if (userAgent.length < 30) return true;
@@ -29,10 +34,21 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    const country = request.headers.get('x-vercel-ip-country') || null;
-    const city = request.headers.get('x-vercel-ip-city') || null;
-    const region = request.headers.get('x-vercel-ip-country-region') || null;
-    const location = [city, region, country].filter(Boolean).join(', ') || body.timezone || null;
+    // Vercel URL-encodes city names (e.g. "Council%20Bluffs"), so decode
+    // before bot-matching and before storing — otherwise filters miss and
+    // the dashboard shows ugly %20 strings.
+    const country = safeDecode(request.headers.get('x-vercel-ip-country')) || null;
+    const city = safeDecode(request.headers.get('x-vercel-ip-city')) || null;
+    const region = safeDecode(request.headers.get('x-vercel-ip-country-region')) || null;
+    // Build the most informative label we can. Vercel often has city+region+
+    // country but sometimes only country. When city is missing we tag the
+    // browser timezone (e.g. "US · America/Los_Angeles") so the dashboard
+    // doesn't show useless bare "US" rows.
+    const parts = [city, region, country].filter(Boolean);
+    let location = parts.join(', ') || country || null;
+    if (!city && body.timezone) {
+      location = location ? `${location} · ${body.timezone}` : body.timezone;
+    }
 
     // Block bots
     if (isBot(body.user_agent, city)) {
