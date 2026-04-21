@@ -81,7 +81,7 @@ const SEED_TOOLS = [
     desc: 'Paste your dietary restrictions and goals. AI generates a 7-day meal plan following WHO guidelines with a grocery list and estimated weekly cost.',
     users: '0', usersNum: 0, shipped: '2026-04-19',
     accent: '#22c55e',
-  },,
+  },
   {
     id: 'arrpower', title: 'ArrPower', price: '\$9.99 / Mo', priceNum: 9.99,
     cat: 'Productivity', platform: 'Web',
