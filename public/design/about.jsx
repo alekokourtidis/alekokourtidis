@@ -66,7 +66,7 @@ function AboutPage() {
           </div>
           <div>
             <p className="about-hero-sub">
-              I'm Aleko. I'm 17. I build small AI tools from my bedroom in Atlanta and people pay me for them. I shipped my first one a couple weeks ago. I'm shipping a new one every day.
+              I'm Aleko. I'm 17. I build small AI tools from my bedroom and people pay me for them. I shipped my first one a couple weeks ago. I'm shipping a new one every day.
             </p>
           </div>
         </div>
