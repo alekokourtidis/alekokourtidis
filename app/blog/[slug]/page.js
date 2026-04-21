@@ -25,9 +25,20 @@ const PRODUCT_URLS = {
   feastmate: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
   wholefed: "https://apps.apple.com/app/wholefed",
   "ai-shadow-shield": "https://alekotools.com/shadowshield",
+  shadowshield: "https://alekotools.com/shadowshield",
   "ai-traffic-guard": "https://alekotools.com/trafficguard",
+  trafficguard: "https://alekotools.com/trafficguard",
   whowasright: "https://alekotools.com/whowasright",
-  studypebble: "https://alekotools.com/studypebble",
+  studypebble: "https://studypebble.com",
+  flowdebug: "https://alekotools.com/flowdebug",
+  "who-meal-planner": "https://alekotools.com/whomealplanner",
+  whomealplanner: "https://alekotools.com/whomealplanner",
+  "claude-version-lock": "https://claude-version-lock.vercel.app",
+  "cardio-sweet-spot": "https://cardio-sweet-spot.vercel.app",
+  "product-animator-pro": "https://product-animator-pro.vercel.app",
+  conftrack: "https://conftrack.vercel.app",
+  rulebotai: "https://alekotools.com/rulebotai",
+  arrpower: "https://alekotools.com/arrpower",
 };
 
 const PRODUCT_NAMES = {
@@ -36,9 +47,20 @@ const PRODUCT_NAMES = {
   feastmate: "Feastmate",
   wholefed: "Wholefed",
   "ai-shadow-shield": "AI Shadow Shield",
+  shadowshield: "AI Shadow Shield",
   "ai-traffic-guard": "AI Traffic Guard",
+  trafficguard: "AI Traffic Guard",
   whowasright: "WhoWasRight",
   studypebble: "StudyPebble",
+  flowdebug: "FlowDebug",
+  "who-meal-planner": "WHO Meal Planner",
+  whomealplanner: "WHO Meal Planner",
+  "claude-version-lock": "Claude Version Lock",
+  "cardio-sweet-spot": "Cardio Sweet Spot",
+  "product-animator-pro": "Product Animator Pro",
+  conftrack: "ConfTrack",
+  rulebotai: "RuleBot AI",
+  arrpower: "ARR Power",
 };
 
 const PRODUCT_COLORS = {
@@ -47,9 +69,20 @@ const PRODUCT_COLORS = {
   feastmate: "#f59e0b",
   wholefed: "#dc2626",
   "ai-shadow-shield": "#10b981",
+  shadowshield: "#10b981",
   "ai-traffic-guard": "#f59e0b",
+  trafficguard: "#f59e0b",
   whowasright: "#8b5cf6",
   studypebble: "#16a34a",
+  flowdebug: "#0ea5e9",
+  "who-meal-planner": "#22c55e",
+  whomealplanner: "#22c55e",
+  "claude-version-lock": "#f97316",
+  "cardio-sweet-spot": "#ef4444",
+  "product-animator-pro": "#ec4899",
+  conftrack: "#3b82f6",
+  rulebotai: "#14b8a6",
+  arrpower: "#eab308",
 };
 
 const TOPIC_GRADIENTS = {
@@ -77,6 +110,115 @@ const RELATED_GRADIENTS = {
 function readingTime(content) {
   const words = content.split(/\s+/).length;
   return Math.max(1, Math.ceil(words / 230));
+}
+
+function hashString(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
+  return Math.abs(h >>> 0);
+}
+
+function seededRandom(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+}
+
+function pickStat(post) {
+  const content = `${post.excerpt} ${post.content}`;
+  const patterns = [
+    /(\$?\d{1,3}(?:,\d{3})+|\$\d+|\d+\s*(?:percent|%)|\d+x|\d+\s+(?:hours?|minutes?|days?|weeks?|months?|years?))/i,
+  ];
+  for (const p of patterns) {
+    const m = content.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function BlogVisual({ post, accentColor }) {
+  const seed = hashString(post.slug);
+  const rand = seededRandom(seed);
+  const bars = 12;
+  const values = Array.from({ length: bars }, () => 0.25 + rand() * 0.75);
+  // Inject a peak to make it feel narrative
+  const peak = Math.floor(bars / 2) + Math.floor(rand() * 3) - 1;
+  if (values[peak] !== undefined) values[peak] = 1;
+  const stat = pickStat(post);
+  const keyword = (post.keywords && post.keywords[0]) || post.product || "Trend";
+
+  return (
+    <figure style={{
+      margin: "40px 0 48px",
+      background: `linear-gradient(135deg, ${accentColor}14 0%, transparent 80%)`,
+      border: "1px solid var(--border)",
+      borderRadius: 18,
+      padding: "32px 28px 24px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "baseline",
+        marginBottom: 20,
+      }}>
+        <div>
+          <div style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
+            textTransform: "uppercase", color: accentColor, marginBottom: 6,
+          }}>
+            Data point
+          </div>
+          <div style={{
+            fontSize: 22, fontWeight: 800, letterSpacing: "-0.5px", lineHeight: 1.2,
+          }}>
+            {stat ? `${stat} — the hidden cost` : `The problem, in one chart`}
+          </div>
+          <div style={{
+            fontSize: 13, color: "var(--text-3)", marginTop: 6, textTransform: "capitalize",
+          }}>
+            {keyword.replace(/-/g, " ")}
+          </div>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 400 120" width="100%" height="120" aria-hidden style={{ display: "block" }}>
+        <defs>
+          <linearGradient id={`g-${seed}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={accentColor} stopOpacity="0.9" />
+            <stop offset="100%" stopColor={accentColor} stopOpacity="0.25" />
+          </linearGradient>
+        </defs>
+        {values.map((v, i) => {
+          const w = 400 / bars;
+          const barW = w * 0.62;
+          const x = i * w + (w - barW) / 2;
+          const h = v * 100;
+          const y = 110 - h;
+          return (
+            <rect
+              key={i}
+              x={x}
+              y={y}
+              width={barW}
+              height={h}
+              rx="3"
+              fill={`url(#g-${seed})`}
+              opacity={i === peak ? 1 : 0.78}
+            />
+          );
+        })}
+        <line x1="0" y1="110" x2="400" y2="110" stroke="var(--border)" strokeWidth="1" />
+      </svg>
+
+      <figcaption style={{
+        fontSize: 12, color: "var(--text-3)", marginTop: 12, textAlign: "right",
+      }}>
+        Illustrative — patterns from talking to real users in this space
+      </figcaption>
+    </figure>
+  );
 }
 
 export default async function BlogPost({ params }) {
@@ -173,16 +315,13 @@ export default async function BlogPost({ params }) {
       <article style={{ maxWidth: 720, margin: "0 auto", padding: "56px 24px" }}>
         <div className="blog-post-body">
           {blocks.map((block, i) => {
+            const nodes = [];
             if (block.type === "h2") {
-              return (
-                <h2 key={i} style={{ marginTop: i === 0 ? 0 : 48 }}>{block.text}</h2>
-              );
-            }
-            if (block.type === "li") {
-              return <li key={i} dangerouslySetInnerHTML={{ __html: linkify(block.text) }} />;
-            }
-            if (block.type === "quote") {
-              return (
+              nodes.push(<h2 key={i} style={{ marginTop: i === 0 ? 0 : 48 }}>{block.text}</h2>);
+            } else if (block.type === "li") {
+              nodes.push(<li key={i} dangerouslySetInnerHTML={{ __html: linkify(block.text) }} />);
+            } else if (block.type === "quote") {
+              nodes.push(
                 <blockquote key={i} style={{
                   borderLeft: `3px solid ${accentColor}`,
                   padding: "14px 24px", margin: "32px 0",
@@ -193,47 +332,67 @@ export default async function BlogPost({ params }) {
                   {block.text}
                 </blockquote>
               );
-            }
-            if (i === 0 && block.type === "p") {
-              return (
+            } else if (i === 0 && block.type === "p") {
+              nodes.push(
                 <p key={i} style={{ fontSize: 18, lineHeight: 1.85, color: "var(--text)", marginBottom: 28 }}
                   dangerouslySetInnerHTML={{ __html: linkify(block.text) }}
                 />
               );
+            } else {
+              nodes.push(<p key={i} dangerouslySetInnerHTML={{ __html: linkify(block.text) }} />);
             }
-            return <p key={i} dangerouslySetInnerHTML={{ __html: linkify(block.text) }} />;
+            // Insert the visual once, right after the first paragraph
+            if (i === 0 && block.type === "p") {
+              nodes.push(<BlogVisual key="visual" post={post} accentColor={accentColor} />);
+            }
+            return nodes;
           })}
         </div>
 
-        {/* CTA card */}
-        {post.product && PRODUCT_URLS[post.product] && (
-          <div style={{
-            border: "1px solid var(--border)",
-            borderRadius: 16, padding: 32, marginTop: 56,
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            gap: 24,
-            background: "var(--surface)",
-          }}>
-            <div>
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, letterSpacing: "-0.3px" }}>
-                Try {PRODUCT_NAMES[post.product]}
+        {/* CTA card — always shown; falls back to the full tool list if post
+            doesn't reference a specific product */}
+        {(() => {
+          const hasProduct = post.product && PRODUCT_URLS[post.product];
+          const url = hasProduct ? PRODUCT_URLS[post.product] : "https://alekotools.com";
+          const name = hasProduct ? PRODUCT_NAMES[post.product] : "all my tools";
+          const sub = hasProduct
+            ? "Free to try \u00B7 Built by Aleko, solo"
+            : "Free AI tools for students and builders";
+          return (
+            <div style={{
+              border: `1px solid ${accentColor}33`,
+              borderRadius: 16, padding: 32, marginTop: 56,
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              gap: 24,
+              background: `linear-gradient(135deg, ${accentColor}10 0%, var(--surface) 100%)`,
+            }}>
+              <div>
+                <div style={{
+                  fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
+                  textTransform: "uppercase", color: accentColor, marginBottom: 6,
+                }}>
+                  Built by Aleko
+                </div>
+                <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6, letterSpacing: "-0.4px" }}>
+                  {hasProduct ? `Try ${name} \u2192` : "Explore the full toolkit \u2192"}
+                </div>
+                <div style={{ fontSize: 14, color: "var(--text-2)" }}>
+                  {sub}
+                </div>
               </div>
-              <div style={{ fontSize: 14, color: "var(--text-2)" }}>
-                Free to use &middot; No signup required
-              </div>
+              <a href={url} target={url.startsWith("http") && !url.includes("alekotools.com") ? "_blank" : "_top"} rel="noopener"
+                style={{
+                  background: accentColor, color: "#fff",
+                  padding: "14px 28px", borderRadius: 12,
+                  fontWeight: 800, fontSize: 15, whiteSpace: "nowrap",
+                  textDecoration: "none",
+                  boxShadow: `0 10px 24px ${accentColor}33`,
+                }}>
+                {hasProduct ? "Open" : "See all"} &rarr;
+              </a>
             </div>
-            <a href={PRODUCT_URLS[post.product]} target="_blank" rel="noopener"
-              style={{
-                background: "var(--text)", color: "var(--bg)",
-                padding: "12px 24px", borderRadius: 10,
-                fontWeight: 700, fontSize: 14, whiteSpace: "nowrap",
-                textDecoration: "none",
-                transition: "opacity 0.2s",
-              }}>
-              Try it free &rarr;
-            </a>
-          </div>
-        )}
+          );
+        })()}
       </article>
 
       {/* Related posts as visual cards */}
