@@ -64,14 +64,6 @@ export default function BlockedPage() {
           }}
         >
           Aleko Tools isn&rsquo;t available where you&rsquo;re visiting from.
-          If you think this is a mistake, email{' '}
-          <a
-            href="mailto:alekokourtidis@gmail.com"
-            style={{ color: '#fafafa', textDecoration: 'underline' }}
-          >
-            alekokourtidis@gmail.com
-          </a>
-          .
         </p>
       </div>
     </main>
