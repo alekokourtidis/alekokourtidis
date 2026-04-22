@@ -5196,7 +5196,7 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 }
 .tools-row-head {
   display: grid;
-  grid-template-columns: 14px 1fr 120px 85px 95px 22px;
+  grid-template-columns: 14px 1fr 120px 100px 22px;
   gap: 14px;
   align-items: center;
   width: 100%;
@@ -5562,7 +5562,7 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
     grid-template-columns: 14px 1fr 85px 22px;
     gap: 10px;
   }
-  .tools-row-cat-pill, .tools-row-users { display: none; }
+  .tools-row-cat-pill { display: none; }
   .tools-row-body-inner {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -5576,4 +5576,81 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
   .tools-cat { flex-shrink: 0; }
   .tools-row-tag { display: none; }
   .tools-row-head { min-height: 48px; }
+}
+
+/* ===== Simplified card pills + Visit buttons (homepage + /tools) ===== */
+.card-cat-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+.card-footer.card-footer-simple {
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}
+.card-link-btn {
+  --accent: #fafafa;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #09090b;
+  background: var(--accent);
+  border-radius: 8px;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.card-link-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 24px -10px var(--accent);
+  gap: 12px;
+  color: #09090b;
+}
+.tools-feat-footer.tools-feat-footer-simple {
+  justify-content: flex-end;
+}
+.tools-feat-link-btn {
+  --accent: #fafafa;
+  background: var(--accent);
+  border: 0;
+  color: #09090b;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.tools-feat-link-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 24px -10px var(--accent);
+  background: var(--accent);
+  border-color: transparent;
+}
+.tools-row-visit {
+  --accent: #fafafa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #09090b;
+  background: var(--accent);
+  white-space: nowrap;
+  transition: transform .15s ease, filter .15s ease;
+}
+.tools-row-visit:hover {
+  filter: brightness(1.12);
+  transform: translateX(2px);
 }
