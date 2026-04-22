@@ -63,7 +63,7 @@ function Terminal() {
 
 function RecoverCard({ t }) {
   return (
-    <a className="nf-tool-card" href={`tool.html?id=${t.id}`} style={{ '--accent': t.accent }}>
+    <a className="nf-tool-card" href={`/tools/${t.id}`} style={{ '--accent': t.accent }}>
       <div className="nf-tool-head">
         <span className="nf-tool-dot" />
         <span className="nf-tool-title">{t.title}</span>
@@ -108,9 +108,9 @@ function NotFound() {
           <Terminal />
 
           <div className="nf-actions">
-            <a className="nf-cta nf-cta-primary" href="index.html">← Back Home</a>
-            <a className="nf-cta nf-cta-alt" href="index.html#tools">See All Tools</a>
-            <a className="nf-cta nf-cta-ghost" href="changelog.html">Read The Build Log</a>
+            <a className="nf-cta nf-cta-primary" href="/">← Back Home</a>
+            <a className="nf-cta nf-cta-alt" href="/#tools">See All Tools</a>
+            <a className="nf-cta nf-cta-ghost" href="/changelog">Read The Build Log</a>
           </div>
 
           <div className="nf-recover">

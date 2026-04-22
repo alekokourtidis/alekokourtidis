@@ -1205,12 +1205,12 @@ function App() {
             <span>Aleko</span>
           </div>
           <div className="nav-links">
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
             <a href="#tools">Tools</a>
-            <a href="blog.html">Blog</a>
-            <a href="affiliates.html">Affiliates</a>
+            <a href="/blog">Blog</a>
+            <a href="/affiliates">Affiliates</a>
           </div>
-          <a href="community.html#suggest" className="nav-cta">Suggest A Tool →</a>
+          <a href="/community#suggest" className="nav-cta">Suggest A Tool →</a>
         </div>
       </nav>
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} current="home" />

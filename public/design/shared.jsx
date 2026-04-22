@@ -38,11 +38,11 @@ function MobileMenu({ open, onClose, current }) {
   }, [open, onClose]);
 
   const links = [
-    { href: 'index.html', label: 'Home', key: 'home' },
-    { href: 'tools.html', label: 'Tools', key: 'tools' },
-    { href: 'blog.html', label: 'Blog', key: 'blog' },
-    { href: 'affiliates.html', label: 'Affiliates', key: 'affiliates' },
-    { href: 'about.html', label: 'About', key: 'about' },
+    { href: '/', label: 'Home', key: 'home' },
+    { href: '/tools', label: 'Tools', key: 'tools' },
+    { href: '/blog', label: 'Blog', key: 'blog' },
+    { href: '/affiliates', label: 'Affiliates', key: 'affiliates' },
+    { href: '/about', label: 'About', key: 'about' },
   ];
   return (
     <div className={`mobile-menu ${open ? 'is-open' : ''}`} aria-hidden={!open}>
@@ -67,7 +67,7 @@ function MobileMenu({ open, onClose, current }) {
             </a>
           ))}
         </nav>
-        <a href="community.html#suggest" className="mobile-menu-cta" onClick={onClose}>
+        <a href="/community#suggest" className="mobile-menu-cta" onClick={onClose}>
           Suggest A Tool →
         </a>
       </aside>
@@ -101,17 +101,17 @@ function SharedNav({ current }) {
           >
             <span /><span /><span />
           </button>
-          <a href="index.html" className="nav-logo">
+          <a href="/" className="nav-logo">
             <span className="nav-logo-dot" />
             <span>Aleko</span>
           </a>
           <div className="nav-links">
-            <a href="index.html" className={current === 'home' ? 'active' : ''}>Home</a>
-            <a href="tools.html" className={current === 'tools' ? 'active' : ''}>Tools</a>
-            <a href="blog.html" className={current === 'blog' ? 'active' : ''}>Blog</a>
-            <a href="affiliates.html" className={current === 'affiliates' ? 'active' : ''}>Affiliates</a>
+            <a href="/" className={current === 'home' ? 'active' : ''}>Home</a>
+            <a href="/tools" className={current === 'tools' ? 'active' : ''}>Tools</a>
+            <a href="/blog" className={current === 'blog' ? 'active' : ''}>Blog</a>
+            <a href="/affiliates" className={current === 'affiliates' ? 'active' : ''}>Affiliates</a>
           </div>
-          <a href="community.html#suggest" className="nav-cta">Suggest A Tool →</a>
+          <a href="/community#suggest" className="nav-cta">Suggest A Tool →</a>
         </div>
       </nav>
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} current={current} />
@@ -136,19 +136,19 @@ function SharedFooter() {
           <div className="footer-col">
             <h4>Products</h4>
             <ul>
-              <li><a href="tools.html">All Tools</a></li>
-              <li><a href="community.html#suggest">Suggest A Tool</a></li>
-              <li><a href="index.html#building">In Progress</a></li>
-              <li><a href="changelog.html">Changelog</a></li>
+              <li><a href="/tools">All Tools</a></li>
+              <li><a href="/community#suggest">Suggest A Tool</a></li>
+              <li><a href="/#building">In Progress</a></li>
+              <li><a href="/changelog">Changelog</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h4>More</h4>
             <ul>
-              <li><a href="blog.html">Writing</a></li>
-              <li><a href="about.html">About</a></li>
-              <li><a href="community.html">Community</a></li>
-              <li><a href="affiliates.html">Affiliates</a></li>
+              <li><a href="/blog">Writing</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/community">Community</a></li>
+              <li><a href="/affiliates">Affiliates</a></li>
             </ul>
           </div>
           <div className="footer-col">

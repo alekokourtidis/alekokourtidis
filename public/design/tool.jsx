@@ -109,7 +109,7 @@ function ToolPage() {
       {/* TOP BAR */}
       <section className="tool-topbar">
         <div className="container">
-          <a href="index.html#tools" className="tool-back">← All Tools</a>
+          <a href="/#tools" className="tool-back">← All Tools</a>
         </div>
       </section>
 
