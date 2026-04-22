@@ -101,9 +101,22 @@ export default function DesignMount({ scripts, stylesheet = "/design/styles.css"
   return (
     <>
       <style>{`
-        html, body { margin: 0; padding: 0; background: #09090b; }
+        /* Only <html> scrolls. Forcing body to overflow:visible + height:auto
+           prevents the nested-scroll situation where both html and body are
+           scrollable, which on macOS routes wheel events to html's outer
+           scrollbar only — the root cause of "scroll only works at far right". */
+        html { overflow-y: auto; }
+        html, body {
+          margin: 0;
+          padding: 0;
+          height: auto;
+          background: #09090b;
+        }
+        body { overflow: visible !important; height: auto !important; }
         body > nav.nav,
         body > footer.footer { display: none !important; }
+        /* Noise grain overlay is ugly on this site — kill it. */
+        .noise { display: none !important; }
       `}</style>
       <div ref={hostRef} suppressHydrationWarning />
     </>
