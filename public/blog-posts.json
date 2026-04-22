@@ -1,5 +1,53 @@
 [
   {
+    "slug": "i-spent-50k-on-conferences-last-year-and-have-no-idea-if-it-worked",
+    "title": "I Spent $50K on Conferences Last Year and Have No Idea If It Worked",
+    "excerpt": "You know that feeling when your CEO asks \"so what did we actually get out of that conference?\" and you're standing there trying to remember if that person you m...",
+    "date": "Apr 20, 2026",
+    "isoDate": "2026-04-21",
+    "cat": "Writing",
+    "accent": "#a78bfa",
+    "read": "5 Min",
+    "words": "1,128",
+    "tool": "conftrack"
+  },
+  {
+    "slug": "you-re-shipping-code-without-testing-it-against-your-actual-ai-model",
+    "title": "You're Shipping Code Without Testing It Against Your Actual AI Model",
+    "excerpt": "You know that feeling when something that worked yesterday just... stops working? You didn't change anything. Your code is the same. But suddenly the AI is prod...",
+    "date": "Apr 20, 2026",
+    "isoDate": "2026-04-21",
+    "cat": "Writing",
+    "accent": "#a78bfa",
+    "read": "5 Min",
+    "words": "1,003",
+    "tool": "claude-version-lock"
+  },
+  {
+    "slug": "everyone-s-wrong-about-how-much-cardio-actually-kills-your-diet",
+    "title": "Everyone's Wrong About How Much Cardio Actually Kills Your Diet",
+    "excerpt": "You know that feeling when you're doing everything \"right\" but your body is screaming at you? Like, you're hitting the treadmill for two hours a day, eating chi...",
+    "date": "Apr 20, 2026",
+    "isoDate": "2026-04-21",
+    "cat": "Writing",
+    "accent": "#a78bfa",
+    "read": "4 Min",
+    "words": "954",
+    "tool": "cardio-sweet-spot"
+  },
+  {
+    "slug": "why-your-product-videos-flop-and-it-s-not-what-you-think",
+    "title": "Why Your Product Videos Flop (And It's Not What You Think)",
+    "excerpt": "You know that feeling when you post a product photo on Instagram and it gets like 12 likes? Then you see someone else's video of basically the same product and ...",
+    "date": "Apr 20, 2026",
+    "isoDate": "2026-04-21",
+    "cat": "Writing",
+    "accent": "#a78bfa",
+    "read": "4 Min",
+    "words": "943",
+    "tool": "product-animator-pro"
+  },
+  {
     "slug": "why-your-nutritionist-s-advice-doesn-t-stick-and-what-actually-works",
     "title": "Why Your Nutritionist's Advice Doesn't Stick (And What Actually Works)",
     "excerpt": "You sit across from a nutritionist, take notes, nod along. They hand you a printout with food groups and portion sizes. You feel motivated for exactly three day...",

@@ -241,7 +241,10 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
   position: relative;
   padding: 64px 0 44px;
   overflow: hidden;
+  text-align: center;
 }
+.hero .container { display: flex; flex-direction: column; align-items: center; }
+.hero h1, .hero-sub { margin-left: auto; margin-right: auto; }
 .hero-eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -312,6 +315,10 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
     rgba(17,17,19,0.7);
   overflow: hidden;
   max-width: 820px;
+  /* Centered within the hero so it doesn't sit alone on the left of a wide
+     viewport. */
+  margin-left: auto;
+  margin-right: auto;
 }
 .dash-row {
   display: grid;
@@ -1486,7 +1493,7 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 }
 .lib-row-head {
   display: grid;
-  grid-template-columns: 10px 1fr 140px 80px 110px 20px;
+  grid-template-columns: 10px 1fr 140px 80px 90px 96px;
   align-items: center;
   gap: 18px;
   padding: 18px 22px;
@@ -1497,6 +1504,27 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
   font-family: inherit;
   text-align: left;
   cursor: pointer;
+}
+.lib-row-link {
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.lib-row-link:hover { background: rgba(255, 255, 255, 0.02); }
+.lib-row-visit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: filter 0.2s, transform 0.2s;
+}
+.lib-row-link:hover .lib-row-visit {
+  filter: brightness(1.12);
+  transform: translateX(2px);
 }
 .lib-row-dot {
   width: 10px; height: 10px;

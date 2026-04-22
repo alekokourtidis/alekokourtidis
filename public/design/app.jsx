@@ -216,15 +216,36 @@ const SEED_TOOLS = [
 ];
 
 
-const TOOL_URLS = {"essaycloner": "/essaycloner", "studypebble": "/studyacorn", "studyacorn": "/studyacorn", "shadowshield": "/shadowshield", "trafficguard": "/trafficguard", "wholefed": "https://apps.apple.com/app/wholefed", "feastmate": "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833", "whowasright": "/whowasright", "flowdebug": "/flowdebug", "whomealplanner": "/whomealplanner", "arrpower": "/arrpower", "aivisibilitychecker": "/aivisibilitychecker", "rulebotai": "/rulebotai"};
+// Map tool IDs to the real production URL the user should land on.
+// Always use the final destination — never the /toolname wrapper — so the
+// browser doesn't do an alekotools → vercel.app hop (which triggers
+// Vercel's SSO "authenticating" flash on any project with deployment
+// protection on).
+const TOOL_URLS = {
+  essaycloner: "https://essaycloner.vercel.app",
+  studypebble: "https://studypebble.com",
+  studyacorn: "https://studypebble.com",
+  shadowshield: "https://ai-shadow-shield.vercel.app",
+  trafficguard: "https://ai-traffic-guard.vercel.app",
+  wholefed: "https://apps.apple.com/app/wholefed",
+  feastmate: "https://apps.apple.com/us/app/feastmate-ai-recipe-generator/id6738283833",
+  whowasright: "https://argument-analyzer-ten.vercel.app",
+  flowdebug: "https://flowdebug.vercel.app",
+  whomealplanner: "https://who-meal-planner.vercel.app",
+  arrpower: "https://arrpower.vercel.app",
+  rulebotai: "https://rulebot-ai.vercel.app",
+  conftrack: "https://conftrack.vercel.app",
+  "cardio-sweet-spot": "https://cardio-sweet-spot.vercel.app",
+  "claude-version-lock": "https://claude-version-lock.vercel.app",
+  "product-animator-pro": "https://product-animator-pro.vercel.app",
+};
 function toolUrl(id, url) {
-  if (url) return url;
-  return TOOL_URLS[id] || '/' + id;
+  if (url && url.startsWith('http')) return url;
+  return TOOL_URLS[id] || url || ('/' + id);
 }
-function toolExternal(id, url) {
-  const u = url || TOOL_URLS[id] || '';
-  return u.startsWith('http');
-}
+// Everything is external now (real https:// URLs), so all tool links
+// should open in a new tab — no _top iframe-busting needed.
+function toolExternal() { return true; }
 
 /* ============ Supabase-backed tool fetch ============
  * Reads `tool_library` (public SELECT policy). Maps rows onto the shape
@@ -721,13 +742,12 @@ function ToolLibrary() {
                 <span className="card-accent" />
                 <div className="card-head">
                   <div className="card-title">{t.title}</div>
-                  <div className="card-price">{t.price}</div>
+                  <div className="card-cat-pill" style={{ color: t.accent, borderColor: t.accent + '40' }}>{t.cat}</div>
                 </div>
                 <div className="card-tagline">{t.tag}</div>
                 <div className="card-demo"><t.Demo /></div>
-                <div className="card-footer">
-                  <div className="card-meta">{t.meta} · {(t.users === '0' || t.users === 0) ? '… Users' : (t.users + ' Users')}</div>
-                  <a className="card-link" href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"}>Visit →</a>
+                <div className="card-footer card-footer-simple">
+                  <a className="card-link card-link-btn" href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"} style={{ '--accent': t.accent }}>Visit →</a>
                 </div>
               </CardGlow>
             </Reveal>
@@ -766,58 +786,38 @@ function ToolLibrary() {
           </div>
         </Reveal>
 
-        {/* LIBRARY ROWS — homepage shows a 5-tool preview; full list lives at /tools */}
+        {/* LIBRARY ROWS — each row is a direct link to the tool. No more
+            expand/collapse; clicking anywhere on the row opens the tool in
+            a new tab. */}
         <div className="lib-rows">
           {filteredRest.length === 0 && (
             <div className="lib-empty">No tools match that. Try a different filter.</div>
           )}
-          {filteredRest.slice(0, 5).map((t, i) => {
-            const isOpen = expanded === t.id;
-            return (
-              <Reveal key={t.id} delay={i * 40} className={`lib-row ${isOpen ? 'open' : ''}`} style={{ '--accent': t.accent }}>
-                <button className="lib-row-head" onClick={() => setExpanded(isOpen ? null : t.id)}>
-                  <span className="lib-row-dot" style={{ background: t.accent }} />
-                  <div className="lib-row-title-col">
-                    <div className="lib-row-title">{t.title}</div>
-                    <div className="lib-row-tag">{t.tag}</div>
-                  </div>
-                  <div className="lib-row-cat" style={{ color: t.accent, borderColor: t.accent + '40' }}>
-                    {t.cat}
-                  </div>
-                  <div className="lib-row-users">
-                    <span className="lib-row-users-num">{(t.users === '0' || t.users === 0) ? '…' : t.users}</span>
-                    <span className="lib-row-users-label">Users</span>
-                  </div>
-                  <div className="lib-row-price">{t.price}</div>
-                  <div className="lib-row-chev">{isOpen ? '▾' : '▸'}</div>
-                </button>
-                <div className="lib-row-body" style={{ maxHeight: isOpen ? 480 : 0 }}>
-                  <div className="lib-row-body-inner">
-                    <div className="lib-row-demo">
-                      <t.Demo />
-                    </div>
-                    <div className="lib-row-meta-col">
-                      <div className="lib-row-meta-item">
-                        <span className="lib-row-meta-label">Launched</span>
-                        <span className="lib-row-meta-val">{t.meta.split('Launched ')[1] || t.meta}</span>
-                      </div>
-                      <div className="lib-row-meta-item">
-                        <span className="lib-row-meta-label">Platform</span>
-                        <span className="lib-row-meta-val">{t.meta.split(' · ')[0]}</span>
-                      </div>
-                      {t.community && (
-                        <div className="lib-row-meta-item">
-                          <span className="lib-row-meta-label">Origin</span>
-                          <span className="lib-row-meta-val" style={{ color: t.accent }}>Community Pick</span>
-                        </div>
-                      )}
-                      <a href={toolUrl(t.id, t.url)} target={toolExternal(t.id, t.url) ? "_blank" : "_top"} className="lib-row-cta">Visit {t.title} →</a>
-                    </div>
-                  </div>
+          {filteredRest.slice(0, 5).map((t, i) => (
+            <Reveal key={t.id} delay={i * 40} className="lib-row" style={{ '--accent': t.accent }}>
+              <a
+                className="lib-row-head lib-row-link"
+                href={toolUrl(t.id, t.url)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="lib-row-dot" style={{ background: t.accent }} />
+                <div className="lib-row-title-col">
+                  <div className="lib-row-title">{t.title}</div>
+                  <div className="lib-row-tag">{t.tag}</div>
                 </div>
-              </Reveal>
-            );
-          })}
+                <div className="lib-row-cat" style={{ color: t.accent, borderColor: t.accent + '40' }}>
+                  {t.cat}
+                </div>
+                <span
+                  className="lib-row-visit"
+                  style={{ background: t.accent, color: '#0a0a0a' }}
+                >
+                  Visit →
+                </span>
+              </a>
+            </Reveal>
+          ))}
         </div>
 
         {filteredRest.length > 5 && (
@@ -1081,9 +1081,9 @@ function BlogSection() {
               <div className="section-label">
                 <span className="pulse-green" /> Devlog
               </div>
-              <h2 className="section-title">Notes From The Late Shift.</h2>
+              <h2 className="section-title">The Brief · Synthesis Notes.</h2>
               <p className="section-desc">
-                Build logs, postmortems, and half-formed thinking I write between commits. No listicles, no thread bait, no SEO tricks.
+                Research notes and explainers across the categories the tools in this directory touch. Editorial voice, not personal essays.
               </p>
             </div>
 

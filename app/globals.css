@@ -61,8 +61,12 @@ a { color: inherit; text-decoration: none; }
 /* ===== CONTAINER ===== */
 .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
 
-/* ===== HERO (Homepage) ===== */
-.hero {
+/* ===== HERO (Homepage) =====
+   Scoped to .next-page so it no longer collides with the design app's
+   .hero block (which the live homepage uses). The old rule's
+   max-width:640px was capping every .hero on the site to 640px, which
+   is why the homepage content kept pinning to the left. */
+.next-page .hero {
   padding: 100px 0 72px;
   max-width: 640px;
   position: relative;

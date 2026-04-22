@@ -35,10 +35,10 @@ function BlogPage() {
         </div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div>
-            <div className="about-eyebrow"><span className="pulse-green" /><span>WRITING</span></div>
-            <h1 className="blogpage-title">Blog.</h1>
+            <div className="about-eyebrow"><span className="pulse-green" /><span>SYNTHESIS NOTES</span></div>
+            <h1 className="blogpage-title">The Brief.</h1>
             <p className="blogpage-sub">
-              What I'm shipping, what I broke, and what I'm thinking about next.
+              Research notes, explainers, and pattern spotting — synthesized from what the tools in this directory are learning. Not first-person essays; a feed of what matters in the categories these products sit in.
             </p>
           </div>
 

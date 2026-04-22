@@ -56,11 +56,11 @@ export default function BlogIndex() {
         <header style={{ marginBottom: 32 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, letterSpacing: 1.2, color: "#9aa", marginBottom: 12, textTransform: "uppercase" }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
-            Writing
+            Synthesis Notes
           </div>
-          <h1 style={{ fontSize: 40, fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: -0.5 }}>Blog.</h1>
-          <p style={{ color: "#9aa", fontSize: 16, marginTop: 12, maxWidth: 560 }}>
-            What I&apos;m shipping, what I broke, and what I&apos;m thinking about next. {posts.length} posts.
+          <h1 style={{ fontSize: 40, fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: -0.5 }}>The Brief.</h1>
+          <p style={{ color: "#9aa", fontSize: 16, marginTop: 12, maxWidth: 600 }}>
+            Research notes, explainers, and pattern spotting across the categories the tools in this directory touch. Not personal essays — editorial voice. {posts.length} briefs.
           </p>
         </header>
 

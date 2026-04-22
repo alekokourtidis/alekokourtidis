@@ -312,15 +312,11 @@ function FeaturedRow({ tools }) {
                   <div className="tools-feat-title">{t.title}</div>
                   <div className="tools-feat-cat" style={{ color: t.accent }}>{t.cat}</div>
                 </div>
-                <div className="tools-feat-price">{t.price}</div>
               </div>
               <div className="tools-feat-tag">{t.tag}</div>
               {Demo && <div className="tools-feat-demo"><Demo /></div>}
-              <div className="tools-feat-footer">
-                <div className="tools-feat-meta">
-                  {t.platform} · {(t.users === '0' || t.users === 0) ? '… users' : (t.users + ' users')} · Launched {fmtDate(t.shipped)}
-                </div>
-                <a href={toolUrl(t.id, t._url)} target={toolTarget(t.id, t._url)} className="tools-feat-link">Visit →</a>
+              <div className="tools-feat-footer tools-feat-footer-simple">
+                <a href={toolUrl(t.id, t._url)} target={toolTarget(t.id, t._url)} className="tools-feat-link tools-feat-link-btn" style={{ '--accent': t.accent }}>Visit →</a>
               </div>
             </CardGlow>
           );
@@ -357,11 +353,13 @@ function ToolRow({ t, index, isOpen, onToggle }) {
           <div className="tools-row-tag">{t.tag}</div>
         </div>
         <div className="tools-row-cat-pill">{t.cat}</div>
-        <div className="tools-row-users">
-          <span className="tools-row-users-num">{(t.users === '0' || t.users === 0) ? '…' : t.users}</span>
-          <span className="tools-row-users-label">users</span>
-        </div>
-        <div className="tools-row-price">{t.price}</div>
+        <a
+          href={toolUrl(t.id, t._url)}
+          target={toolTarget(t.id, t._url)}
+          className="tools-row-visit"
+          onClick={(e) => e.stopPropagation()}
+          style={{ '--accent': t.accent }}
+        >Visit →</a>
         <span className={`tools-row-chev ${isOpen ? 'open' : ''}`}>
           <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
             <path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -386,12 +384,8 @@ function ToolRow({ t, index, isOpen, onToggle }) {
                 <span className="tools-row-meta-val">{t.platform}</span>
               </div>
               <div className="tools-row-meta">
-                <span className="tools-row-meta-label">Users</span>
-                <span className="tools-row-meta-val">{t.users}</span>
-              </div>
-              <div className="tools-row-meta">
-                <span className="tools-row-meta-label">Price</span>
-                <span className="tools-row-meta-val">{t.price}</span>
+                <span className="tools-row-meta-label">Category</span>
+                <span className="tools-row-meta-val" style={{ color: t.accent }}>{t.cat}</span>
               </div>
             </div>
             <a
