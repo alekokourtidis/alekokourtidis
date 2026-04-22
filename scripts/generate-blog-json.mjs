@@ -1,5 +1,15 @@
 // Generates /public/blog-posts.json from lib/blog-posts.js so the static
 // design pages can render real (agent-generated) posts.
+//
+// Category strategy:
+//   1. Try Supabase tool_library at build time (authoritative — every tool
+//      has a curated `cat`). Normalizes slugs to match dashed/undashed
+//      variants the blog uses in `product`.
+//   2. Fall back to a small hardcoded map for tools that never hit
+//      tool_library.
+//   3. Last-resort fallback: "General" — not "Writing", since writing
+//      is a medium, not a topic.
+
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -9,7 +19,12 @@ const root = resolve(__dirname, '..');
 
 const { BLOG_POSTS } = await import(resolve(root, 'lib/blog-posts.js'));
 
-const CAT_BY_PRODUCT = {
+const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+
+const normalize = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+const HARDCODED_CAT = {
   'who-meal-planner': 'Health',
   feastmate: 'Health',
   wholefed: 'Health',
@@ -22,25 +37,64 @@ const CAT_BY_PRODUCT = {
   trafficguard: 'SEO',
   whowasright: 'Relationships',
   autoeditor: 'Build Log',
-  flowdebug: 'Build Log',
+  flowdebug: 'Productivity',
   alekotools: 'Thinking',
 };
+
 const ACCENT_BY_CAT = {
   Health: '#22c55e',
   Education: '#fbbf24',
   Security: '#ef4444',
   SEO: '#a78bfa',
-  Relationships: '#60a5fa',
+  Productivity: '#60a5fa',
+  Marketing: '#f472b6',
+  Creative: '#14b8a6',
+  Relationships: '#8b5cf6',
   'Build Log': '#22d3ee',
   Thinking: '#f472b6',
+  General: '#a78bfa',
 };
+
+// Try to load live categories from tool_library. If the build runs without
+// network (rare), fall back gracefully.
+let supabaseCats = {};
+try {
+  const res = await fetch(
+    `${SB_URL}/rest/v1/tool_library?select=slug,cat,accent&visible=eq.true`,
+    { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
+  );
+  if (res.ok) {
+    const rows = await res.json();
+    for (const r of rows) {
+      supabaseCats[normalize(r.slug)] = { cat: r.cat, accent: r.accent };
+    }
+    console.log(`Fetched ${rows.length} tool categories from Supabase`);
+  } else {
+    console.warn(`tool_library fetch returned ${res.status} — using hardcoded map`);
+  }
+} catch (e) {
+  console.warn(`tool_library fetch failed (${e.message}) — using hardcoded map`);
+}
+
+function resolveCategory(product) {
+  if (!product) return { cat: 'General', accent: ACCENT_BY_CAT.General };
+  const norm = normalize(product);
+  if (supabaseCats[norm]) {
+    return {
+      cat: supabaseCats[norm].cat,
+      accent: supabaseCats[norm].accent || ACCENT_BY_CAT[supabaseCats[norm].cat] || ACCENT_BY_CAT.General,
+    };
+  }
+  const hard = HARDCODED_CAT[product] || HARDCODED_CAT[norm];
+  if (hard) return { cat: hard, accent: ACCENT_BY_CAT[hard] || ACCENT_BY_CAT.General };
+  return { cat: 'General', accent: ACCENT_BY_CAT.General };
+}
 
 const minified = BLOG_POSTS
   .slice()
   .sort((a, b) => new Date(b.date) - new Date(a.date))
   .map((p) => {
-    const cat = CAT_BY_PRODUCT[p.product] || 'Writing';
-    const accent = ACCENT_BY_CAT[cat] || '#a78bfa';
+    const { cat, accent } = resolveCategory(p.product);
     const words = (p.content || '').trim().split(/\s+/).length;
     const read = `${Math.max(2, Math.round(words / 220))} Min`;
     const d = new Date(p.date);

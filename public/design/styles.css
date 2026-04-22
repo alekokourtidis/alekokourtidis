@@ -1493,9 +1493,11 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 }
 .lib-row-head {
   display: grid;
-  grid-template-columns: 10px 1fr 140px 80px 90px 96px;
+  /* dot | title+tag stretches to fill | cat pill | Visit btn — both action
+     elements sit flush to the right edge, separated only by the 14px gap. */
+  grid-template-columns: 10px 1fr auto auto;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
   padding: 18px 22px;
   background: none;
   border: none;
@@ -1505,6 +1507,8 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
   text-align: left;
   cursor: pointer;
 }
+.lib-row-cat { justify-self: end; }
+.lib-row-visit { justify-self: end; }
 .lib-row-link {
   text-decoration: none;
   transition: background 0.2s;
@@ -2450,11 +2454,11 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
   .lib-cat { padding: 6px 10px; font-size: 12px; }
 
   .lib-row-head {
-    grid-template-columns: 10px 1fr 60px 20px;
+    grid-template-columns: 10px 1fr auto;
     gap: 10px;
     padding: 12px 14px;
   }
-  .lib-row-cat, .lib-row-price { display: none; }
+  .lib-row-cat { display: none; }
   .lib-row-title { font-size: 14px; }
   .lib-row-tag { font-size: 12px; line-height: 1.35; }
   .lib-row-body-inner { grid-template-columns: 1fr; gap: 16px; padding: 14px; }
