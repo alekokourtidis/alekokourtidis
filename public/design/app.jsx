@@ -144,7 +144,7 @@ const SEED_TOOLS = [
   {
     id: 'trendscout', title: 'TrendScout', price: 'Waitlist',
     cat: 'Productivity', url: '/trendscout',
-    tag: 'Every 7am, a TikTok content brief in your Telegram. Hooks, sounds, formats — diffed against last week, tailored to your niche.',
+    tag: 'Every 7am: the AI news that popped overnight — rewritten as your next TikTok hook. Reddit + HN + ProductHunt + RSS, filtered to your niche, delivered to Telegram.',
     meta: 'Web · Beta 2026-04-23',
     users: '…', shipped: '2026-04-23',
     accent: '#f472b6', Demo: null,

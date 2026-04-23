@@ -1,65 +1,69 @@
 import WaitlistForm from "./WaitlistForm";
 
 export const metadata = {
-  title: "TrendScout — Daily TikTok trend briefs for solo creators | Aleko Tools",
+  title: "TrendScout — Daily AI news briefs, rewritten as video hooks | Aleko Tools",
   description:
-    "Every morning at 7am, TrendScout pulls TikTok's Creative Center data, diffs it against last week, and writes you a content brief: hooks to use, sounds to ride, formats to avoid. Built for solo creators who post consistently.",
+    "Every morning at 7am, TrendScout reads Reddit, Hacker News, and AI/tech RSS, picks the stories that actually popped overnight, and rewrites them as TikTok video hooks you can film. Like an @aibreakfast / @morning.brew editor — for your feed.",
   alternates: { canonical: "https://alekotools.com/trendscout" },
 };
 
 const FEATURES = [
   {
+    title: "Real news, not hashtags",
+    body:
+      "TrendScout reads Reddit's top AI/builder subs, Hacker News front page, ProductHunt launches, and AI/tech RSS feeds every morning. It picks the stories with real signal — 1,000+ upvotes, 300+ HN points, reacting to actual launches — not hashtags with no relevance.",
+  },
+  {
+    title: "Rewritten as video hooks",
+    body:
+      "Every story comes back as a TikTok-ready concept: exact on-screen text for the first 2 seconds, 3-beat shot structure, and a 1-line reason why the story hits right now. Like an @aibreakfast editor wrote your shot list.",
+  },
+  {
     title: "Weekly batch brief",
     body:
-      "Every Sunday at 7am, a full sweep of trending hashtags, sounds, creators, and top ads — then 7–10 specific video concepts with exact hooks and beat-by-beat structure. Shoot them all Sunday, post one a day.",
+      "Every Sunday 7am: 7 story-driven video concepts pulled from the week's biggest AI/builder news. Shoot them all Sunday, post one per day Mon-Sun. Your entire week's content solved in a 20-minute session.",
   },
   {
-    title: "Daily change log",
+    title: "Daily news nudge",
     body:
-      "Mon–Sat 7am, a light scan. Only pings you if something moved overnight — a sound blowing up, a hashtag jumping 20 ranks. Silence is good. No noise.",
+      "Mon–Sat 7am: a quick scan. If a big story broke overnight (new GPT release, a founder's thread going viral), you get a reactive concept. Otherwise, silence. No noise for the sake of it.",
   },
   {
-    title: "Velocity signal",
+    title: "Niche-filtered by default",
     body:
-      "Trend data means nothing without direction. TrendScout stores daily snapshots and shows you what's rising, what's peaked, what's new this week. You're not reacting to yesterday — you're riding what's climbing.",
-  },
-  {
-    title: "Tailored to your niche",
-    body:
-      "Picks the industries that match your audience (Tech, Education, Apps, etc.). Filters out trends that won't convert for you. Every brief is written for your brand, not a generic creator.",
-  },
-  {
-    title: "Built on the source",
-    body:
-      "Pulls directly from TikTok's Creative Center — the same dashboard TikTok shows to paying advertisers. No third-party scrapers, no stale rankings.",
+      "Only pulls from subs/feeds where AI builders, solo founders, and tech-curious students actually hang out. No generic pop culture. No crypto. No politics. Just the stuff your audience is already talking about.",
   },
   {
     title: "Telegram delivery",
     body:
-      "Briefs ship to Telegram at 7am so they're the first thing you see. No new app to check. No dashboard to log into. Just open your phone, read, film.",
+      "Briefs ship to Telegram at 7am — the first thing you see when you wake up. No dashboard, no new app, no login. Open your phone, read, film, post.",
   },
 ];
 
 const FAQS = [
   {
-    q: "Is it safe for my TikTok account?",
-    a: "Yes. TrendScout never logs in, never uses your cookies, never identifies as you. It scrapes Creative Center — TikTok's own public trend dashboard. Zero ban risk to your account.",
+    q: "Why news instead of TikTok trends?",
+    a: "Trending hashtags and sounds are lagging indicators — by the time they're trending, they've peaked. Real content creators in AI/tech ride NEWS: a GPT release, a founder's tweet going viral, an open-source project hitting 20k stars overnight. TrendScout surfaces the news the day it happens so you're the first to post a take.",
+  },
+  {
+    q: "Is it safe for my social accounts?",
+    a: "100% safe. TrendScout never logs into any platform, never uses your cookies. It reads public sources — Reddit's JSON API, HN's Firebase API, public RSS feeds. Nothing touches your accounts.",
   },
   {
     q: "Will the ideas actually work?",
-    a: "You have to film well. TrendScout tells you what's working right now and gives you the hook + structure. The performance depends on your execution — but you'll never be stuck staring at a blank FYP wondering what to post.",
+    a: "Execution still matters — you have to film well. But you won't waste 30 minutes staring at your FYP wondering what to post. Every brief names the exact story, the hook line, the 3 shots, and why it hits right now.",
   },
   {
-    q: "What if I don't want daily briefs?",
-    a: "Configure it to weekly-only. Many creators batch Sunday and ignore the daily nudges entirely.",
+    q: "What if I post in a different niche?",
+    a: "v1 is tuned for AI + solo-builder + tech-curious-student creators. If you want a different niche (fitness, finance, fashion) I'll build that version if the waitlist shows demand.",
   },
   {
-    q: "How is this different from just scrolling TikTok?",
-    a: "Scrolling TikTok wastes 30–60 minutes a day and skews your feed toward whatever the algo wants YOU to consume — not what's growing in your niche. TrendScout gives you structural, ranked, niche-filtered data in 3 minutes of reading a morning brief.",
+    q: "How is this different from just scrolling Reddit?",
+    a: "Scrolling Reddit takes 45 min and leaves you overwhelmed. TrendScout does 3 minutes of reading in 20 seconds: top stories, ranked, with the exact hook line already written. You go from news → video in 10 minutes instead of 2 hours.",
   },
   {
     q: "When is it available?",
-    a: "Currently in private beta. Join the waitlist and I'll send a discount code when it opens.",
+    a: "Currently in private beta. Join the waitlist — I'll send a discount code when it opens.",
   },
 ];
 
@@ -106,13 +110,13 @@ export default function TrendScoutPage() {
             WebkitTextFillColor: "transparent",
           }}
         >
-          A TikTok content strategist who sends you marching orders at 7am.
+          The AI news that&apos;s about to blow up — rewritten as your next TikTok hook.
         </h1>
 
         <p style={{ fontSize: 19, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 640 }}>
-          TrendScout pulls TikTok's Creative Center data every morning, diffs it against last week, and writes you a brief:
-          what to film, what sounds to use, what hooks are getting paid to run. Built for creators who post consistently but
-          waste 30 minutes a day guessing what's working.
+          Every morning at 7am, TrendScout reads Reddit&apos;s top AI subs, Hacker News, ProductHunt, and the best AI/tech
+          RSS feeds — picks the stories that actually popped overnight, and turns them into video concepts you can film today.
+          Built like @aibreakfast / @morning.brew, but for creators who post short-form instead of carousels.
         </p>
       </div>
 
@@ -176,27 +180,34 @@ export default function TrendScoutPage() {
               "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
             whiteSpace: "pre-wrap",
           }}
-        >{`trend-scout · weekly · 2026-04-27
+        >{`trend-scout · daily · 2026-04-23
+reddit 102 · hn 13 · rss 8
 
-Pattern of the week: POV + tool-reveal is still dominant in AI content.
-#zerotohero is up 8 ranks. Sound "Brain Scan" (22k uses, +340% WoW)
-is driving most "POV: I replaced my X with AI" videos.
+Story 1 — GPT-5.5 launched this morning
+  Source: Hacker News, 762 pts, 3h ago
+  Hook (0:00): "OpenAI just dropped GPT-5.5 and nobody's talking about
+              the weirdest feature"
+  Beat 1: screen-rec of the model card, zoom on context window stat
+  Beat 2: your face reacting, text overlay with the one crazy number
+  Beat 3: "if you were still paying for ChatGPT Plus, here's what
+          actually changed"
+  Why now: front-page HN, TechCrunch broke it 30 min ago
 
-Concept 1 — POV + brain reveal
-  Hook (0:00): "POV: I gave AI my entire iMessage history"
-  Beat 1: phone scroll of messages flashing by
-  Beat 2: cut to Claude output on laptop
-  Beat 3: text overlay "It knew me better than I did"
-  Sound: "Brain Scan" (see data)
-  Tags: #aitools #pov #selfawareness
-  Why now: sound ranks 2 (+340%), hashtag #aitools +12 ranks this week
+Story 2 — r/ChatGPT hit 5,058 upvotes on "Yahu by gpt"
+  Source: Reddit, 5058 ups, 6h ago
+  Hook (0:00): "This 8-word ChatGPT prompt has 5,000 upvotes and
+              nobody can explain why"
+  Beat 1: screen of the actual post
+  Beat 2: you trying it live
+  Beat 3: result text overlaid
+  Why now: pure curiosity gap, community-validated hook
 
-Concept 2 — Solo builder receipts
-  Hook (0:00): "I made $30k in a month at 16. Here's why I quit."
+Story 3 — Anthropic's Mythos breach
   ...
 
-Avoid: generic AI explainers. "What is an AI agent" posts peaked 3 weeks
-ago and are now losing ground (#aiagent dropped from rank 4 → rank 22).
+Also worth mentioning:
+  · Qwen3.6-27B hit 938 HN pts — good for a "small models keep winning" tweet
+  · r/ClaudeAI viral thread about dev autonomy — thread-able
 `}</pre>
       </section>
 
