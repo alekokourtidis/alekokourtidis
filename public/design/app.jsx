@@ -142,6 +142,14 @@ const SEED_TOOLS = [
     accent: '#ef4444', Demo: window.ShadowShieldDemo,
   },
   {
+    id: 'trendscout', title: 'TrendScout', price: 'Waitlist',
+    cat: 'Productivity', url: '/trendscout',
+    tag: 'Every 7am, a TikTok content brief in your Telegram. Hooks, sounds, formats — diffed against last week, tailored to your niche.',
+    meta: 'Web · Beta 2026-04-23',
+    users: '…', shipped: '2026-04-23',
+    accent: '#f472b6', Demo: null,
+  },
+  {
     id: 'trafficguard', title: 'AI Traffic Guard', price: '$29 / Mo',
     cat: 'Productivity',
     tag: 'Watches your top keywords and flags the ones Google AI Overviews are eating. Rewrite before the traffic goes.',
@@ -241,11 +249,14 @@ const TOOL_URLS = {
 };
 function toolUrl(id, url) {
   if (url && url.startsWith('http')) return url;
+  if (url && url.startsWith('/')) return url;
   return TOOL_URLS[id] || url || ('/' + id);
 }
-// Everything is external now (real https:// URLs), so all tool links
-// should open in a new tab — no _top iframe-busting needed.
-function toolExternal() { return true; }
+// Open external (http*) in new tab, same-origin (/…) in same tab.
+function toolExternal(id, url) {
+  const u = url || TOOL_URLS[id] || '';
+  return u.startsWith('http');
+}
 
 /* ============ Supabase-backed tool fetch ============
  * Reads `tool_library` (public SELECT policy). Maps rows onto the shape
@@ -813,8 +824,8 @@ function ToolLibrary() {
               <a
                 className="lib-row-head lib-row-link"
                 href={toolUrl(t.id, t.url)}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={toolExternal(t.id, t.url) ? "_blank" : "_top"}
+                rel={toolExternal(t.id, t.url) ? "noopener noreferrer" : undefined}
               >
                 <span className="lib-row-dot" style={{ background: t.accent }} />
                 <div className="lib-row-title-col">
