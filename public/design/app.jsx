@@ -494,49 +494,36 @@ const UPDATE_TOOL_COLOR = {
   'Feastmate':     '#fb923c',
   'Core':          '#9ca3af',
 };
-// Fetch recent builds/deploys from Supabase as updates.
-// Tool names come from the curated `tool_library.title` field so they show
-// "AI Traffic Guard" / "EssayCloner" / "WhoWasRight" / "WHO Meal Planner"
-// — not the naive-titlecased "Ai Traffic Guard" / "Essaycloner" mess.
-// Smart-titlecase is only the fallback when a slug isn't in tool_library.
-const BRAND_WORDS = new Set(['AI', 'WHO', 'SAT', 'AP', 'API', 'SEO', 'PDF', 'TL', 'AR']);
-function smartTitle(str) {
-  return (str || '')
-    .replace(/-/g, ' ')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map(w => {
-      const up = w.toUpperCase();
-      if (BRAND_WORDS.has(up)) return up;
-      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-    })
-    .join(' ');
-}
-const normalizeSlug = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+// Recent Updates reads from tool_library (NOT built_projects). tool_library
+// is the curated source of truth — alekotools and slug-variant dupes are
+// already hidden there via `visible=false`, and `shipped_at` holds the real
+// first-ship date (unlike built_projects.created_at, which reflects when the
+// row was last re-deployed).
+//
+// Ordering: shipped_at ASC, created_at ASC. That puts the OLDEST tool at the
+// top and the NEWEST at the bottom, matching how you'd read a timeline.
 let RECENT_UPDATES = [];
 (function loadUpdates() {
   const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
   const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
   const headers = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
-  Promise.all([
-    fetch(SB_URL + '/rest/v1/built_projects?status=eq.deployed&order=created_at.desc&limit=10&select=project_name,tagline,created_at', { headers }).then(r => r.json()),
-    fetch(SB_URL + '/rest/v1/tool_library?select=slug,title&visible=eq.true', { headers }).then(r => r.json()),
-  ])
-    .then(([builds, library]) => {
-      if (!Array.isArray(builds)) return;
-      const titleMap = {};
-      if (Array.isArray(library)) {
-        for (const r of library) titleMap[normalizeSlug(r.slug)] = r.title;
-      }
-      RECENT_UPDATES = builds.map(b => {
-        const d = new Date(b.created_at);
-        const slug = normalizeSlug(b.project_name);
-        const title = titleMap[slug] || smartTitle(b.project_name);
+  fetch(
+    SB_URL +
+    '/rest/v1/tool_library?select=slug,title,tagline,shipped_at,created_at' +
+    '&visible=eq.true' +
+    '&order=shipped_at.asc,created_at.asc',
+    { headers }
+  )
+    .then(r => r.json())
+    .then(rows => {
+      if (!Array.isArray(rows)) return;
+      RECENT_UPDATES = rows.map(r => {
+        const d = new Date(r.shipped_at || r.created_at);
         return {
           date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          tool: title,
+          tool: r.title,
           tag: 'LAUNCH',
-          text: b.tagline || 'New tool shipped',
+          text: r.tagline || 'New tool shipped',
         };
       });
     })
