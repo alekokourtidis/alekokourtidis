@@ -500,8 +500,8 @@ const UPDATE_TOOL_COLOR = {
 // first-ship date (unlike built_projects.created_at, which reflects when the
 // row was last re-deployed).
 //
-// Ordering: shipped_at ASC, created_at ASC. That puts the OLDEST tool at the
-// top and the NEWEST at the bottom, matching how you'd read a timeline.
+// Ordering: shipped_at DESC, created_at DESC. Newest at the top (reverse-chron
+// — standard feed order).
 let RECENT_UPDATES = [];
 (function loadUpdates() {
   const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
@@ -511,7 +511,7 @@ let RECENT_UPDATES = [];
     SB_URL +
     '/rest/v1/tool_library?select=slug,title,tagline,shipped_at,created_at' +
     '&visible=eq.true' +
-    '&order=shipped_at.asc,created_at.asc',
+    '&order=shipped_at.desc,created_at.desc',
     { headers }
   )
     .then(r => r.json())
