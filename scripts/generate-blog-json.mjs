@@ -55,18 +55,35 @@ const ACCENT_BY_CAT = {
   General: '#a78bfa',
 };
 
-// Try to load live categories from tool_library. If the build runs without
+// Smart titlecase: keeps AI / WHO / SAT / AP / API / SEO / PDF uppercase.
+// Used only as a last-resort fallback when a blog's `product` slug isn't in
+// tool_library. The curated tool_library.title is always the preferred source.
+const BRAND_WORDS = new Set(['AI', 'WHO', 'SAT', 'AP', 'API', 'SEO', 'PDF']);
+function smartTitle(str) {
+  return (str || '')
+    .replace(/-/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => {
+      const up = w.toUpperCase();
+      if (BRAND_WORDS.has(up)) return up;
+      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
+// Try to load live tool info from tool_library. If the build runs without
 // network (rare), fall back gracefully.
 let supabaseCats = {};
 try {
   const res = await fetch(
-    `${SB_URL}/rest/v1/tool_library?select=slug,cat,accent&visible=eq.true`,
+    `${SB_URL}/rest/v1/tool_library?select=slug,title,cat,accent&visible=eq.true`,
     { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
   );
   if (res.ok) {
     const rows = await res.json();
     for (const r of rows) {
-      supabaseCats[normalize(r.slug)] = { cat: r.cat, accent: r.accent };
+      supabaseCats[normalize(r.slug)] = { cat: r.cat, accent: r.accent, title: r.title };
     }
     console.log(`Fetched ${rows.length} tool categories from Supabase`);
   } else {
@@ -74,6 +91,13 @@ try {
   }
 } catch (e) {
   console.warn(`tool_library fetch failed (${e.message}) — using hardcoded map`);
+}
+
+function resolveToolTitle(product) {
+  if (!product) return null;
+  const hit = supabaseCats[normalize(product)];
+  if (hit?.title) return hit.title;
+  return smartTitle(product);
 }
 
 function resolveCategory(product) {
@@ -109,7 +133,7 @@ const minified = BLOG_POSTS
       accent,
       read,
       words: words.toLocaleString(),
-      tool: p.product || null,
+      tool: resolveToolTitle(p.product),
     };
   });
 

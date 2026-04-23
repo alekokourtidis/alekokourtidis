@@ -1,15 +1,87 @@
 [
   {
+    "slug": "why-your-product-photos-look-cheap-and-it-s-not-your-camera",
+    "title": "Why Your Product Photos Look Cheap (And It's Not Your Camera)",
+    "excerpt": "You know that feeling when you're scrolling through TikTok and you see an ad for some random product that just... stops you? Like, it's not even a fancy brand o...",
+    "date": "Apr 22, 2026",
+    "isoDate": "2026-04-23",
+    "cat": "Marketing",
+    "accent": "#60a5fa",
+    "read": "5 Min",
+    "words": "1,179",
+    "tool": "Reel Studio"
+  },
+  {
+    "slug": "your-ai-chatbot-is-costing-you-money-and-you-don-t-know-it",
+    "title": "Your AI Chatbot Is Costing You Money (And You Don't Know It)",
+    "excerpt": "You know that feeling when you realize your employee made a promise they shouldn't have? Like when a stylist tells a client \"yeah, we can definitely do that\" ab...",
+    "date": "Apr 22, 2026",
+    "isoDate": "2026-04-23",
+    "cat": "Productivity",
+    "accent": "#fbbf24",
+    "read": "5 Min",
+    "words": "1,008",
+    "tool": "Rule Bot"
+  },
+  {
+    "slug": "your-hard-drive-wakes-up-50-times-a-day-and-you-have-no-idea",
+    "title": "Your Hard Drive Wakes Up 50 Times a Day (And You Have No Idea)",
+    "excerpt": "You know that feeling when you're trying to keep your power bill reasonable and your homeserver is supposed to be this efficient, quiet thing in the corner — bu...",
+    "date": "Apr 22, 2026",
+    "isoDate": "2026-04-23",
+    "cat": "Productivity",
+    "accent": "#60a5fa",
+    "read": "5 Min",
+    "words": "1,034",
+    "tool": "Arr Scheduler"
+  },
+  {
+    "slug": "your-content-is-feeding-ai-chatbots-and-you-re-getting-nothing-back",
+    "title": "Your Content Is Feeding AI Chatbots (And You're Getting Nothing Back)",
+    "excerpt": "You know that feeling when you realize someone's been using your stuff without asking? That's basically what's happening right now with your website.  Every tim...",
+    "date": "Apr 22, 2026",
+    "isoDate": "2026-04-23",
+    "cat": "SEO",
+    "accent": "#a78bfa",
+    "read": "5 Min",
+    "words": "1,129",
+    "tool": "AI Visibility"
+  },
+  {
+    "slug": "why-everything-you-learned-about-healthy-eating-is-probably-wrong",
+    "title": "Why Everything You Learned About 'Healthy Eating' Is Probably Wrong",
+    "excerpt": "You know that feeling when you're scrolling through Instagram at 11 PM and someone with abs you'll never have is telling you that eating carbs after 6 PM will l...",
+    "date": "Apr 22, 2026",
+    "isoDate": "2026-04-23",
+    "cat": "Health",
+    "accent": "#22c55e",
+    "read": "6 Min",
+    "words": "1,264",
+    "tool": "WHO Meal Planner"
+  },
+  {
+    "slug": "why-your-automation-broke-at-3am-and-you-have-no-idea-why",
+    "title": "Why Your Automation Broke at 3am (And You Have No Idea Why)",
+    "excerpt": "You know that feeling when you wake up to a Slack message from a client saying \"your automation stopped working\"? It's 3am. You're groggy. And you have absolute...",
+    "date": "Apr 22, 2026",
+    "isoDate": "2026-04-23",
+    "cat": "Productivity",
+    "accent": "#14b8a6",
+    "read": "6 Min",
+    "words": "1,254",
+    "tool": "FlowDebug"
+  },
+  {
     "slug": "i-spent-50k-on-conferences-last-year-and-have-no-idea-if-it-worked",
     "title": "I Spent $50K on Conferences Last Year and Have No Idea If It Worked",
     "excerpt": "You know that feeling when your CEO asks \"so what did we actually get out of that conference?\" and you're standing there trying to remember if that person you m...",
     "date": "Apr 20, 2026",
     "isoDate": "2026-04-21",
-    "cat": "Writing",
-    "accent": "#a78bfa",
+    "cat": "Productivity",
+    "accent": "#60a5fa",
     "read": "5 Min",
     "words": "1,128",
-    "tool": "conftrack"
+    "tool": "Conf Tracker"
   },
   {
     "slug": "you-re-shipping-code-without-testing-it-against-your-actual-ai-model",
@@ -17,11 +89,11 @@
     "excerpt": "You know that feeling when something that worked yesterday just... stops working? You didn't change anything. Your code is the same. But suddenly the AI is prod...",
     "date": "Apr 20, 2026",
     "isoDate": "2026-04-21",
-    "cat": "Writing",
-    "accent": "#a78bfa",
+    "cat": "Productivity",
+    "accent": "#60a5fa",
     "read": "5 Min",
     "words": "1,003",
-    "tool": "claude-version-lock"
+    "tool": "Model Anchor"
   },
   {
     "slug": "everyone-s-wrong-about-how-much-cardio-actually-kills-your-diet",
@@ -29,11 +101,11 @@
     "excerpt": "You know that feeling when you're doing everything \"right\" but your body is screaming at you? Like, you're hitting the treadmill for two hours a day, eating chi...",
     "date": "Apr 20, 2026",
     "isoDate": "2026-04-21",
-    "cat": "Writing",
-    "accent": "#a78bfa",
+    "cat": "Health",
+    "accent": "#60a5fa",
     "read": "4 Min",
     "words": "954",
-    "tool": "cardio-sweet-spot"
+    "tool": "Heart Zone"
   },
   {
     "slug": "why-your-product-videos-flop-and-it-s-not-what-you-think",
@@ -41,11 +113,11 @@
     "excerpt": "You know that feeling when you post a product photo on Instagram and it gets like 12 likes? Then you see someone else's video of basically the same product and ...",
     "date": "Apr 20, 2026",
     "isoDate": "2026-04-21",
-    "cat": "Writing",
-    "accent": "#a78bfa",
+    "cat": "Marketing",
+    "accent": "#60a5fa",
     "read": "4 Min",
     "words": "943",
-    "tool": "product-animator-pro"
+    "tool": "Reel Studio"
   },
   {
     "slug": "why-your-nutritionist-s-advice-doesn-t-stick-and-what-actually-works",
@@ -57,7 +129,7 @@
     "accent": "#22c55e",
     "read": "4 Min",
     "words": "904",
-    "tool": "who-meal-planner"
+    "tool": "WHO Meal Planner"
   },
   {
     "slug": "i-tracked-every-argument-with-my-roommate-for-a-month",
@@ -66,10 +138,10 @@
     "date": "Apr 18, 2026",
     "isoDate": "2026-04-19",
     "cat": "Relationships",
-    "accent": "#60a5fa",
+    "accent": "#8b5cf6",
     "read": "4 Min",
     "words": "989",
-    "tool": "whowasright"
+    "tool": "WhoWasRight"
   },
   {
     "slug": "everyone-says-low-code-is-easier-they-re-lying",
@@ -77,11 +149,11 @@
     "excerpt": "You know that feeling when something breaks at 2 AM and you have no idea why? Your client's automation just stopped working. Orders aren't syncing. Emails aren'...",
     "date": "Apr 18, 2026",
     "isoDate": "2026-04-19",
-    "cat": "Build Log",
-    "accent": "#22d3ee",
+    "cat": "Productivity",
+    "accent": "#14b8a6",
     "read": "5 Min",
     "words": "1,108",
-    "tool": "flowdebug"
+    "tool": "FlowDebug"
   },
   {
     "slug": "how-adaptive-learning-actually-works-and-why-it-matters",
@@ -89,11 +161,11 @@
     "excerpt": "So I got curious about this a while back. You know how some apps and platforms seem to know exactly what you're struggling with? Like they adjust the difficulty...",
     "date": "Apr 16, 2026",
     "isoDate": "2026-04-17",
-    "cat": "Writing",
+    "cat": "General",
     "accent": "#a78bfa",
     "read": "5 Min",
     "words": "1,021",
-    "tool": "informational"
+    "tool": "Informational"
   },
   {
     "slug": "your-automation-just-broke-and-you-have-no-idea-why",
@@ -101,11 +173,11 @@
     "excerpt": "You know that feeling when a client calls at 2 PM on a Friday and says \"the thing stopped working\"? And you have absolutely no idea what they're talking about b...",
     "date": "Apr 16, 2026",
     "isoDate": "2026-04-17",
-    "cat": "Build Log",
-    "accent": "#22d3ee",
+    "cat": "Productivity",
+    "accent": "#14b8a6",
     "read": "5 Min",
     "words": "1,099",
-    "tool": "flowdebug"
+    "tool": "FlowDebug"
   },
   {
     "slug": "why-you-re-studying-the-wrong-stuff-and-how-to-fix-it",
@@ -117,7 +189,7 @@
     "accent": "#fbbf24",
     "read": "6 Min",
     "words": "1,234",
-    "tool": "studypebble"
+    "tool": "Study Pebble"
   },
   {
     "slug": "how-to-actually-resolve-arguments-with-your-partner",
@@ -126,10 +198,10 @@
     "date": "Apr 16, 2026",
     "isoDate": "2026-04-17",
     "cat": "Relationships",
-    "accent": "#60a5fa",
+    "accent": "#8b5cf6",
     "read": "6 Min",
     "words": "1,285",
-    "tool": "whowasright"
+    "tool": "WhoWasRight"
   },
   {
     "slug": "why-chasing-google-rankings-might-be-your-biggest-seo-mistake",
@@ -141,7 +213,7 @@
     "accent": "#a78bfa",
     "read": "4 Min",
     "words": "953",
-    "tool": "ai-traffic-guard"
+    "tool": "AI Traffic Guard"
   },
   {
     "slug": "why-your-teachers-can-actually-tell-when-you-re-faking-your-voice",
@@ -150,10 +222,10 @@
     "date": "Apr 16, 2026",
     "isoDate": "2026-04-17",
     "cat": "Education",
-    "accent": "#fbbf24",
+    "accent": "#a78bfa",
     "read": "5 Min",
     "words": "991",
-    "tool": "essaycloner"
+    "tool": "EssayCloner"
   },
   {
     "slug": "best-ap-study-app-2026-study-acorn",
@@ -165,7 +237,7 @@
     "accent": "#fbbf24",
     "read": "4 Min",
     "words": "912",
-    "tool": "studypebble"
+    "tool": "Study Pebble"
   },
   {
     "slug": "how-to-make-ai-essays-undetectable",
@@ -174,10 +246,10 @@
     "date": "Apr 13, 2026",
     "isoDate": "2026-04-14",
     "cat": "Education",
-    "accent": "#fbbf24",
+    "accent": "#a78bfa",
     "read": "2 Min",
     "words": "386",
-    "tool": "essaycloner"
+    "tool": "EssayCloner"
   },
   {
     "slug": "ai-tools-every-student-needs",
@@ -185,7 +257,7 @@
     "excerpt": "From essay writing to food planning — these AI tools save hours every week. And most are free.",
     "date": "Apr 12, 2026",
     "isoDate": "2026-04-13",
-    "cat": "Writing",
+    "cat": "General",
     "accent": "#a78bfa",
     "read": "2 Min",
     "words": "302",
@@ -198,9 +270,9 @@
     "date": "Apr 11, 2026",
     "isoDate": "2026-04-12",
     "cat": "Education",
-    "accent": "#fbbf24",
+    "accent": "#a78bfa",
     "read": "2 Min",
     "words": "369",
-    "tool": "essaycloner"
+    "tool": "EssayCloner"
   }
 ]

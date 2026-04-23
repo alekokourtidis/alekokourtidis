@@ -14,7 +14,11 @@ window.useToolLibrarySupabase = function useToolLibrarySupabase(fallback, mapRow
   const [tools, setTools] = useState(fallback || []);
   useEffect(() => {
     let cancelled = false;
-    fetch(window.SB_URL + '/rest/v1/tool_library?select=*&visible=eq.true&order=sort_order.asc', {
+    // Newest-first (shipped_at DESC) is the correct default — when sort_order
+    // ties (every tool defaults to 100), Postgres returns arbitrary order and
+    // the user can't tell which tool is actually the most recent. created_at
+    // is the tiebreaker when shipped_at is identical across same-day deploys.
+    fetch(window.SB_URL + '/rest/v1/tool_library?select=*&visible=eq.true&order=shipped_at.desc,created_at.desc', {
       headers: { apikey: window.SB_KEY, Authorization: 'Bearer ' + window.SB_KEY },
       cache: 'no-store',
     })
@@ -132,38 +136,47 @@ function SharedFooter() {
             <p className="footer-tagline">
               Small, sharp AI tools. Shipped solo, from my bedroom.
             </p>
+            <p className="footer-sub">
+              A one-person studio shipping one focused AI tool every day. No VC money,
+              no team, no roadmap committee. If something here is useful, tell someone.
+              If something's broken, tell me.
+            </p>
           </div>
           <div className="footer-col">
-            <h4>Products</h4>
+            <h4>Site</h4>
             <ul>
+              <li><a href="/about">About</a></li>
               <li><a href="/tools">All Tools</a></li>
+              <li><a href="/blog">Writing</a></li>
+              <li><a href="/community">Community</a></li>
               <li><a href="/community#suggest">Suggest A Tool</a></li>
-              <li><a href="/#building">In Progress</a></li>
+              <li><a href="/affiliates">Affiliates</a></li>
               <li><a href="/changelog">Changelog</a></li>
             </ul>
           </div>
           <div className="footer-col">
-            <h4>More</h4>
+            <h4>Follow</h4>
             <ul>
-              <li><a href="/blog">Writing</a></li>
-              <li><a href="/about">About</a></li>
-              <li><a href="/community">Community</a></li>
-              <li><a href="/affiliates">Affiliates</a></li>
+              <li><a href="https://tiktok.com/@alekokourtidis" target="_blank">TikTok</a></li>
+              <li><a href="https://instagram.com/alekokourtidis" target="_blank">Instagram</a></li>
+              <li><a href="https://youtube.com/@alekokourtidis" target="_blank">YouTube</a></li>
+              <li><a href="https://x.com/alekokourtidis" target="_blank">X / Twitter</a></li>
+              <li><a href="https://github.com/alekokourtidis" target="_blank">GitHub</a></li>
+              <li><a href="/contact">Contact</a></li>
             </ul>
           </div>
           <div className="footer-col">
-            <h4>Elsewhere</h4>
+            <h4>Legal</h4>
             <ul>
-              <li><a href="#">Twitter / X</a></li>
-              <li><a href="#">GitHub</a></li>
-              <li><a href="#">Email</a></li>
-              <li><a href="#">RSS</a></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/affiliates">Affiliate Disclosure</a></li>
             </ul>
           </div>
         </div>
         <div className="footer-bot">
-          <span>© 2026 Aleko. Built From My Bedroom.</span>
-          <span className="footer-uptime"><span className="pulse-green" /> Uptime: 99.98%</span>
+          <span>© 2026 Aleko Kourtidis · Built solo, shipped daily from Atlanta</span>
+          <span className="footer-uptime"><span className="pulse-green" /> All systems operational</span>
         </div>
       </div>
     </footer>

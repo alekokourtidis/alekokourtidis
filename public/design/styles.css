@@ -1041,8 +1041,16 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 .footer-tagline {
   font-size: 14px;
   color: var(--text-2);
-  max-width: 260px;
+  max-width: 280px;
   line-height: 1.5;
+  margin-bottom: 14px;
+}
+.footer-sub {
+  font-size: 13px;
+  color: var(--text-3);
+  max-width: 320px;
+  line-height: 1.6;
+  margin-top: 0;
 }
 .footer-col h4 {
   font-size: 11px;

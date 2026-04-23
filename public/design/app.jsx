@@ -298,7 +298,9 @@ function useToolLibrary() {
   const [tools, setTools] = useState(SEED_TOOLS);
   useEffect(() => {
     let cancelled = false;
-    fetch(SB_URL + '/rest/v1/tool_library?select=*&visible=eq.true&order=sort_order.asc', {
+    // Newest-first. shipped_at DESC with created_at as tiebreaker so same-day
+    // ships show in actual deploy order, not arbitrary Postgres order.
+    fetch(SB_URL + '/rest/v1/tool_library?select=*&visible=eq.true&order=shipped_at.desc,created_at.desc', {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
     })
       .then(r => r.ok ? r.json() : null)
@@ -324,18 +326,19 @@ function ShippingDashboard() {
   const [count, setCount] = useState(8);
 
   useEffect(() => {
-    // Fetch real tool count from Supabase
+    // Source of truth for "tools shipped" is tool_library (visible only) so
+    // this number always matches the count shown on /tools and in the tool
+    // library section below. The old "6 manual + deployed" heuristic drifted
+    // (double-counted, ignored Alekotools being a site not a tool).
     const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
     const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
-    fetch(SB_URL + '/rest/v1/built_projects?status=eq.deployed&select=id', {
+    fetch(SB_URL + '/rest/v1/tool_library?select=slug&visible=eq.true', {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
     })
       .then(r => r.json())
       .then(data => {
-        // Add 6 for manually-built tools (essaycloner, studypebble, shadowshield, trafficguard, wholefed, feastmate)
-        const pipelineCount = Array.isArray(data) ? data.length : 0;
-        const total = Math.max(8, 6 + pipelineCount);
-        setCount(total);
+        const total = Array.isArray(data) ? data.length : 0;
+        if (total > 0) setCount(total);
         setPulse(true);
         setTimeout(() => setPulse(false), 400);
       })
@@ -491,22 +494,47 @@ const UPDATE_TOOL_COLOR = {
   'Feastmate':     '#fb923c',
   'Core':          '#9ca3af',
 };
-// Fetch recent builds/deploys from Supabase as updates
+// Fetch recent builds/deploys from Supabase as updates.
+// Tool names come from the curated `tool_library.title` field so they show
+// "AI Traffic Guard" / "EssayCloner" / "WhoWasRight" / "WHO Meal Planner"
+// — not the naive-titlecased "Ai Traffic Guard" / "Essaycloner" mess.
+// Smart-titlecase is only the fallback when a slug isn't in tool_library.
+const BRAND_WORDS = new Set(['AI', 'WHO', 'SAT', 'AP', 'API', 'SEO', 'PDF', 'TL', 'AR']);
+function smartTitle(str) {
+  return (str || '')
+    .replace(/-/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(w => {
+      const up = w.toUpperCase();
+      if (BRAND_WORDS.has(up)) return up;
+      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+const normalizeSlug = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 let RECENT_UPDATES = [];
 (function loadUpdates() {
   const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
   const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
-  fetch(SB_URL + '/rest/v1/built_projects?status=eq.deployed&order=created_at.desc&limit=10&select=project_name,tagline,created_at', {
-    headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
-  })
-    .then(r => r.json())
-    .then(builds => {
+  const headers = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+  Promise.all([
+    fetch(SB_URL + '/rest/v1/built_projects?status=eq.deployed&order=created_at.desc&limit=10&select=project_name,tagline,created_at', { headers }).then(r => r.json()),
+    fetch(SB_URL + '/rest/v1/tool_library?select=slug,title&visible=eq.true', { headers }).then(r => r.json()),
+  ])
+    .then(([builds, library]) => {
       if (!Array.isArray(builds)) return;
+      const titleMap = {};
+      if (Array.isArray(library)) {
+        for (const r of library) titleMap[normalizeSlug(r.slug)] = r.title;
+      }
       RECENT_UPDATES = builds.map(b => {
         const d = new Date(b.created_at);
+        const slug = normalizeSlug(b.project_name);
+        const title = titleMap[slug] || smartTitle(b.project_name);
         return {
           date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          tool: (b.project_name || '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+          tool: title,
           tag: 'LAUNCH',
           text: b.tagline || 'New tool shipped',
         };
@@ -1289,33 +1317,47 @@ function App() {
               <p className="footer-tagline">
                 Small, sharp AI tools.<br/>Shipped solo, from my bedroom.
               </p>
+              <p className="footer-sub">
+                A one-person studio shipping one focused AI tool every day. No VC money,
+                no team, no roadmap committee. If something here is useful, tell someone.
+                If something's broken, tell me.
+              </p>
             </div>
             <div className="footer-col">
               <h4>Site</h4>
               <ul>
                 <li><a href="/about" target="_top">About</a></li>
-                <li><a href="/community#suggest" target="_top">Suggest A Tool</a></li>
-                <li><a href="/blog" target="_top">Blog</a></li>
                 <li><a href="/tools" target="_top">Tools</a></li>
+                <li><a href="/blog" target="_top">Blog</a></li>
                 <li><a href="/community" target="_top">Community</a></li>
+                <li><a href="/community#suggest" target="_top">Suggest A Tool</a></li>
                 <li><a href="/affiliates" target="_top">Affiliates</a></li>
+                <li><a href="/changelog" target="_top">Changelog</a></li>
               </ul>
             </div>
             <div className="footer-col">
-              <h4>Socials</h4>
+              <h4>Follow</h4>
               <ul>
                 <li><a href="https://tiktok.com/@alekokourtidis" target="_blank">TikTok</a></li>
                 <li><a href="https://instagram.com/alekokourtidis" target="_blank">Instagram</a></li>
                 <li><a href="https://youtube.com/@alekokourtidis" target="_blank">YouTube</a></li>
                 <li><a href="https://x.com/alekokourtidis" target="_blank">X / Twitter</a></li>
                 <li><a href="https://github.com/alekokourtidis" target="_blank">GitHub</a></li>
-                <li><a href="mailto:alekokourtidis@gmail.com">Email</a></li>
+                <li><a href="/contact" target="_top">Contact</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>Legal</h4>
+              <ul>
+                <li><a href="/privacy" target="_top">Privacy Policy</a></li>
+                <li><a href="/terms" target="_top">Terms of Service</a></li>
+                <li><a href="/affiliates" target="_top">Affiliate Disclosure</a></li>
               </ul>
             </div>
           </div>
           <div className="footer-bot">
-            <span>© 2026 Aleko. Built From My Bedroom.</span>
-            <span>v1.0 · Last Shipped 2 Hours Ago</span>
+            <span>© 2026 Aleko Kourtidis · Built solo, shipped daily from Atlanta</span>
+            <span>This site is open-source and open to feedback.</span>
           </div>
         </div>
       </footer>
