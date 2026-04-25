@@ -1,9 +1,17 @@
-export const metadata = { title: "Aleko Tools" };
+import DesignMount from "../components/DesignMount";
+
+export const metadata = {
+  title: "Changelog — Aleko Tools",
+  description: "Every tool I've shipped, in order.",
+};
+
 export default function Page() {
   return (
-    <>
-      <style>{`html, body { margin: 0; padding: 0; height: 100%; } .nav, .footer { display: none !important; }`}</style>
-      <iframe src="/design/changelog.html" style={{ display: "block", width: "100%", height: "100vh", border: "none" }} title="Aleko Tools" />
-    </>
+    <DesignMount
+      scripts={[
+        "/design/shared.jsx",
+        "/design/changelog.jsx",
+      ]}
+    />
   );
 }
