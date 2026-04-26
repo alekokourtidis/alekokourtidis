@@ -16,6 +16,24 @@ function DaysSince({ from }) {
   return <>{n.toLocaleString()}</>;
 }
 
+// Live tools-shipped count, sourced from tool_library to match the
+// homepage ShippingDashboard. Falls back to a sensible default if the
+// fetch fails (e.g. offline preview), then count-ups to the live value.
+function LiveToolsShipped({ fallback = 34 }) {
+  const [target, setTarget] = useState(fallback);
+  useEffect(() => {
+    const SB_URL = 'https://fdnbotpgodpcgqtojnrm.supabase.co';
+    const SB_KEY = 'sb_publishable_EXP_ArZJG1-dDSY240-ZdQ_91x4KdbQ';
+    fetch(SB_URL + '/rest/v1/tool_library?select=slug&visible=eq.true', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
+    })
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data) && data.length > 0) setTarget(data.length); })
+      .catch(() => {});
+  }, []);
+  return <CountUp to={target} />;
+}
+
 function CountUp({ to, suffix = '', duration = 1400 }) {
   const [n, setN] = useState(0);
   useEffect(() => {
@@ -78,9 +96,9 @@ function AboutPage() {
           <div>
             <div className="about-stats">
               <div className="about-stat">
-                <div className="about-stat-num"><CountUp to={6} /></div>
+                <div className="about-stat-num"><LiveToolsShipped /></div>
                 <div className="about-stat-label">Tools Shipped</div>
-                <div className="about-stat-sub">All Live · All Paid</div>
+                <div className="about-stat-sub">Live count · matches /tools</div>
               </div>
               <div className="about-stat">
                 <div className="about-stat-num"><DaysSince from="2026-04-11" /></div>
@@ -88,13 +106,13 @@ function AboutPage() {
                 <div className="about-stat-sub">Since First Launch</div>
               </div>
               <div className="about-stat">
-                <div className="about-stat-num"><CountUp to={42318} /></div>
+                <div className="about-stat-num"><CountUp to={199810} /></div>
                 <div className="about-stat-label">Lines Of Code</div>
                 <div className="about-stat-sub">Across All Tools</div>
               </div>
               <div className="about-stat">
-                <div className="about-stat-num"><CountUp to={19} suffix="K" /></div>
-                <div className="about-stat-label">Monthly Users</div>
+                <div className="about-stat-num"><CountUp to={1184} /></div>
+                <div className="about-stat-label">Monthly Visitors</div>
                 <div className="about-stat-sub">Across The Stack</div>
               </div>
             </div>
